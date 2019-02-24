@@ -28,7 +28,7 @@ module.exports = {
     bio: 'Web developer. Aspiring ML engineer / AI researcher.',
     contacts: {
       email: 'tanyeejian@gmail.com',
-      telegram: '#',
+      telegram: 'swampertx',
       twitter: 'TanYeeJian',
       github: 'SwampertX',
       rss: '#',
