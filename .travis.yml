@@ -11,6 +11,17 @@ script:
   - yarn test:coverage --runInBand --no-cache
   - yarn test --runInBand --no-cache
   - codecov
+  - yarn build
+deploy:
+  provider: pages
+  skip-cleanup: true
+  keep-history: true
+  github-token: $GITHUB_TOKEN
+  local-dir: public
+  target-branch: master
+  on:
+    branch: gatsby
+
 cache:
   directories:
     - node_modules
