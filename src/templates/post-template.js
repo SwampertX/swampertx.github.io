@@ -4,10 +4,7 @@ import Layout from '../components/Layout';
 import Post from '../components/Post';
 
 const PostTemplate = ({ data }) => {
-  const {
-    title: siteTitle,
-    subtitle: siteSubtitle
-  } = data.site.siteMetadata;
+  const { title: siteTitle, subtitle: siteSubtitle } = data.site.siteMetadata;
 
   const {
     title: postTitle,
