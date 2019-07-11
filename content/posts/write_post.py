@@ -13,7 +13,7 @@ def create_boilerplate(title, date):
              'title: ' + quote(title) + '\n',
              'date: ' + quote(date) + '\n',
              'template: "post"\ndraft: true\n',
-             'slug: "/posts/"' + lower_dash_title + '"\n',
+             'slug: "/posts/' + lower_dash_title + '"\n',
              'category: \ntags: \n' + (' - \n' * 3),
              'description: \n---\n']
     boilerplate = ''
@@ -27,7 +27,7 @@ while not satisfied:
     filename = str(date.today()) + '---' + formatted + '.md'
     cfm = input("A new file, " + filename +" will be created. (Y/n)")
     if cfm.upper() != 'N':
-        boilerplate = create_boilerplate(formatted, str(date.today()))
+        boilerplate = create_boilerplate(title, str(date.today()))
         with open(filename, 'w') as post:
             post.write(boilerplate)
         satisfied = True
