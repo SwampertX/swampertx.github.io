@@ -30,3 +30,5 @@ The Common Unis Printer Service (CUPS), an open source printer server developed 
 ```bash
 sudo apt install cups
 ```
+
+
