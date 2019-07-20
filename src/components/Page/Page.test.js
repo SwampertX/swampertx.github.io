@@ -5,7 +5,7 @@ import Page from './Page';
 describe('Page', () => {
   const props = {
     children: 'test',
-    title: 'test',
+    title: 'test'
   };
 
   it('renders correctly', () => {

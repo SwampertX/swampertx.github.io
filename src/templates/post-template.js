@@ -11,7 +11,8 @@ const PostTemplate = ({ data }) => {
     description: postDescription
   } = data.markdownRemark.frontmatter;
 
-  const metaDescription = postDescription !== null ? postDescription : siteSubtitle;
+  const metaDescription =
+    postDescription !== null ? postDescription : siteSubtitle;
 
   return (
     <Layout title={`${postTitle} - ${siteTitle}`} description={metaDescription}>
