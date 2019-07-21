@@ -11,7 +11,7 @@ script:
   - npm run test:coverage --runInBand --no-cache
   - npm run test --runInBand --no-cache
   - codecov
-  - npm run build
+  - NODE_OPTIONS=--max_old_space_size=4096 npm run build
 deploy:
   provider: pages
   skip-cleanup: true
@@ -25,3 +25,4 @@ deploy:
 cache:
   directories:
     - node_modules
+
