@@ -7,11 +7,7 @@ import Menu from './Menu';
 import styles from './Sidebar.module.scss';
 
 export const PureSidebar = ({ data, isIndex }) => {
-  const {
-    author,
-    copyright,
-    menu
-  } = data.site.siteMetadata;
+  const { author, copyright, menu } = data.site.siteMetadata;
 
   return (
     <div className={styles['sidebar']}>
@@ -42,7 +38,7 @@ export const Sidebar = (props) => (
               name
               photo
               bio
-              contacts {       
+              contacts {
                 twitter
                 telegram
                 github
@@ -54,7 +50,7 @@ export const Sidebar = (props) => (
         }
       }
     `}
-    render={(data) => <PureSidebar {...props} data={data}/>}
+    render={(data) => <PureSidebar {...props} data={data} />}
   />
 );
 

@@ -1,6 +1,9 @@
 {
     "parser": "babel-eslint",
-    "extends": "airbnb-base",
+    "extends": [
+        "airbnb-base",
+        "prettier"
+    ],
     "env": {
       "browser": true,
       "node": true,
@@ -11,12 +14,14 @@
         "react",
         "jest",
         "jsx-a11y",
-        "import"
+        "import",
+        "prettier"
     ],
     "globals": {
         "graphql": true
     },
     "rules": {
+      "prettier/prettier": ["error"],
       "comma-dangle": 0,
       "import/imports-first": 0,
       "global-require": 0,
