@@ -62,18 +62,23 @@ As the printer is remotely connected via the same network, we will choose the `L
 
 ![Enter the IP address](/media/cups/cups_lpd_ip.jpg)
 
-In the connection textbox, enter the IP address of the printer prefaced by `lpd://`.
+In the connection textbox, enter the IP address of the printserver and the
+printer queue in the following format:
+```
+lpd://<ip_addr>/<queue>
+```
+
 For Cinnamon College's printers, it happens to be `172.16.29.84` as of writing, so we will
-enter `lpd://172.16.29.84`.
+enter `lpd://172.16.29.84/MONO-A4` for the most used machine.
 
 ![Enter printer name, description and location](/media/cups/cups_printer_name.jpg)
 
-Onto the next page, the **Name** textbox is the most important here. Refer to the MacOS 
-instructions and you will find the name for your printer, such as `MONO-A4`. This will
-determine which printer you set up.
+_Errata: on the previous version of the post, I said the name is
+important but **it is not**. The **queue** determines the printer, whereas
+name is the just the printer name you see when you are at a printing dialog._
 
-For the **description** and **location** columns, you can enter whatever you like to help
-you distinguish between the different printers you add to CUPS.
+For the **name**, **description** and **location** columns, you can enter whatever you like
+to help you distinguish between the different printers you add to CUPS.
 
 ## Step 5: Select a PPD file for your printer
 PostScript Printer Description (PPD) files are instruction sets created by printer vendors
@@ -83,7 +88,7 @@ Refer again to the MacOS setup document, we are told to select a `Generic PostSc
 PPD. Selecting the `Make` as `Generic`, I chose the PPD as below, because it seems to match
 the description the most.
 
-![Select the PPD for your printer](/media/cups/cups_ppd.jpg)
+![Select the PPD for your printer](/media/cups/cups_ppd2.jpg)
 
 When you are done, click Add Printer.
 
@@ -99,4 +104,8 @@ Friendly reminder: set double-sided printing as default to save the earth!!
 
 Voila - now you are done! You can check your newly installed printer at `localhost:631/printers/<PRINTER-NAME>`, which is `localhost:631/printers/MONO-A4` in my case.
 
+![Printer status page](/media/cups/cups_printer_status.jpg)
+
 Hope this guide benefits you.
+
+*Updated 14 Aug 2019*
