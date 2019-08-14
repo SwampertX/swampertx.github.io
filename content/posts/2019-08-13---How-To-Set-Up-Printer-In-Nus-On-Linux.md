@@ -102,7 +102,7 @@ be that we started with the printer's default options.
 
 Friendly reminder: set double-sided printing as default to save the earth!!
 
-Voila - now you are done! You can check your newly installed printer at `localhost:631/printers/<PRINTER-NAME>`, which is `localhost:631/printers/MONO-A4` in my case.
+Voila - now you are done! You can check your newly installed printer at `localhost:631/printers/<PRINTER-NAME>`, which is `localhost:631/printers/Cinna_MONO_A4` in my case.
 
 ![Printer status page](/media/cups/cups_printer_status.jpg)
 
