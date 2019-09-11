@@ -1,6 +1,7 @@
 #!/usr/bin/python3.7
 
 from datetime import date
+import string
 
 satisfied = False
 
@@ -23,8 +24,9 @@ def create_boilerplate(title, date):
 
 while not satisfied:
     title = input("Create a post title: (Eg. 'Why you should stop using Chrome NOW')\n")
-    formatted = '-'.join([word.capitalize() for word in title.split()])
-    filename = str(date.today()) + '---' + formatted + '.md'
+    WORDS = [word.capitalize() for word in title.split() if not word in string.punctuation]
+    FORMATTED = '-'.join(WORDS)
+    filename = str(date.today()) + '---' + FORMATTED + '.md'
     cfm = input("A new file, " + filename +" will be created. (Y/n)")
     if cfm.upper() != 'N':
         boilerplate = create_boilerplate(title, str(date.today()))
