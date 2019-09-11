@@ -43,7 +43,7 @@
     "classnames": "^2.2.6",
     "codecov": "^3.1.0",
     "core-js": "^3.1.4",
-    "dotenv": "^8.0.0",
+    "dotenv": "^8.1.0",
     "gatsby": "^2.13.27",
     "gatsby-link": "^2.2.2",
     "gatsby-plugin-catch-links": "^2.1.2",
