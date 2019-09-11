@@ -3,7 +3,7 @@ title: "About me"
 template: "page"
 ---
 ### Resume please?
-[Here](https://drive.google.com/open?id=151bFPnVzPAqFLqet1nMECWO3u3QZufLI) you go! :)
+[Here](https://drive.google.com/open?id=1nrJdPvaIUbc3eNv7LHrvA03_1B5puTfm) you go! :)
 
 ### Who are you?
 I am Yee Jian, a first year student in [National University of Singapore](www.nus.edu.sg).
