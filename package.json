@@ -101,7 +101,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jest": "^22.10.0",
     "eslint-plugin-prettier": "^3.1.0",
-    "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-react": "^7.14.3",
     "eslint-watch": "^4.0.2",
     "gh-pages": "^2.0.1",
     "identity-obj-proxy": "^3.0.0",
