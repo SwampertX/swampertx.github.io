@@ -41,7 +41,7 @@
     "acorn": "^7.0.0",
     "bluebird": "^3.5.2",
     "classnames": "^2.2.6",
-    "codecov": "^3.1.0",
+    "codecov": "^3.6.0",
     "core-js": "^3.2.1",
     "dotenv": "^8.1.0",
     "gatsby": "^2.15.18",
