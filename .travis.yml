@@ -3,7 +3,6 @@ node_js:
   - '10'
 install:
   - npm install -g codecov
-  - npm install webpack
 script:
   - npm install
   - npm run lint
