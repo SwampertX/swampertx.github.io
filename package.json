@@ -44,7 +44,7 @@
     "codecov": "^3.6.1",
     "core-js": "^3.2.1",
     "dotenv": "^8.1.0",
-    "gatsby": "^2.15.33",
+    "gatsby": "^2.15.35",
     "gatsby-link": "^2.2.20",
     "gatsby-plugin-catch-links": "^2.1.13",
     "gatsby-plugin-feed": "^2.3.16",
