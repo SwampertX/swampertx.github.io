@@ -39,7 +39,7 @@
   ],
   "dependencies": {
     "acorn": "^7.1.0",
-    "bluebird": "^3.7.0",
+    "bluebird": "^3.7.1",
     "classnames": "^2.2.6",
     "codecov": "^3.6.1",
     "core-js": "^3.3.1",
