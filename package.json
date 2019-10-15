@@ -82,7 +82,7 @@
     "redux": "^3.7.2",
     "slate": "^0.33.8",
     "typescript": "^3.6.4",
-    "webpack": "^4.41.0"
+    "webpack": "^4.41.2"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
