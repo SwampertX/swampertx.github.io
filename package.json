@@ -42,7 +42,7 @@
     "bluebird": "^3.7.0",
     "classnames": "^2.2.6",
     "codecov": "^3.6.1",
-    "core-js": "^3.3.1",
+    "core-js": "^3.3.2",
     "dotenv": "^8.1.0",
     "gatsby": "^2.15.35",
     "gatsby-link": "^2.2.22",
