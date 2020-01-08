@@ -1,15 +1,15 @@
 language: node_js
 node_js:
-  - '10'
+  - '13'
 install:
-  - npm install -g codecov
+  - yarn add codecov
 script:
-  - npm install
-  - npm run lint
-  - npm run test:coverage --runInBand --no-cache
-  - npm run test --runInBand --no-cache
+  - yarn install
+  - yarn run lint
+  - yarn run test:coverage --runInBand --no-cache
+  - yarn run test --runInBand --no-cache
   - codecov
-  - NODE_OPTIONS=--max_old_space_size=4096 npm run build
+  - yarn run build
 deploy:
   provider: pages
   skip-cleanup: true
