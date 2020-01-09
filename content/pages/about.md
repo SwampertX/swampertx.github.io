@@ -1,34 +1,44 @@
 ---
-title: "About me"
-template: "page"
+title: 'About me'
+template: 'page'
 ---
+
 ### Resume please?
-[Here](https://drive.google.com/open?id=1nrJdPvaIUbc3eNv7LHrvA03_1B5puTfm) you go! :)
+
+[Here](https://cv.yeejian.tech) you go! :)
 
 ### Who are you?
-I am Yee Jian, a first year student in [National University of Singapore](www.nus.edu.sg).
-Brave enough, I am studying a Double Degree in **Computer Science and Applied Mathematics**. 
-Challenging problems are the doses of adrenaline rush I can **never** get enough. 
 
-Loves hacking around and automating processes ([IVLE Downloader](https://github.com/SwampertX/ivle-downloader), [CS2040 judging bash script](https://github.com/SwampertX/nus-scripts/blob/master/codecrunch/check_java.md)). 
+![](/tanah_lot.jpg)
+I am Yee Jian, a second year student in [National University of Singapore](www.nus.edu.sg).
+Brave enough, I am studying a Double Degree in **Computer Science and Mathematics**.
+Challenging problems are the doses of adrenaline rush I can **never** get enough.
 
-![A screenshot of the check_java bash script to automate checking.](/media/check_java.gif)
-*A screenshot of the check_java bash script to automate checking.*
+You can check out the projects I have done [here](projects).
 
-I will be graduating in May 2023. Currently actively looking for internship opportunities. **Contact me at [yeejian.tan@u.nus.edu](mailto:yeejian.tan@u.nus.edu)**!
+I will be graduating in May 2023. Currently actively looking for any software engineering or research internship opportunities. If you think I might be a good fit, feel free to **contact me at [yeejian.tan@u.nus.edu](mailto:yeejian.tan@u.nus.edu)**!
 
+### What are you interested in?
+
+I am stil exploring the vast number of fields Computer Science has to offer, but currently I intend to focus on Algorithms and Distributed Systems for my degree. Modules I have taken include **CS3244 Machine Learning** and **DYM1401CS Type Theory**.
+
+I also try to contribute to open source projects such as the [USC Website](https://github.com/usdevs/usc-website).
+Recently, I made my [first contribution](https://gitlab.com/gitlab-org/gitlab/merge_requests/20662) to [Gitlab](https://gitlab.com)! I am planning to write an article documenting it soon.
 
 ### What are you interested in outside school?
-I love playing the Piano! I play as a soloist, accompanist, and an ensemble musician. In my repertoire, I have Chopin Etudes, the Yellow River Piano Concerto, and Ginastera's Danzas Argentinas. 
+
+I love playing the Piano! I play as a soloist, accompanist, and an ensemble musician. In my repertoire, I have Chopin Etudes, the Yellow River Piano Concerto, and Ginastera's Danzas Argentinas.
 
 I have also clinched multiple awards at the national level, including **Champion** at the **VIVACE Naional Piano Ensemble Competition in Singapore, in 2017**.
 
 ![Picture with my partner at the VIVACE 2017.](/media/vivace.jpg)
-*Picture with my partner at the VIVACE 2017.*
+_Picture with my partner at the VIVACE 2017._
 
-I am currently the person-in-charge of [USClassical](https://nususc.com/group/hhrBz6p3Hl0DuTcUFiAC), an interest group which gathers around and perform classical music a few times a year.
+I was previously the the person-in-charge of [USClassical](https://nususc.com/group/hhrBz6p3Hl0DuTcUFiAC), an interest group in [USP](https://usp.nus.edu.sg) which gathers around and perform classical music a few times a year.
 
+Currently, I serve as the principal player for [Erhu](https://en.wikipedia.org/wiki/Erhu) II in the
+[NUS Chinese Orchestra](https://www.nuschineseorchestra.com)!
 
 ### Anything to showcase?
-Of course! Check out the projects on the side bar. Many are only minimally viable, and work in progress, but I really love them! (Philosophy: I won't write a software that I won't use)
 
+Of course! Check out the projects on the side bar. Many are only minimally viable, and work in progress, but I really love them! (Philosophy: I won't write a software that I won't use)
