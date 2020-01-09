@@ -30,7 +30,7 @@ module.exports = {
   ],
   author: {
     name: 'Yee Jian',
-    photo: '/photo_75x75.jpg',
+    photo: '/photo.jpg',
     bio: 'Web developer. Aspiring ML engineer / AI researcher.',
     contacts: {
       email: 'tanyeejian@gmail.com',
