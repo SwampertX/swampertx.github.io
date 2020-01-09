@@ -37,7 +37,7 @@ module.exports = {
       telegram: 'swampertx',
       twitter: 'TanYeeJian',
       github: 'SwampertX',
-      rss: '#'
+      rss: '/rss.xml'
     }
   }
 };
