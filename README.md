@@ -1,4 +1,4 @@
-#[Yee Jian's personal site](https://swampertx.github.io)
+# [Yee Jian's personal site](https://swampertx.github.io)
 
 Written using Gatsby JS. Contains my technical portfolio.
 
