@@ -5,7 +5,7 @@ template: "post"
 draft: false
 slug: "/posts/cs2103-in-nvim-+-cli---week-2"
 category: "Technology"
-tags: 
+tags:
  - NeoVim
  - Software Engineering
  - Technology
@@ -20,6 +20,7 @@ Because you can. Also I wanna try out the limits of nVIM.
 Java debugging in CLI? Let's see what can happen.
 
 ## 1. Setting up JDK11
+
 Okay. You know what to do - your package manager has JDK11 ready for you - but what is
 the name of the package?
 
@@ -59,7 +60,7 @@ Luckily, the Duke project comes with gradle in the source code. Simply navigate 
 
 ## 3. Git
 
-Installing git is simple! It is just 
+Installing git is simple! It is just
 
 ```bash
 sudo apt install git-all
@@ -74,16 +75,18 @@ Done! Start using git.
 This is the crucial part - we must harness the powerful plugins in to make our lives much easier, even easier than in IDEs, hopefully.
 
 Things I have figured out:
-* Asynchronous Linting
-* Auto-formatting (on save or on type)
 
+- Asynchronous Linting
+- Auto-formatting (on save or on type)
 
 Things I have not:
+
 - Debugging
 
 Feel free to follow this section, as long as you have **Vim 8 or later**, or **NeoVim** installed on your machine! I will keep calling either of them vim, but what I refer to is any of these versions/flavours of vim.
 
 ### 4.1 Asynchronous Linting
+
 When Vim meets VSCode - we have coc.nvim. Installing it using vim-plug is a breeze, just
 prepend the following lines to your `~/.vimrc`:
 
@@ -111,8 +114,8 @@ Following [coc-java][coc-java]'s README, we found this page detailing how to mak
 
 ```json
 {
-    "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
-    "coc.preferences.formatOnSaveFiletypes": ["java"]
+  "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
+  "coc.preferences.formatOnSaveFiletypes": ["java"]
 }
 ```
 
@@ -121,6 +124,7 @@ and voila! Your files will now be formatted whenever you save them. If you look 
 As for the [Available Commands](https://github.com/neoclide/coc-java#available-commands) just above it, you can trigger any of them using `:CocCommand`, and then do a fuzzy search on your desired command. For example, we are looking for `java.action.organizeImports` specifically! What a godsend!
 
 ## Closing words
+
 That will be all for now. If I discover more useful features, I will cover them here.
 
 [coc-java]: https://github.com/neoclide/coc-java
