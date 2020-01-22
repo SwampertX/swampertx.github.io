@@ -2,7 +2,7 @@
 title: 'CS2103 in NVim + CLI - A Post Reflection'
 date: '2020-01-20'
 template: 'post'
-draft: true
+draft: false
 slug: '/posts/cs2103-in-nvim-+-cli---a-post-reflection'
 category:
 tags:
