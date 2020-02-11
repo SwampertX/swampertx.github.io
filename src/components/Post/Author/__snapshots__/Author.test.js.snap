@@ -9,15 +9,15 @@ exports[`Author renders correctly 1`] = `
   >
     test
     <a
-      className="author__bio-twitter"
-      href="https://www.twitter.com/test"
+      className="author__bio-github"
+      href="https://github.com/undefined"
       rel="noopener noreferrer"
       target="_blank"
     >
       <strong>
         test
       </strong>
-       on Twitter
+       on Github
     </a>
   </p>
 </div>
