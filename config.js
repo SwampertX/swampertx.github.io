@@ -5,7 +5,7 @@ module.exports = {
   title: 'Blog by Yee Jian',
   subtitle: 'Web developer. Aspiring ML engineer / AI researcher.',
   copyright: '© All rights reserved.',
-  disqusShortname: '',
+  disqusShortname: 'yeejian',
   postsPerPage: 4,
   googleAnalyticsId: 'UA-133276825-1',
   menu: [
