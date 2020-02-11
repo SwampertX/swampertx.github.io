@@ -5,7 +5,7 @@ template: 'page'
 
 ### Resume please?
 
-[Here](https://cv.yeejian.tech) you go! :)
+[Here](https://drive.google.com/file/d/1MKIJBWTu0g9YguMM1H_qWGAZF8e0dpV2/view?usp=sharing) you go! :)
 
 ### Who are you?
 
