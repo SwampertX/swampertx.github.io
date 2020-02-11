@@ -4,7 +4,7 @@ date: '2020-01-20'
 template: 'post'
 draft: false
 slug: '/posts/cs2103-in-nvim-+-cli---a-post-reflection'
-category:
+category: Technology
 tags:
   - NeoVim
   - Software Engineering
@@ -12,7 +12,7 @@ tags:
   - Vim
   - Java
   - Gradle
-description:
+description: 'The lessons I learned using both NeoVim and IntelliJ.'
 ---
 
 Now that **CS2103 Software Engineering** is over, is using NeoVim as a Java Editor worth it?

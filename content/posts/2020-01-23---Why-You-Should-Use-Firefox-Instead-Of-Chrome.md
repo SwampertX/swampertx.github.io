@@ -2,7 +2,7 @@
 title: 'Why you should use Firefox instead of Chrome'
 date: '2020-01-23'
 template: 'post'
-draft: true
+draft: false
 slug: '/posts/why-you-should-use-firefox-instead-of-chrome'
 category: Technology
 tags:
@@ -11,6 +11,7 @@ tags:
   - FOSS
   - Browser
   - Google
+  - Rant
 description: And why you should do so immediately, if you value your sanity and privacy.
 ---
 
@@ -58,14 +59,16 @@ the traditional rendering method before Firefox Quantum. The Mozilla Gfx Blog
 even wrote an article on how power usage is [DRAMATICALLY reduced here]\
 (https://mozillagfx.wordpress.com/2019/10/22/dramatically-reduced-power-usage-in-firefox-70-on-macos-with-core-animation/).
 
-## Skip me the sales, I want to port to Firefox immediately!
+## Skip me the sales, I want to port to [Firefox](https://www.mozilla.org/en-US/firefox/switch/) immediately!
 
-Well, if you are still not convinced, I recommend you to take Firefox for a whirl and feel
+![](/media/firefox_switch.jpg)
+
+Well, if you are still not convinced, I recommend you to take [Firefox](https://www.mozilla.org/en-US/firefox/switch/) for a whirl and feel
 for yourself how different it is from Google Chrome. The truth is, you will take less than
 5 minutes to have ALL your history, cookies, passwords, form fills all migrated from Google
-Chrome and you can start flying around in Firefox just like Google Chrome. Only this time,
-you can have the peace of mind that Firefox not only blocks all trackers on all sites by
+Chrome and you can start flying around in [Firefox](https://www.mozilla.org/en-US/firefox/switch/) just like Google Chrome. Only this time,
+you can have the peace of mind that [Firefox](https://www.mozilla.org/en-US/firefox/switch/) not only blocks all trackers on all sites by
 default (important!), it also ensures you that a not-for-profit organization is helping you
-to connect to the rest of the internet. And the browser you are using now is built by the
+to connect to the rest of the Internet. And the browser you are using now is built by the
 collective effort of thousands of volunteers, writing code and fixing bugs in a transparent
-procedure to ensure we can browse the internet happily, and protected.
+procedure to ensure we can browse the Internet happily, and protected.
