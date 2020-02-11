@@ -3,9 +3,9 @@
 module.exports = {
   url: 'https://swampertx.github.io',
   title: 'Blog by Yee Jian',
-  subtitle: 'Web developer. Aspiring ML engineer / AI researcher.',
+  subtitle: 'Tech ramblings',
   copyright: '© All rights reserved.',
-  disqusShortname: '',
+  disqusShortname: 'yeejian',
   postsPerPage: 4,
   googleAnalyticsId: 'UA-133276825-1',
   menu: [
@@ -31,7 +31,7 @@ module.exports = {
   author: {
     name: 'Yee Jian',
     photo: '/photo.jpg',
-    bio: 'Web developer. Aspiring ML engineer / AI researcher.',
+    bio: 'Open-source enthusiast / classical pianist',
     contacts: {
       email: 'tanyeejian@gmail.com',
       telegram: 'swampertx',
