@@ -38,7 +38,7 @@
     "disqus"
   ],
   "dependencies": {
-    "acorn": "^7.1.0",
+    "acorn": "^7.1.1",
     "bluebird": "^3.7.2",
     "classnames": "^2.2.6",
     "codecov": "^3.6.1",
