@@ -81,7 +81,7 @@
     "react-dom": "^16.12.0",
     "react-helmet": "^5.2.0",
     "redux": "^4.0.5",
-    "sharp": "^0.24.0",
+    "sharp": "^0.25.3",
     "slate": "^0.57.1",
     "typescript": "^3.7.4",
     "webpack": "^4.41.5"
