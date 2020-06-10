@@ -1,0 +1,18 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>NUS - Tag - Tan Yee Jian</title>
+        <link>http://example.org/tags/nus/</link>
+        <description>NUS - Tag - Tan Yee Jian</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 13 Aug 2019 00:00:00 &#43;0000</lastBuildDate><atom:link href="http://example.org/tags/nus/" rel="self" type="application/rss+xml" /><item>
+    <title>How to set up printer in NUS on Linux</title>
+    <link>http://example.org/posts/posts/how-to-set-up-printer-in-nus-on-linux/</link>
+    <pubDate>Tue, 13 Aug 2019 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/posts/posts/how-to-set-up-printer-in-nus-on-linux/</guid>
+    <description><![CDATA[This is a step-by-step guide in setting up printing service in Cinnamon College, NUS.
+The general idea is that as Linux users, we can follow the MacOS guides available, with some not-so-nice web interface to set it up.
+A typical setup instruction looks like this:
+Credits: USP Survival Guide 290719v2.pdf
+What can we do?! They all assume linux users are dangerous enough and know what they are doing. But everyone starts somewhere!]]></description>
+</item></channel>
+</rss>

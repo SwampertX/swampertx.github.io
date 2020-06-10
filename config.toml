@@ -1,0 +1,270 @@
+baseURL = "http://yeejian.tech/"
+# [en, zh-cn, fr, ...] determines default content language
+defaultContentLanguage = "en"
+# language code
+languageCode = "en"
+title = "Tan Yee Jian"
+
+# Change the default theme to be use when building the site with Hugo
+theme = "LoveIt"
+
+enableRobotsTXT = true
+# enableGitInfo = true
+enableEmoji = true
+
+[params]
+  # LoveIt theme version
+  version = "0.2.X"
+  description = "Tech and other Ramblings"
+  keywords = ["blog", "minimal", "Hugo", "technology", "piano", "music", "Singapore"]
+  gitRepo = "https://github.com/SwampertX/swampertx.github.io"
+
+# Header config
+  [params.header]
+    # desktop header mode ("fixed", "normal", "auto")
+    desktopMode = "fixed"
+    # mobile header mode ("fixed", "normal", "auto")
+    mobileMode = "auto"
+    # Header title config
+    [params.header.title]
+      # URL of the LOGO
+      logo = ""
+      # title name
+      name = "Tan Yee Jian"
+      # you can add extra information before the name (HTML format is supported), such as icons
+      # pre = "<i class='far fa-kiss-wink-heart fa-fw'></i>"
+      # you can add extra information after the name (HTML format is supported), such as icons
+      # post = ""
+      # whether to use typeit animation for title name
+      typeit = true
+
+  # Footer config
+  [params.footer]
+    enable = true
+    # Custom content (HTML format is supported)
+    custom = ''
+    # whether to show Hugo and theme info
+    hugo = true
+    # whether to show copyright info
+    copyright = true
+    # whether to show the author
+    author = true
+    # site creation time
+    since = 2020
+    # ICP info only in China (HTML format is supported)
+    icp = ""
+    # license info (HTML format is supported)
+    # license= '<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>'
+    license = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">This blog</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://blog.yeejian.dev" property="cc:attributionName" rel="cc:attributionURL">Tan Yee Jian</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.'
+
+  # Section (all posts) page config
+  [params.section]
+    # special amount of posts in each section page
+    paginate = 20
+    # date format (month and day)
+    dateFormat = "01-02"
+    # amount of RSS pages
+    rss = 10
+
+  # List (category or tag) page config
+  [params.list]
+    # special amount of posts in each list page
+    paginate = 20
+    # date format (month and day)
+    dateFormat = "01-02"
+    # amount of RSS pages
+    rss = 10
+
+  # Page config
+  [params.page]
+    # whether to hide a page from home page
+    hiddenFromHomePage = false
+    # whether to hide a page from search results
+    hiddenFromSearch = false
+    # whether to enable twemoji
+    twemoji = false
+    # whether to enable lightgallery
+    lightgallery = true
+    # whether to enable the ruby extended syntax
+    ruby = true
+    # whether to enable the fraction extended syntax
+    fraction = true
+    # whether to enable the fontawesome extended syntax
+    fontawesome = true
+    # whether to show link to Raw Markdown content of the content
+    linkToMarkdown = true
+    # whether to show the full text content in RSS
+    rssFullText = false
+
+  [params.home.profile]
+    enable = true
+    avatarURL = "/images/icon_hoodie.svg"
+    subtitle = "blah blah blah."
+    typeit = true
+    social = true
+
+  [params.social]
+    Github = "SwampertX"
+    Linkedin = "yeejian-tan"
+    Gitlab = "SwampertX"
+    Telegram = "SwampertX"
+    Email = "tanyeejian@gmail.com"
+    RSS = true
+
+  [params.page.comment.utterances]
+    enable = true
+    repo = "SwampertX/swampertx.github.io"
+    issueTerm = "pathname"
+    label = "utterances"
+    lightTheme = "github-light"
+    darkTheme = "github-dark"
+
+  [params.page.share]
+    enable = true
+    Twitter = true
+    Facebook = true
+    Linkedin = true
+    Whatsapp = true
+    Pinterest = false
+    Tumblr = false
+    HackerNews = true
+    Reddit = true
+
+  [params.page.library]
+    [params.page.library.css]
+      # someCSS = "some.css"
+      # located in "assets/" 位于 "assets/"
+      # Or 或者
+      # someCSS = "https://cdn.example.com/some.css"
+    [params.page.library.js]
+      # someJavascript = "some.js"
+      # located in "assets/" 位于 "assets/"
+      # Or 或者
+      # someJavascript = "https://cdn.example.com/some.js"
+
+  # SEO config
+  [params.page.seo]
+    # Publisher info
+    # 出版者信息
+    [params.page.seo.publisher]
+      name = "Tan Yee Jian"
+      [params.page.seo.publisher.logo]
+        url = "logo.png"
+        width = 127
+        height = 40
+    # Logo info
+    # Logo 信息
+    [params.page.seo.logo]
+      url = "logo.png"
+      width = 127
+      height = 40
+    # Image info
+    # 图片信息
+    [params.page.seo.image]
+      url = "cover.png"
+      width = 800
+      height = 600
+
+  [params.page.code]
+    copy = true
+    maxShownLines = 10
+
+  [params.page.math]
+    enable = false
+    # default block delimiter is $$ ... $$ and \\[ ... \\]
+    blockLeftDelimiter = ""
+    blockRightDelimiter = ""
+    # default inline delimiter is $ ... $ and \\( ... \\)
+    inlineLeftDelimiter = ""
+    inlineRightDelimiter = ""
+    # KaTeX extension copy_tex
+    copyTex = false
+
+  [params.search]
+    enable = true
+    # type of search engine ("lunr", "algolia")
+    type = "algolia"
+    # max index length of the chunked content
+    contentLength = 4000
+    # placeholder of the search bar
+    placeholder = ""
+    # max number of results length
+    maxResultLength = 10
+    # snippet length of the result
+    snippetLength = 30
+    # HTML tag name of the highlight part in results
+    highlightTag = "em"
+    # whether to use the absolute URL based on the baseURL in search index
+    absoluteURL = false
+    [params.search.algolia]
+      index = "blog.en_prod"
+      appID = "DVF3HVX8I7"
+      searchKey = "963479170a64d58f0529a6634827fd56"
+
+# Author config
+[author]
+  name = "Tan Yee Jian"
+  email = "tanyeejian@gmail.com"
+  link = ""
+
+# Sitemap config
+[sitemap]
+  changefreq = "weekly"
+  filename = "sitemap.xml"
+  priority = 0.5
+
+# Permalinks config (https://gohugo.io/content-management/urls/#permalinks)
+[Permalinks]
+  posts = ":year/:month/:filename"
+  # posts = ":filename"
+
+[menu]
+  [[menu.main]]
+    identifier = "about"
+    # you can add extra information before the name (HTML format is supported), such as icons
+    pre = ""
+    # you can add extra information after the name (HTML format is supported), such as icons
+    post = ""
+    name = "About"
+    url = "/about/"
+    # title will be shown when you hover on this menu link
+    title = ""
+    weight = 1
+  [[menu.main]]
+    identifier = "projects"
+    # you can add extra information before the name (HTML format is supported), such as icons
+    pre = ""
+    # you can add extra information after the name (HTML format is supported), such as icons
+    post = ""
+    name = "Projects"
+    url = "/projects/"
+    # title will be shown when you hover on this menu link
+    title = ""
+    weight = 2
+  [[menu.main]]
+    identifier = "posts"
+    # you can add extra information before the name (HTML format is supported), such as icons
+    pre = ""
+    # you can add extra information after the name (HTML format is supported), such as icons
+    post = ""
+    name = "Posts"
+    url = "/posts/"
+    # title will be shown when you hover on this menu link
+    title = ""
+    weight = 3
+  [[menu.main]]
+    identifier = "tags"
+    pre = ""
+    post = ""
+    name = "Tags"
+    url = "/tags/"
+    title = ""
+    weight = 4
+  [[menu.main]]
+    identifier = "categories"
+    pre = ""
+    post = ""
+    name = "Categories"
+    url = "/categories/"
+    title = ""
+    weight = 5

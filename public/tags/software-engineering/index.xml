@@ -1,0 +1,25 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Software Engineering - Tag - Tan Yee Jian</title>
+        <link>http://example.org/tags/software-engineering/</link>
+        <description>Software Engineering - Tag - Tan Yee Jian</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 20 Jan 2020 00:00:00 &#43;0000</lastBuildDate><atom:link href="http://example.org/tags/software-engineering/" rel="self" type="application/rss+xml" /><item>
+    <title>CS2103 in NVim &#43; CLI - A Post Reflection</title>
+    <link>http://example.org/posts/posts/cs2103-in-nvim-&#43;-cli-a-post-reflection/</link>
+    <pubDate>Mon, 20 Jan 2020 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/posts/posts/cs2103-in-nvim-&#43;-cli-a-post-reflection/</guid>
+    <description><![CDATA[Now that CS2103 Software Engineering is over, is using NeoVim as a Java Editor worth it?
+My answer: the learning was worth it, but the functionalities of IntelliJ totally crushed Java development. It is the killer app that you need, if you are doing serious Java development.
+The Pros and Cons with NVim Pros Vim&rsquo;s many keybindings makes text editing enjoyable. With all the familiar jumps, yanking paragraphs, search and replace - I absolutely loved the &ldquo;fingers never leave the home row&rdquo; experience.]]></description>
+</item><item>
+    <title>CS2103 in nVIM &#43; CLI - Week 2</title>
+    <link>http://example.org/posts/posts/cs2103-in-nvim-&#43;-cli-week-2/</link>
+    <pubDate>Fri, 13 Sep 2019 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/posts/posts/cs2103-in-nvim-&#43;-cli-week-2/</guid>
+    <description><![CDATA[Because you can. Also I wanna try out the limits of nVIM. Java debugging in CLI? Let&rsquo;s see what can happen.
+1. Setting up JDK11 Okay. You know what to do - your package manager has JDK11 ready for you - but what is the name of the package?
+apt-cache search java11 # aha! I see &#34;openjdk-11-jdk&#34; sudo apt install openjdk-11-jdk # 213MB. That&#39;s huge but okay done which java # /usr/bin/java .]]></description>
+</item></channel>
+</rss>

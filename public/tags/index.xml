@@ -1,0 +1,77 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Tags - Tag - Tan Yee Jian</title>
+        <link>http://example.org/tags/</link>
+        <description>Tags - Tag - Tan Yee Jian</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 09 Feb 2020 00:00:00 &#43;0000</lastBuildDate><atom:link href="http://example.org/tags/" rel="self" type="application/rss+xml" /><item>
+    <title>functional programming</title>
+    <link>http://example.org/tags/functional-programming/</link>
+    <pubDate>Sun, 09 Feb 2020 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/tags/functional-programming/</guid>
+    <description><![CDATA[]]></description>
+</item><item>
+    <title>lambda calculus</title>
+    <link>http://example.org/tags/lambda-calculus/</link>
+    <pubDate>Sun, 09 Feb 2020 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/tags/lambda-calculus/</guid>
+    <description><![CDATA[]]></description>
+</item><item>
+    <title>Programming</title>
+    <link>http://example.org/tags/programming/</link>
+    <pubDate>Sun, 09 Feb 2020 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/tags/programming/</guid>
+    <description><![CDATA[]]></description>
+</item><item>
+    <title>programming language</title>
+    <link>http://example.org/tags/programming-language/</link>
+    <pubDate>Sun, 09 Feb 2020 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/tags/programming-language/</guid>
+    <description><![CDATA[]]></description>
+</item><item>
+    <title>Browser</title>
+    <link>http://example.org/tags/browser/</link>
+    <pubDate>Thu, 23 Jan 2020 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/tags/browser/</guid>
+    <description><![CDATA[]]></description>
+</item><item>
+    <title>FOSS</title>
+    <link>http://example.org/tags/foss/</link>
+    <pubDate>Thu, 23 Jan 2020 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/tags/foss/</guid>
+    <description><![CDATA[]]></description>
+</item><item>
+    <title>Google</title>
+    <link>http://example.org/tags/google/</link>
+    <pubDate>Thu, 23 Jan 2020 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/tags/google/</guid>
+    <description><![CDATA[]]></description>
+</item><item>
+    <title>Open Source</title>
+    <link>http://example.org/tags/open-source/</link>
+    <pubDate>Thu, 23 Jan 2020 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/tags/open-source/</guid>
+    <description><![CDATA[]]></description>
+</item><item>
+    <title>Rant</title>
+    <link>http://example.org/tags/rant/</link>
+    <pubDate>Thu, 23 Jan 2020 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/tags/rant/</guid>
+    <description><![CDATA[]]></description>
+</item><item>
+    <title>technology</title>
+    <link>http://example.org/tags/technology/</link>
+    <pubDate>Thu, 23 Jan 2020 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/tags/technology/</guid>
+    <description><![CDATA[]]></description>
+</item></channel>
+</rss>

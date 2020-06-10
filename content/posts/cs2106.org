@@ -1,0 +1,1159 @@
+#+TITLE: CS2106 Operating Systems
+* Lecture 6 IPC, Threads
+** Archipelago Q&A
+1. Why not set the Time Quantum to the Interval of Timer Interrupt, since that
+   is the only important time to run the scheduler?
+   A: ITI is hardware specific, and QT is set by kernel.
+2. If there is only one job in RR, then will there be context switch every TQ
+   before the job ends?
+   A: No, but some stack will still be saved upon the running of the Interrupt Routine.
+** Inter-process Communication
+Mechanisms:
+*** Shared memory
+*** Message passing
+Can be either *Blocking* or *Non-blocking*.
+**** Receiver
+Blocking receive is the most common
+**** Sender
+***** Asynchronous
+Even asynchronous can be blocking, since the mailbox(buffer) can be full.
+If sent before receiver calls =receive=, is blocked until the receiver receives
+the message using the =receive= function call.
+***** Synchronous
+Also known as *Rendezvous*, since both process have to meet at a known point in time.
+There is no immediate buffering, the sender have to be blocked until the
+receiver is ready.
+**** Pros and Cons
+***** Pros
+- Can send across different machines
+- Cross-platform, as long as message is standard
+- Easier synchronization
+***** Cons
+- Inefficient
+- Messages are limited in size and format
+*** Pipes (Unix)
+One of the earliest UPC mechanism
+- FIFO
+- Blocking
+  - Writers wait when buffer is full
+  - Readers wait when buffer is empty
+*** Signal (Unix)
+*SIGH\**, programs which receive that either handle it with it's own handlers, or
+ use the default handlers given by the system.
+** Threads
+*Motivation*: Processes are
+- heavy/expensive
+- hard to context switch
+- IPC is hard, since each process have independent memory space
+and threads can help us with
+- achieving multi-core programming
+- even on 1 core, we can move I/O intensive tasks to a thread to prevent
+  blocking, and enable doing some other CPU tasks at the main process
+
+*Brain teaser: would we want to run two threads with exact same code?*
+Answer: Yes, probably on different data. Egg. searching for a number in an
+array - data-centric parallelization
+
+What can Threads share?
+- GPR - No. They will interfere with one another
+- Special registers - No
+- Text segment - Yes
+- Data segment - Yes
+- Heap - Yes
+- Stack - No. Different fn calls
+- PID - Yes
+- Files - Yes
+- Instruction cache - not relevant
+- Data cache - not relevant
+
+In short, anything other than *Stack and Registers* are shared.
+    Threads can be implemented as User or Kernel threads, the former cannot
+    utilize multiple cores, and the latter can.
+*** User Thread
+A user process A spawns multiple threads A1, A2,... and the OS deems A as just
+one thread.
+- Advantages:
+  - Any OS
+  - Thread operations are library calls
+  - Can design your own thread scheduling policy
+- Disadvantages:
+  - Cannot exploit multiple cores
+
+*** Kernel Thread
+- Advantages:
+  - Can run on multiple CPUs!
+- Disadvantages:
+  - Now thread operations are system calls, and is more expensive
+  - If thread operations are too feature intensive, it becomes very heavy to
+    run, and too feature-poor for the converse
+* --- Uncle Soo >> Djordje ---
+* Lecture 6 Synchronization
+** Race Condition
+Reason: each operation is a few machine instructions which can interleave
+Solution: designate section that will race, as *Critical Section*
+- Only one process can run in the CS
+*** The Toilet Analogy
+You want toilet to be a Critical Section: only one person (process/thread) can
+be in it
+Therefore, it should have 4 properties:
+1. Mutual Exclusion
+   Only one guy in the toilet
+2. Progress
+   If no one is in toilet, one of the queuing guy can use
+3. Bounded Wait
+   If you are queuing, your waiting time is bounded
+4. Independence
+   If you are not anywhere near the toilet, you can not block (book) it
+*** Bad Synchronization
+The "meet each other in corridor" analogy
+**** Deadlock
+Both insist walking on the same side of corridor
+**** Livelock
+Both switch sides together to "make way", end up blocking each other
+**** Starvation
+Some people never get to pass through the corridor
+*** Critical Section Implementations
+#+BEGIN_SRC python3
+EnterCS()
+# do something dangerous
+ExitCS()
+#+END_SRC
+*And we wish to implement =EnterCS()= and =ExitCS()=.*
+**** Assembly level Implementation
+A =TestAndSet= instruction which
+1. Fetches memory from a Lock to a register
+2. Set the content of the memory to =1=
+all in one instruction.
+#+BEGIN_SRC C
+void EnterCS(int* Lock) {
+    // loop until lock is free, ie == 1
+    while (TestAndSet(Lock) == 1);
+}
+
+/*Do CS Stuff Here*/
+
+void ExitCS(int* Lock) { *Lock = 0; }
+// exit by setting lock free
+
+#+END_SRC
+***** Criteria check - Passed!
+1. Mutual Exclusion - *Yes*
+   The lock is 0 or 1
+2. Progress - *Yes*
+   The lock is 0 then others can use
+3. Bounded Wait - *Depends*
+   Only possible if scheduling is fair - other processes get to use the lock
+4. Independence - *Yes*
+***** Catches
+Busy Waiting - due to the while loop when waiting to use the lock
+**** High-level language Implementation
+***** Attempt 1 - Violates Mutual Exclusion
+We first notice that setting a Lock to 0 for free, and 1 for locked does not
+work - because *checking and setting locks are multiple instructions*.
+This will allow the /Mutual Exclusion/ requirement to fail, since multiple
+process perceive the lock as free.
+*lousy solution*: disable interrupts, hence only one process at a time. /But
+this disables the scheduler/!
+***** Attempt 2 - Violates Independence
+Now the Lock value determines which process can use:
+if A and B wants to use the CS, 1 represents A use, and 0 represents B use.
+*Problem*: this violates the /Independence/ property.
+***** Attempt 3 - Deadlock
+#+BEGIN_SRC C
+want[myId] = 1;
+while (want[otherId] == 1);
+// CS code
+want[myId] = 0;
+#+END_SRC
+Problem: What if both =myId= and =otherId= are both 1 (ie, they both want to
+use)?
+Answer: They will both wait for each other to give up (via the while loop),
+which will not happen
+***** Peterson's Algorithm
+Combining Attempt 2 and 3:
+Recall Attempt 3's problem: Both let each other run
+We add a "Judge" variable: =Turn=
+We will only wait when the other process wants to run and does not let me run
+
+=Turn= variable gives "priority" to a process, so the deadlock in Attempt 3 will
+not happen
+***** Criteria check - Passed (Peterson)
+1. Mutual Exclusion - *Yes*
+   Determined by =Turn= variable - it can only be one value at a time
+2. Progress - *Yes*
+   Resets =Want[myId]= when coming out of the CS
+3. Bounded Wait - *Depends*
+   If scheduling is fair
+4. Independence - *Yes*
+   complements =want[myId]= with a =Turn= variable to facilitate switching
+***** Peterson's Algorithm: Disadvantages
+- Busy Waiting
+- Low-Level
+- 2 processes only
+**** High-level abstraction, implemented as Assembly
+By Dijkstra
+***** Semaphore
+A generalized synchronization mechanism. Is a specification, rather than
+implementation.
+A Semaphore is a Data Structure that contains:
+- An integer value =S=
+- A queue of processes
+and it supports two functions to be called by processes/threads:
+1. =Wait(sem)= (=Down(sem)=)
+   - If =S= <= 0, then wait in the queue until =S= > 0 and then decrement and
+     continue executing
+   - Else, decrement =S= and continue executing
+2. =Signal(sem)= (=Up(sem)=)
+  =S++=. Wake up =S= processes
+****** Properties
+Given \(S_{initial} \geq 0\), then \(S_{current} = S_{initial} + \#signal(S) -
+\#wait(s)\) is an invariant.
+Where
+- \(#signal(S)\) = no. of =signal()= executed, and
+- \(#wait(S)\) = no. of =wait()= *completed*
+****** Proof that Semaphore eliminates Deadlock and Starvation
+***** Criteria check
+1. Mutual Exclusion
+2. Progress
+3. Bounded Wait
+4. Independence
+** Classical Synchronization Problems
+*** Producer Consumer
+**** Specification
+- Processes share a bounded buffer (fixed size array, or stack) of size *K*
+- *Producers* insert to the end of buffer if items < K
+- *Consumer* remove item from the end if items > 0
+*** Readers Writers
+**** Specification
+Processes share a data structure D
+*Writer* must have *exclusive* access to D
+*Reader* can read with other readers *concurrently*
+* Tutorial 5
+** Question 1
+1. Process, since we sometimes want to detach the running program when shell exits.
+   - protects, acts as a sandbox for programs running
+   - does not need to share memory space
+2. Process? There is no need to share the heap
+   - same as previous, need to protect separate memory space
+3. Thread. Share the heap, and many entities, process is too heavy
+   - IPC has higher overhead
+4. Thread would be fine, as they can share cache of some sort in-memory
+** Question 2
+- We list down the instructions:
+  1. Load, inc, store
+  2. Load, inc, store. label these (1-6),
+  3. Load, mult, store. label these 7-9.
+- 1-6 and 7-9 are sequential. then equivalent to 9 choose 3. 84 scenarios
+- Ignoring operations, we have 6C2 = 15 scenarios
+- Listing them:
+  | sequence | outcome | notes |
+  |----------+---------+-------|
+  |   123456 | 2*2 = 4 |       |
+  |   123546 |       2 |       |
+  |   125346 |       2 |       |
+  |   152346 |       0 |       |
+  |   512346 |       0 |       |
+  |   123564 |       1 |       |
+  |   125364 |       2 |       |
+  |   152364 |       2 |       |
+  |   512364 |         |       |
+  |   125634 |         |       |
+  |   152634 |         |       |
+  |   512634 |         |       |
+  |   156234 |         |       |
+  |   516234 |         |       |
+  |   561234 |         |       |
+  0, 1, 2, 3, 4 are possible
+** Question 3
+Yes it would avoid, since only the current thread/process can run without
+interrupt, but it can never be killed
+- does not work in multicore
+- might not have privilege to disable
+- if disable timer -
+** Question 4
+S1 = 1, S2 = 0
+Therefore A must be blocked and can only happen after C.
+B and C can happen freely. then
+BCA, CAB, CBA are possible ones
+** Question 5
+#+BEGIN_SRC C
+int arrived = 0;
+Semaphore mutex = 1;
+Semaphore waitQ = 0;
+
+void Barrier(N) {
+    wait(mutex);
+    arrived++;
+    signal(mutex);
+
+    // everyone steps pass this except for the nth
+    if(arrived == N)
+        signal(waitQ); // CRUCIAL
+
+    // N - 1 has called this and waits in the queue
+    wait(waitQ);
+
+    // crucial happens. then first process goes below and releases the second
+    // continues until all N go through
+    signal(waitQ);
+}
+#+END_SRC
+This barrier is un-reusable.
+** Question 6
+in =GeneralWait()= :
+if two processes have not reached =wait(queue)=
+then count = -2, mutex =
+but two
+* Lecture 7 Memory Management
+** Recap - memory usage of process
+- *Text* for instructions
+- *Data* for global variables
+- *Heap* for dynamic allocation
+- *Stack* for function invocations
+** Summary
+- *Source code to Executable* - memory locations are relative
+- *Executable to Actual Process* - OS loads and run into memory
+
+Topics to explore:
+1. Memory Abstraction
+2. Contiguous Memory Allocation
+   allocating chunks of memory
+3. Disjoint Memory Allocation
+   like a linked list
+4. Virtual Memory Management
+   secondary storage (ie hard drive)
+** Memory Abstraction
+*** Without Abstraction
+What if a process uses physical address directly?
+In a timesharing OS, there will be memory collision for processes that access
+the same location!
+**** Fix Attempt - Address Relocation
+Going through the *whole executable*, adding a starting position to *ALL* memory
+addresses.
+
+_Problem_: Very time consuming. Also in assembly code, it is almost impossible
+to tell part *addresses* and *values* since there is no data type!
+**** Fix Attempt 2 - Base + Limit Registers
+Compile executables with *Base* and *Limit* register values.
+Hence all memory addresses are compiled with the offset, and *Limit* can protect
+your memory space
+*** Logical address
+A process' view of the memory space - they think they have all the memory space
+- Store Memory concept
+  Von Neumann Architecture - both instruction and data in memory
+- Load-Store Memory execution model
+**** Assumptions
+1. A process occupies a *contiguous memory region*
+2. Physical memory is large enough to contain whole processes
+*** Memory Partition
+**** Fixed-Size Partition
+Split memory into partitions that are sufficient for the largest of programs.
+Then processes are allocated memory space of any of the fixed partitions.
+
+*Cons*: Memory wastage (eg. 2gb memory for "Hello World")
+**** Variable-Size Partition
+Give processes as much memory as they need.
+
+*Problem*: When a process terminates, the fragmented "holes", or free memory
+ fragments are insufficient for one process, but enough when combined
+**** Linked-list partition - the Buddy Algorithm
+- Given Memory of size 2^K
+- Array of K elements
+  Each entry A[i] = linked list of memory address of free chunks of size 2^i
+- Initialization = Each A[i] is empty, except for A[K] = 0 (whole block of 0 to
+  2^k memory)
+- Algorithm:
+  1. Allocating Memory
+     1. We have a process that needs X bytes of memory
+     2. Calculate minimum n such that 2^n > X
+        We will need a memory block from A[n]
+     3. If A[n] is empty
+        - We go to A[n+1] and look at its first entry (recurse up if A[n+1] is
+          also empty)
+        - say the address is =a=. Thus =a= to =a+2^n+1= is a free memory block
+        - Split the memory by:
+          1. Remove =a= from the linked list at A[n+1]
+          2. Add entries =a=, =a+2^n= at A[n]. These two entries are defined as
+             "buddies" of each other.
+     4. Allocate the first element in the linked list at A[n] for the process
+     5. Remove it from the linked list
+  2. Deallocating Memory
+     1. If process occupying memory address =a= of size =2^n= is done, we return
+        the entry =a= to (the end/beginning of) A[n].
+     2. If the buddy of a, ie =a+2^n= is in A[n], merge both of them together
+        by:
+        1. Remove =a= and =a+2^n= from A[n]
+        2. Add (to the end/beginning of) A[n+1] =a=
+        3. Repeat this whole step until either n = K, or no buddy is found.
+
+     Time complexity:
+     1. O(1)
+     2. There are maximally 2^(k+1-n)/2 elements in the linked list at A[n].
+        (verify) and thus in the worst case, we keep adding up from that to 2^0.
+        O(2^k)
+* Tutorial 6
+1. We just need to make sure the addition is atomic.
+   #+BEGIN_SRC C
+int atomic_increment(int* t) {
+    int at_t = *t;
+    while(!_sync_bool_compare_and_swap(t, at_t, at_t+1))
+        int at_t = *t;
+}
+   #+END_SRC
+2.
+   A. Two people from different directions meet at a point on bridge, deadlock
+   B. No problem. Probably inefficient, as per C solves
+   C. Allow people from the same side to join the bridge if there is already
+      someone.
+      #+BEGIN_SRC C
+Semaphore mutex = 1;
+int count = 0;
+
+void enter_bridge(int dir) {
+    int pass = 0;
+    if (dir == 1) {
+        while(!pass) {
+            wait(mutex);
+            if(count >= 0) {
+                pass = 1;
+                count ++;
+            }
+            signal(mutex);
+        }
+    } else {
+        while(!pass) {
+            wait(mutex);
+            if(count <= 0) {
+                pass = 1;
+                count --;
+            }
+            signal(mutex);
+        }
+    }
+}
+
+void exit_bridge(int dir) {
+    if (dir == 1) {
+        wait(mutex);
+        count--;
+        signal(mutex);
+    } else {
+        wait(mutex);
+        count++;
+        signal(mutex);
+    }
+}
+      #+END_SRC
+   D. Busy waiting.
+3. We notice this is the dining philosopher's problem. The X, Y, Z are
+   philosophers while A, B, C are chopsticks
+   A. No. Without loss of generality, if X and Y are running simultaneously,
+      either X gets B or Y gets B. The process that gets B will run, and return
+      the resource.
+   B. X takes A, Y takes B, and Z takes C.
+   C. (answer) Z to acquire A before C.
+      Recalling Tanenbaum's solution:
+      #+BEGIN_SRC C
+#define THINKING 0
+#define EATING 1
+#define HUNGRY 2
+
+#define NEXT (i+1)%N
+#define PREV (i+N-1)%N
+#define N 100
+
+int state[N];
+Semaphore mutex = 1;
+Semaphore s[N] = {1};
+
+void philosopher(int i) {
+    while(1) {
+        think();
+        takeChopsticks(i);
+        eat();
+        putChopsticks(i);
+    }
+}
+
+void takeChopsticks(int i) {
+    wait(mutex);
+    state[i] = HUNGRY;
+    safeToEat(i);
+    signal(mutex);
+    wait(s[i]);
+}
+
+void safeToEat(int i) {
+    if (state[i] == HUNGRY
+    && state[PREV] != EATING
+    && state[NEXT] != EATING){
+        state[i] = EATING;
+        signal(s[i]);
+    }
+}
+
+void putChopsticks(int i) {
+    wait(mutex);
+    state[i] = THINKING;
+    safeToEat(LEFT);
+    safeToEat(RIGHT);
+    signal(mutex);
+}
+      #+END_SRC
+4.
+   A. P2 -> P3 -> P1
+   B. Yes
+   C. P1 -> P2 -> P3 is a happy path
+   D. No. 2314 is a happy path
+5. We just show that any of
+   - Mutual Exclusion
+   - Hold and Wait
+   - No-preempt
+   - Circular wait
+
+   is impossible. Turns out that Hold and Wait is eliminated, since a
+   philosopher either takes both chopsticks and eat, or wait until both
+   chopsticks are available.
+* Tutorial 7
+1.
+    | 1 | 1 | 1 | 1 | 1 | 1 | 0 | 0 |
+    |---+---+---+---+---+---+---+---|
+    | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+   a.
+      1. Find how many blocks to allocate. n = X / sizeof(smallest alloc unit)
+      2. Look for the first occurence of 0 in bitmap.
+         <=> finding the most significant 1 on (1s complement of bitmap)
+      3. Apparently the way to get the MSSB is just to iterate through and get it.
+   b. Simply =AND= the bitmap with all =1= except for X bits starting from Y as =0=
+   c. It will be merged automatically.
+2.
+    |   | Min          | Max             | Remarks                                     |
+    |---+--------------+-----------------+---------------------------------------------|
+    | a | \= max       | 2 ^ 12 * (1)    | Use an array. No need starting address/size |
+    | b | 13?          | 2^12 * 4 * (13) | Linked list                                 |
+    | c | 2^(24-10)/8  |                 |                                             |
+3.
+    | Algo      | 200 |    400 |    600 |    500 | 300 |    250 | Remarks                     |
+    |-----------+-----+--------+--------+--------+-----+--------+-----------------------------|
+    | First Fit |     | 357(1) | 210(2) | 468(3) |     |        | 491(4) waits. O(n) average  |
+    | Best Fit  |     | 357(1) | 491(4) | 468(3) |     | 210(2) | O(n) average                |
+    | Worst Fit |     |        | 357(1) | 210(2) |     |        | 468, 491 wait. O(n) average |
+    Most efficient: best fit. Best average runtime: first fit. Best to use: first fit
+4. From the ordering of first fit, we realize the new algorithm has the same
+   runtime given the example.
+
+   On average, it reduces the search space and is generally faster if we
+   wrap-around in our search, since first fit tends to fill up the first few
+   memory spaces.
+5. Linked List of processes =id:usesmem(at)=
+   A:240(0), B:60(256), C:100(384), D:128(512)
+   Buddy Table:
+   | Size(KB) | init |   a |   b |   c |   d |      e | f        | g                 |
+   |----------+------+-----+-----+-----+-----+--------+----------+-------------------|
+   |     1024 |    0 |     |     |     |     |        |          |                   |
+   |      512 |      | 512 | 512 | 512 |     |        |          | 0                 |
+   |      256 |      | 256 |     |     | 768 | 0, 768 | 0, 768   | +(0, 256)+ ,768   |
+   |      128 |      |     | 384 |     | 640 |    640 | 384, 640 | +(256, 384)+, 640 |
+   |       64 |      |     | 320 | 320 | 320 |    320 | 320      | +(256, 320)+      |
+   |       32 |      |     |     |     |     |        |          |                   |
+   |       16 |      |     |     |     |     |        |          |                   |
+   |        8 |      |     |     |     |     |        |          |                   |
+   |        4 |      |     |     |     |     |        |          |                   |
+   |        2 |      |     |     |     |     |        |          |                   |
+   |        1 |      |     |     |     |     |        |          |                   |
+   |----------+------+-----+-----+-----+-----+--------+----------+-------------------|
+* Lecture 7 Disjoint Memory Space
+** Paging
+Physical memory - into frames
+Logical memory (for a process) - into pages
+each are of the same size = 4KB
+*** Logical Address Translation
+Strategies:
+- Frame size as a power of 2 (to get the first k bits as frame number)
+- Physical frame size == Logical page size
+
+Exercise
+LA = =11|10=
+PA = =101|10=
+*** Implementing Paging Scheme
+- Paging is costly (to save and retrieve page table)
+- Pure software implementation: store page table inside memory context
+- Instead we use a *cache*, known as *Translation Look-aside Buffer (TLB)*
+  - Is a fully associative cache, need to iterate through (in parallel) to find
+    the page to frame translation
+  - 50 times faster
+  - Hit: time taken = TLB access (1ns) + memory access (50ns)
+  - Miss: time taken = TLB access (1ns, miss) + memory access(50ns, check actual
+    paging table) + memory access (50ns)
+- Fragmentation
+  - External fragmentation (unused frames) is impossible
+  - Internal fragmentation (within frames) is possible, if a page is not fully
+    utilized in a frame
+- Question: what to save when switching a process?
+  Preliminary answer: no need for tlb, just overwrite if irrelevant; if the
+  process has not terminated, page table should remain there, which means
+  physical frames should not be touched.
+  - TLB? *Flush. Store to speed up*
+  - Page table? *Different process's page0 is different. Swap out*
+  - Physical frames (in the memory)?
+  - Nothing?
+- Protection
+  - Can save valid, rwx bits in each page
+- How to share memory
+  - share a page, page tables point to the same frame
+- How to fork?
+  - First share the same page table, until write
+  - Then we copy over *the modified page only*.
+- Separate Text, Heap, Stack
+  | Segment | Base | Limit |
+  |---------+------+-------|
+  | Text    |      |       |
+  | Data    |      |       |
+  | Stack   |      |       |
+  | Heap    |      |       |
+
+  If our access to =(segment, address)= where address > limit, it is a
+  *Segmentation Fault*. Segment table usually stored in CPU, since it is very
+  small. (4 entries only in our example)
+  - Now we further "Paginate" our segments. then our segment table:
+    | Segment | Page table base |
+
+    Then given a =(segment, address)= has the address converted into =(frame,
+    offset)= from the entry in the page table.
+* Tutorial 8
+1. page 0,1: =text=, pages 2,3: =data=
+   a. Page table:
+      | page# |  frame# | valid |
+      |-------+---------+-------|
+      |     0 |       5 |     1 |
+      |     1 |       2 |     1 |
+      |     2 |      10 |     1 |
+      |     3 | (blank) |     0 |
+
+      | page | content | frame |
+      |------+---------+-------|
+      |    0 | inst 1  |     5 |
+      |      | inst 2  |       |
+      |      | inst 3  |       |
+      |      | inst 4  |       |
+      |    1 | inst 5  |     2 |
+      |      | inst 6  |       |
+      |      | word 1  |       |
+      |      | word 2  |       |
+      |    2 | word 3  |    10 |
+      |      | word 4  |       |
+      |      | word 5  |       |
+      |      | -       |       |
+      |    3 | -       |     9 |
+      |      | -       |       |
+      |      | -       |       |
+      |      | -       |       |
+
+      | processor action | logical address | physical address |
+      |------------------+-----------------+------------------|
+      | fetch inst 1     | =0000= 0        | =010100= 20      |
+      | load word 2      | =0111= 7        | =001011= 11      |
+      | load word 3      | =1000= 8        | =101000= 49      |
+      | load word 6      | =1011= 11       | =100111= 39      |
+   b. Segment table:
+      | segment  | base address | limit |
+      |----------+--------------+-------|
+      | 0 (text) |           50 |     6 |
+      | 1 (data) |           23 |     5 |
+
+      | action       | Logical address | physical address |
+      |--------------+-----------------+------------------|
+      | fetch inst 1 | =0,0=           |               50 |
+      |              | =1,1=           |               24 |
+      |              | =1,2=           |               25 |
+      |              | =1,5=           |         segfault |
+   c. Segment/page table:
+      | segment | pages | frame | valid |
+      |---------+-------+-------+-------|
+      | text    |     0 |     7 |     1 |
+      |         |     1 |     4 |     1 |
+      |         |     2 |     1 |     0 |
+      |         |     3 |     2 |     0 |
+      | data    |     0 |     9 |     1 |
+      |         |     1 |     3 |     1 |
+      |         |     2 |    14 |     0 |
+      |         |     3 |     6 |     0 |
+
+      | processor action | logical address | physical address |
+      |------------------+-----------------+------------------|
+      | fetch inst 1     | =0,0,00=        | =0111,00= 28     |
+      | load word 2      | =1,0,01=        | =1001,10= 37     |
+      | load word 3      | =1,0,10=        | =1001,11= 38     |
+      | load word 6      | =1,1,10=        | =0011,10= 14     |
+2. Design 3, since it is dynamic.
+3.
+   a. Global variable in the text segment.
+      1. Query page table (50ns)
+      2. Get the data (50ns)
+   b. In the case of hit: just 50ns. otherwise 100.
+      #+BEGIN_SRC python :results output
+print(50*0.75+100*0.25)
+      #+END_SRC
+      #+RESULTS:
+      : 62.5
+   c. no of entries = 75% of the number of frames in RAM.
+      write memory efficient programs.
+      0.75 * (2^32 / 2^12)
+      32 to 1024 in real life with 99% hit rate due to temporal and spatial locality
+4. Internal fragmentation is related to the minimum memory chunk size. If it is
+   =2^k= bytes, then the average internal fragmentation
+   \[\sum^{2^k-1}_{i=1}\frac{i}{2^k} = \frac{2^k(2^k-1)}{2^{k+1}} =
+   \frac{2^k-1}{2}\]
+5.
+   a. *Contiguous memory allocation*: Impossible for contiguous, since we have no way of allocating extra memory
+      space if it runs out. Or possibly, can throw runtime error.
+   b. *Pure paging*: You can keep getting new pages until all memory have exhausted.
+   c. *Pure segmentation*: You can possibly grow each segment.
+6.
+   a. Use the same page table, but with its write bits set to 0.
+   b. When child or parent process is going to write to any page.
+   c. An extra bit denoting has forked. if attempt to write and the bit is set,
+      then copy the memory.
+* Lecture 9 Virtual Memory Scheme
+Destroy: memory context is always in RAM
+** Virtual memory space
+- Compared to *Logical memory address*: now you can page into swap
+- A page is either *memory resident* (in RAM, physical memory) or *non-memory
+  resident* (in secondary memory)
+- If a page is in secondary memory, it is consider *invalid* (by the valid bit).
+  Invalid memory access (by hardware) will trap to OS, which load the memory
+  into physical memory and continue with operation.
+** Page Table Structure
+*** Direct Paging
+- If we have k bit of addresses, and each page is 2^m bits, we have 2^k-m
+  entries.
+*** 2-Level
+- A table of page tables. This prevents having many page entries that are
+  invalid.
+- Invalid tables are simply represented by a single null pointer entry
+*** Inverse Table
+- Frame as key, value is PID and page number
+- Queries are in PID, page number, and have to search through the table
+- Advantage: just one table
+  Disadvantage: slow translation
+** Page Replacement Algorithms
+If, during a page fault (page not in memory), there is no more memory left, we
+need to evict a memory page.
+- If page is dirty (modified from swap last time it is used), need to write back
+*** Optimum
+Evict the one that is not going to be used for the longest time. Impossible to
+implement.
+*** FIFO
+Evict the guy who reaches earliest. Since it does not exploit temporal locality
+(it might be used recently), causes Belady's Anomaly: when frame number
+increases, does not have less page faults.
+*** Least Recently Used
+*** Second-Chance
+Keep a bit denoting whether a page has been reference again since it's first
+appearance in page table. Keep a wraparound pointer that evict pages that have
+the bit unset. If the bit is set, pointer passes through it will unset it.
+** Frame Allocation
+Limited frames for programs. How to allocate? Simple approaches
+- Equal allocation: everyone gets same amount, distributed equally
+- Proportional allocation: if you need more memory, you get more frames
+
+Think about this: when we replace page, we can either replace the process's own
+frames (local replacement) or steal others' frames (global replacement)
+
+- Local: stable performance, but might be low
+- Global: dynamic, but can affect others
+*** Thrashing
+Heavy I/O to get non-resident pages to memory
+
+*Cascading Thrashing*: Process A thrashes, evicts memory from another process B,
+ which then thrashes when it's running, and runs down the loop.
+*** Working Set Model
+There might be a working set of frames that causes no heavy change in number of
+frames, or otherwise. We call them stable and transient working sets.
+* Tutorial 9
+1.
+   a.
+      1. Virtual Address -> <Page#, offset>
+      2. TLB for page
+         a. If TLB Miss, trap to OS
+            OS look for page-frame mapping in page table
+            save it in TLB. Replace TLB entry via some caching algorithm, for
+            example remove the last least recently used
+         b. Else jump to 4
+      3. Is page# memory resident?
+         a. It is not, then OS will put it into physical memory. If physical
+            memory is occupied, then need to "swap" the page in swap and the
+            frame in memory. Which to kick off to swap is decided by the
+            algorithms.
+         b. Else just read
+      4. Read
+   b. TLB
+      | page no | Frame no |
+      |---------+----------|
+      |       3 |        7 |
+      |       0 |        4 |
+
+      Page Table
+      | page no | frame/swap page no | memory resident | valid |
+      |---------+--------------------+-----------------+-------|
+      |       0 |                    |                 |       |
+2.
+   a. 32bits, ie number of bytes = 2^32bits
+      number of pages possible = 2^32-12 = 2^20
+      page table space = 2^20+2 = 2^22 = 4MB
+
+      virtual address = page dir index - pt index - offset
+      offset = to uniquely identify each byte in a page = 12 bits
+      pt index = to uniquely identify each pt entry = 4kb / 4b = 10 bits
+
+      we will have 128k pages = 512MB/4kbper page = 2^(29-12)
+   b. Same amount since each frame is fully utilized?
+   c. how many frames? 2^(29-12) = 2^17
+      hence size = 2^(17+3) = 2^20
+3.
+   A.
+      a. A04
+         | ref bit | 0 | 0 | 0 | (pointer) 1 |
+      b. Save frame 2 in a swap slot
+         Bring A08 to frame 2
+         Update TLB for A
+   B.
+      a. B17
+      b. Maybe
+         | frame | content |
+         |-------+---------|
+         |     1 | A31     |
+         |     3 | A17     |
+         |     2 | A08     |
+         |     0 | B13     |
+      c. OS knows a frame has to be evicted. It will keep a variable call
+         victim, and
+         1. if victim doesn't have an entry, then increment, otherwise
+         2. check it's reference bit.
+* Lecture 10 File System
+| Memory Management | Files System Management |
+** File
+- as an abstract data type
+- Hard Disk lingo:
+  Track: a concentric circle on the drive
+  Geometric sector: a sector (a slice of pie) on the hard disk
+- Therefore sector is the smallest unit of transfer for a hard drive. This is
+  bigger if the rotations per minute is high
+** File System
+Criteria:
+1. Self contained (plug and play to different OS)
+2. Persistent (to power off)
+3. Efficient: minimum bookkeeping
+** Directory
+* Lecture 11 File System Implementation
+** General Disk Organization
+- Partitions, each contain a filesystem
+- Contains:
+  | OS boot block | Partition details | directory structure | files info | files data |
+- Before any partition, at the start of a disk: Master Boot Record
+  Simple Boot Code + Partition Table
+  MBR leads you to the start of each partition which contains the boot code for
+  that OS (in that filesystem)
+** File implementation
+- Logical view of a file: a collection of logical blocks (of smallest
+  allocatable size)
+  criteria: minimal overhead + fast access of logical blocks.
+*** Scheme 1: Contiguous Block Allocation
+- Simple, just need start location and length to identify each file
+- Fast access
+- External fragmentation
+*** Scheme 2: Linked List Allocation
+- Just need to head to identify. Last logical block will be specially marked
+- Keep track the end of it for easy appending.
+- Slow access to the rest of the file
+- Unreliable - one corrupted block can kill off the whole file.
+*** Scheme 3: File Allocation Table
+- Keep linked list 'next' in the RAM instead of the hard disk.
+- Optimizing: we might not need the whole table (of next's) at all time.
+- 'Index' this table in a logical block.
+- What if the block is too small to index the whole file?
+  - Link-list to the next or
+  - Multi-level indexing.
+*** Scheme 3: Hybrid
+- Within one logical block:
+  - some entries points to blocks directly
+  - one point to a index table
+  - one point to a double-level-index
+  - one point to a triple ...
+** Free Space Management
+*** Objectives
+able to allocate and free
+*** Scheme 1: Bitmap
+each block is mapped to a bit.
+*** Scheme 2: Free Blocks
+- Have a table listing free blocks. The end of it points to another table
+- Each table reside in some logical block (which in turn would not be free)
+** Directory Structure
+*** Objectives
+- Keep track of the files (names) in it
+- Map the file name to the file info
+*** Implementation 1: Linear list
+- ie a table of the files inside, the starting logical block number, ending
+  number etc.
+- locate a file: linear search.
+*** Implementation 2: Hash Table
+- fast lookup
+- but limited size and depends on a good hash function to prevent collision
+** Combining knowledge (an example)
+*** Create a file
+1. We want to create a file with =filepath=.
+2. We check if the path is valid. Go to the =Directory Structure= part of the
+   filesystem and check.
+3. Check if there is enough free space - look at =Partition Details= whether we
+   have that free space.
+4. To create, say if we use index, create a index block and stuff.
+*** Open a file
+1. Open a file with a path.
+2. OS provides a file descriptor
+3. Points to the open file table (OS-wide), with a pointer
+4. The pointer points to the logical blocks (?)
+*** Magnetic Disk
+1. We want to read from a sector.
+2. Needle change to the right track. =Seek Time=, 2-10ms
+3. Rotate to the sector on the track. =Rotational Latency=, 4800 to 15000 RPM
+   needs 12.5 to 4ms respectively.
+4. =Transfer Time=. Transfer rate is around 125MB/s. this is << =Seek Time=,
+   =Rotational Latency=
+** Disk I/O Scheduling
+*** Objective
+To minimize =Seek Time= and =Rotational Latency=
+*** Algorithm 1: FCFS
+- not good
+*** Algorithm 2: Shortest Seek First
+- go to the nearest track first
+- potential starvation
+*** Algorithm 3: Elevator
+- Think of track numbers as floor numbers
+- Lift goes all the way down, then all the way up (bi-direction)
+- Or just move up. When reach the top, go from ground.(bi-direction)
+* Tutorial 10
+1.
+   a. W(9,3)=2 (3,5)
+      W(11,3)=3 (2,3,5)
+      W(9,4)=3 (2,3,5)
+      W(11,5)=3 (2,3,5)
+   b. Solution: preemptively loads pages into memory when a process transits to
+      running state. Or prevent more programs from running when memory is full
+      (as predicted by the working set)
+      By principle of locality, the future is likely to use a similar number of
+      frames, can allocate that
+      delta value can average a
+   c. the times when the values are used
+2.
+   a. abstraction from OS (different syscalls), error checking and handling
+      (again, system interrupts)
+   b. trigger is 1024. buffer size is 1kb. When newline character is added,
+      the buffer is flushed.
+   c. Read buffersize of things first. Then write it into outputArray arraySize
+      times. If no more complete item left, read again to fill buffer.
+3. Lock the writing file.
+   Will first check the per-process open file table
+4. fd saves file permission and path resolution
+** Hao Wei's notes
+- Linux uses inode =ls -i= to identify files
+- Permissions: User-Group-Others, in that priority.
+- Open File Table
+  - System-wide table: one entry per file
+  - Per-process table: keep track of fd, and other info such as offset
+- Soft links can point to directories but hard links cannot. Soft links are
+  special files.
+* Lecture 12 File System Case Studies
+** FAT12
+which Bill Gates wrote it in 5 days
+*** Structure of a FAT12 partition
+| Boot | FAT | FAT Duplicate | Root Directory | Data blocks |
+
+File Allocation Table is a map from logical block number to either status (if
+not in use) of the location of the next logical block of the file.
+
+Structure of a FAT:
+| block number | status or next    |
+|--------------+-------------------|
+|              | BAD               |
+|              | 5                 |
+|              | EOF (end of file) |
+|              | FREE              |
+
+FAT16 means there can maximally be 2^16 data blocks (or 16 bits when identifying
+a next block)
+*** A Directory
+- is saved as a special file. contains at least one data block
+- is an array of entries of 32 bytes.
+- An entry is:
+  | File name (8)             |
+  | File Ext (3)              |
+  | Attributes (1)            |
+  | Directory Entry           |
+  | Creation Date, Time (2,2) |
+  | First Disk Block (2)      |
+  | File Size in Bytes (4)    |
+*** Some common operations
+**** Reading a file, =lab5/ex1.c=
+1. =lab5= is in a data block. How to find out? relative to the root
+2. The data block in =lab5= have many entries, one of which contains =ex1.c=
+3. The entry containing =ex1.c= contains =ex1.c='s first disk block.
+**** Delete a file, =lab5/ex1.c=
+***** What needs to be done?
+1. remove entry from the parent directory's block. Mark the entry as invalid, by
+   changing the first byte of the entry (hence file name) with =0xE5=. If this
+   is used as the first character of file name, use =0x05= to represent it
+   instead. HACKS!
+2. =ex1.c= has multiple blocks in the partition, hence multiple entries in the
+   FAT. Say it is =3-8-5-12=, we need to write all of the FAT entries associated
+   with the file with =FREE=.
+3. Should we wipe the data blocks? Too expensive, leave data blocks as is.
+***** What can we recover from a deleted file?
+- File name: lose the first byte (due to FAT change)
+- File content: maybe lost or not, depending whether the blocks are used
+  (allocated to new files by OS).
+**** Count free space in folder?
+- In the whole disk: count the number of =FREE= entries in the FAT
+- In a specific folder that is not root:
+  1. Take out the directory's data block
+  2. recursively check???
+*** Improvements
+**** Larger partition size!
+1. Disk Cluster: a FAT entry to address multiple continuous disk blocks. However
+   increases internal fragmentation.
+2. FAT Size: use more bits to address a block. 32 bits can address 16TB with 4KB
+   clusters.
+**** Long File Name Support
+Virtual FAT, use exactly the same filesystem that supports filenames 255 characters.
+** Ext2
+*** Partition Structure
+| Boot | Block Group 0 | Block Group 1 | ... |
+
+Each Block Group contains
+| Super-block                       |
+| Group Descriptors                 |
+| block bitmap (0 free, 1 occupied) |
+| inode bitmap                      |
+| inode array                       |
+| data blocks                       |
+
+- Group Descriptors:
+  Describes EVERY SINGLE BLOCK GROUP in the partition
+- Super Block: describes the whole filesystem.
+  Both GD and SB are duplicated in every block group, redundancy makes fs very
+  robust.
+*** Inode structure
+- 128 bytes
+- Contains information of
+  - Mode(2)
+  - Owner Info (4)
+  - File Size (4/8)
+  - Timestamps (3*4)
+  - Data Block Pointers (15*4)
+    file-specific. first 12 point to direct blocks (containing data)
+    13th block points to a data block with 1-level paging
+    14th - 2-level paging and so on
+**** Inode Example
+- Allows fast access to small files
+- Yet can handle huge files
+- First 12 blocks
+- Then (block size/ block address size) blocks
+- Then ^ squared blocks
+- Cubed, etc
+*** Directory Example
+- Also represented as an Inode
+- The first data pointer points to a data block
+- That data block is a linked list, containing file name, filename length, file
+  or directory, and the inode number. Chaining to the next child in the directory.
+*** Examples
+**** Accessing =/sub/file=
+Inode for =/= is 2
+1. Inode table, entry 2 points to a inode.
+2. The inode's data block pointer points to 15
+3. Disk block 15 contains a link list. Say the first node of the link list is
+   =sub=, with inode 8
+4. Inode-table 8 will give an inode (in a data block?) which has a data block
+   pointer, first entry is 20
+5. Disk block 20 contains the link list describing the folder =/sub/=, and say
+   =file= is the first element of the linked list, with inode = 6
+6. Checking inode table for 6th entry yields an inode, and the data block
+   pointers are as described previously, point to either direct data or a few
+   paging levels.
+**** Deleting =/sub/file=
+1. check the =/sub/file= inode, which gives the location of actual data blocks
+   of =file=.
+2. First, remove the =/sub/file= from =/sub/=. Easily remove that node from the
+   linked list.
+3. Now, there is no more =/sub/file=, then we need to remove its inode and
+   actual data. We can do this by setting the relevant bits to zero in the block
+   bitmap (for data) and inode bitmap respectively.
+**** Hard/Symbolic Link with Inode
+- Soft links give DAG, Hard links give Graphs
+***** Hard Link
+- Point to the same inode. A file has inode =8=, then multiple directories can
+  have a linkedlist node that has 8.
+- If we want to delete the file, what if someone else still needs it?
+- Actually referece count store in inode, recording number of dirs using it.
+  When 0, remove.
+***** Soft Link
+- A new file, regular like normal file, but file content is special and content
+  the actual path of the file it is pointing to.
+** Extra Topics!
+*** What if FS is inconsistent, due to Power loss/crash?
+Tools: =CHKDSK= in windows, =fsck= in linux
+*** Defragmentation
+- Linux has auto, claim to have no frag if usage is less than 90%
+* Tutorial 11
+1.
+   a. Free capacity = count 1s in the block bitmap: =12=
+      Directory View:
+      / -- y -- i, h
+        -- f
+        -- x -- g
+             -- z -- k
+   b.
+      - =/y/i= Get root directory from dir block 0. y is a directory, thus go to
+        its directory block 3. Directory block 3 finds file =i=.
+      - =/x/z/i= Get root directory from dir block, finds dir x, whose details
+        is at block 1. Block 1 points to =z= at block 2, and =i= is not found in
+        block 2, abort.
+   c.
+      - =/x/z/k= /Dir blocks 0 to 1 to 2. =k= has first data block =6=, and it ends there.
+        File content is =:)=
+      - =/y/h= Dir blocks 0 to 3. start block at =27=. Traversal:
+        | Block | Content |
+        |-------+---------|
+        |    27 | OP      |
+        |    30 | ER      |
+        |    21 | AT      |
+        |    14 | IN      |
+        |     4 | GS      |
+        |    23 | YS      |
+        |     7 | TE      |
+        |    10 | M:      |
+        |    28 | _(      |
+   d. =/y/n= 0 to 3. Create a new directory entry, with filename =n=. 5 blocks:
+      | Block | Next |
+      |-------+------|
+      |     8 |   13 |
+      |    13 |   15 |
+      |    15 |   16 |
+      |    16 |   20 |
+      |    20 |   22 |
+
+      Hence the directory entry should have 8 and 22
+2.
+   1. FCFS: since the relative order is unchanged, FCFS will yield the same result.
+   2. C-SCAN: single direction scan. Assuming increasing, make 18 arrive very
+      late so the first round not pick it up.
+3.
+   a. If the requests overlap in terms of sectors, ie request A reads sector
+      1,2, and request B reads 2,3 in any capacity.
+   b. less operations and thus less hardware overhead.
+   c. reading a small part of data might be delay if merged with a larger read
+      request. Limit the number of max num of sector?
+   d. Waiting for mergable requests can reduce total waiting time.
+   e. Might miss the elevator while waiting to merge or merging requests.
+4. Can address more space, but at the cost of more internal fragmentation.
+* PYP To Review Questions
+** 19/20 Sem 1
+MCQs: 14, 19, 20, 22, 25
