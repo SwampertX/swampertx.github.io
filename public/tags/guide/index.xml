@@ -1,18 +1,30 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>guide - Tag - Tan Yee Jian</title>
-        <link>http://example.org/tags/guide/</link>
-        <description>guide - Tag - Tan Yee Jian</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 13 Aug 2019 00:00:00 &#43;0000</lastBuildDate><atom:link href="http://example.org/tags/guide/" rel="self" type="application/rss+xml" /><item>
+        <title>Guide - Tag - Tan Yee Jian</title>
+        <link>http://yeejian.tech/tags/guide/</link>
+        <description>Guide - Tag - Tan Yee Jian</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>tanyeejian@gmail.com (Tan Yee Jian)</managingEditor>
+            <webMaster>tanyeejian@gmail.com (Tan Yee Jian)</webMaster><lastBuildDate>Thu, 04 Jun 2020 00:00:00 &#43;0000</lastBuildDate><atom:link href="http://yeejian.tech/tags/guide/" rel="self" type="application/rss+xml" /><item>
     <title>How to set up printer in NUS on Linux</title>
-    <link>http://example.org/posts/posts/how-to-set-up-printer-in-nus-on-linux/</link>
-    <pubDate>Tue, 13 Aug 2019 00:00:00 &#43;0000</pubDate>
+    <link>http://yeejian.tech/2020/06/how-to-set-up-printer-in-nus-on-linux/</link>
+    <pubDate>Thu, 04 Jun 2020 00:00:00 &#43;0000</pubDate>
     <author>Author</author>
-    <guid>http://example.org/posts/posts/how-to-set-up-printer-in-nus-on-linux/</guid>
-    <description><![CDATA[This is a step-by-step guide in setting up printing service in Cinnamon College, NUS.
+    <guid>http://yeejian.tech/2020/06/how-to-set-up-printer-in-nus-on-linux/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/cinnamon.jpg" referrerpolicy="no-referrer">
+            </div>This is a step-by-step guide in setting up printing service in Cinnamon College, NUS.
 The general idea is that as Linux users, we can follow the MacOS guides available, with some not-so-nice web interface to set it up.
 A typical setup instruction looks like this:
 Credits: USP Survival Guide 290719v2.pdf
 What can we do?! They all assume linux users are dangerous enough and know what they are doing. But everyone starts somewhere!]]></description>
+</item><item>
+    <title>Creating My First Pull Request</title>
+    <link>http://yeejian.tech/2020/05/creating-my-first-pull-request/</link>
+    <pubDate>Sun, 31 May 2020 23:19:29 &#43;0800</pubDate>
+    <author>Author</author>
+    <guid>http://yeejian.tech/2020/05/creating-my-first-pull-request/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/gitlab-logo-white-rgb.png" referrerpolicy="no-referrer">
+            </div>How I contributed the first time to GitLab, and what it meant to me]]></description>
 </item></channel>
 </rss>

@@ -1,0 +1,17 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Open Source - Category - Tan Yee Jian</title>
+        <link>http://yeejian.tech/categories/open-source/</link>
+        <description>Open Source - Category - Tan Yee Jian</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>tanyeejian@gmail.com (Tan Yee Jian)</managingEditor>
+            <webMaster>tanyeejian@gmail.com (Tan Yee Jian)</webMaster><lastBuildDate>Sun, 31 May 2020 23:19:29 &#43;0800</lastBuildDate><atom:link href="http://yeejian.tech/categories/open-source/" rel="self" type="application/rss+xml" /><item>
+    <title>Creating My First Pull Request</title>
+    <link>http://yeejian.tech/2020/05/creating-my-first-pull-request/</link>
+    <pubDate>Sun, 31 May 2020 23:19:29 &#43;0800</pubDate>
+    <author>Author</author>
+    <guid>http://yeejian.tech/2020/05/creating-my-first-pull-request/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/gitlab-logo-white-rgb.png" referrerpolicy="no-referrer">
+            </div>How I contributed the first time to GitLab, and what it meant to me]]></description>
+</item></channel>
+</rss>

@@ -1,77 +1,78 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Tags - Tag - Tan Yee Jian</title>
-        <link>http://example.org/tags/</link>
+        <link>http://yeejian.tech/tags/</link>
         <description>Tags - Tag - Tan Yee Jian</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 09 Feb 2020 00:00:00 &#43;0000</lastBuildDate><atom:link href="http://example.org/tags/" rel="self" type="application/rss+xml" /><item>
-    <title>functional programming</title>
-    <link>http://example.org/tags/functional-programming/</link>
-    <pubDate>Sun, 09 Feb 2020 00:00:00 &#43;0000</pubDate>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>tanyeejian@gmail.com (Tan Yee Jian)</managingEditor>
+            <webMaster>tanyeejian@gmail.com (Tan Yee Jian)</webMaster><lastBuildDate>Thu, 04 Jun 2020 00:00:00 &#43;0000</lastBuildDate><atom:link href="http://yeejian.tech/tags/" rel="self" type="application/rss+xml" /><item>
+    <title>Guide</title>
+    <link>http://yeejian.tech/tags/guide/</link>
+    <pubDate>Thu, 04 Jun 2020 00:00:00 &#43;0000</pubDate>
     <author>Author</author>
-    <guid>http://example.org/tags/functional-programming/</guid>
+    <guid>http://yeejian.tech/tags/guide/</guid>
     <description><![CDATA[]]></description>
 </item><item>
-    <title>lambda calculus</title>
-    <link>http://example.org/tags/lambda-calculus/</link>
-    <pubDate>Sun, 09 Feb 2020 00:00:00 &#43;0000</pubDate>
+    <title>NUS</title>
+    <link>http://yeejian.tech/tags/nus/</link>
+    <pubDate>Thu, 04 Jun 2020 00:00:00 &#43;0000</pubDate>
     <author>Author</author>
-    <guid>http://example.org/tags/lambda-calculus/</guid>
+    <guid>http://yeejian.tech/tags/nus/</guid>
     <description><![CDATA[]]></description>
 </item><item>
-    <title>Programming</title>
-    <link>http://example.org/tags/programming/</link>
-    <pubDate>Sun, 09 Feb 2020 00:00:00 &#43;0000</pubDate>
+    <title>Technology</title>
+    <link>http://yeejian.tech/tags/technology/</link>
+    <pubDate>Thu, 04 Jun 2020 00:00:00 &#43;0000</pubDate>
     <author>Author</author>
-    <guid>http://example.org/tags/programming/</guid>
+    <guid>http://yeejian.tech/tags/technology/</guid>
     <description><![CDATA[]]></description>
 </item><item>
-    <title>programming language</title>
-    <link>http://example.org/tags/programming-language/</link>
-    <pubDate>Sun, 09 Feb 2020 00:00:00 &#43;0000</pubDate>
+    <title>gitlab</title>
+    <link>http://yeejian.tech/tags/gitlab/</link>
+    <pubDate>Sun, 31 May 2020 23:19:29 &#43;0800</pubDate>
     <author>Author</author>
-    <guid>http://example.org/tags/programming-language/</guid>
-    <description><![CDATA[]]></description>
-</item><item>
-    <title>Browser</title>
-    <link>http://example.org/tags/browser/</link>
-    <pubDate>Thu, 23 Jan 2020 00:00:00 &#43;0000</pubDate>
-    <author>Author</author>
-    <guid>http://example.org/tags/browser/</guid>
-    <description><![CDATA[]]></description>
-</item><item>
-    <title>FOSS</title>
-    <link>http://example.org/tags/foss/</link>
-    <pubDate>Thu, 23 Jan 2020 00:00:00 &#43;0000</pubDate>
-    <author>Author</author>
-    <guid>http://example.org/tags/foss/</guid>
-    <description><![CDATA[]]></description>
-</item><item>
-    <title>Google</title>
-    <link>http://example.org/tags/google/</link>
-    <pubDate>Thu, 23 Jan 2020 00:00:00 &#43;0000</pubDate>
-    <author>Author</author>
-    <guid>http://example.org/tags/google/</guid>
+    <guid>http://yeejian.tech/tags/gitlab/</guid>
     <description><![CDATA[]]></description>
 </item><item>
     <title>Open Source</title>
-    <link>http://example.org/tags/open-source/</link>
-    <pubDate>Thu, 23 Jan 2020 00:00:00 &#43;0000</pubDate>
+    <link>http://yeejian.tech/tags/open-source/</link>
+    <pubDate>Sun, 31 May 2020 23:19:29 &#43;0800</pubDate>
     <author>Author</author>
-    <guid>http://example.org/tags/open-source/</guid>
+    <guid>http://yeejian.tech/tags/open-source/</guid>
     <description><![CDATA[]]></description>
 </item><item>
-    <title>Rant</title>
-    <link>http://example.org/tags/rant/</link>
-    <pubDate>Thu, 23 Jan 2020 00:00:00 &#43;0000</pubDate>
+    <title>Reflection</title>
+    <link>http://yeejian.tech/tags/reflection/</link>
+    <pubDate>Sun, 31 May 2020 23:19:29 &#43;0800</pubDate>
     <author>Author</author>
-    <guid>http://example.org/tags/rant/</guid>
+    <guid>http://yeejian.tech/tags/reflection/</guid>
     <description><![CDATA[]]></description>
 </item><item>
-    <title>technology</title>
-    <link>http://example.org/tags/technology/</link>
+    <title>functional programming</title>
+    <link>http://yeejian.tech/tags/functional-programming/</link>
+    <pubDate>Sun, 09 Feb 2020 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>http://yeejian.tech/tags/functional-programming/</guid>
+    <description><![CDATA[]]></description>
+</item><item>
+    <title>lambda calculus</title>
+    <link>http://yeejian.tech/tags/lambda-calculus/</link>
+    <pubDate>Sun, 09 Feb 2020 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>http://yeejian.tech/tags/lambda-calculus/</guid>
+    <description><![CDATA[]]></description>
+</item><item>
+    <title>programming language</title>
+    <link>http://yeejian.tech/tags/programming-language/</link>
+    <pubDate>Sun, 09 Feb 2020 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>http://yeejian.tech/tags/programming-language/</guid>
+    <description><![CDATA[]]></description>
+</item><item>
+    <title>Browser</title>
+    <link>http://yeejian.tech/tags/browser/</link>
     <pubDate>Thu, 23 Jan 2020 00:00:00 &#43;0000</pubDate>
     <author>Author</author>
-    <guid>http://example.org/tags/technology/</guid>
+    <guid>http://yeejian.tech/tags/browser/</guid>
     <description><![CDATA[]]></description>
 </item></channel>
 </rss>

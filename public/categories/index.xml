@@ -1,7 +1,15 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Categories - Category - Tan Yee Jian</title>
-        <link>http://example.org/categories/</link>
+        <link>http://yeejian.tech/categories/</link>
         <description>Categories - Category - Tan Yee Jian</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="http://example.org/categories/" rel="self" type="application/rss+xml" /></channel>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>tanyeejian@gmail.com (Tan Yee Jian)</managingEditor>
+            <webMaster>tanyeejian@gmail.com (Tan Yee Jian)</webMaster><lastBuildDate>Sun, 31 May 2020 23:19:29 &#43;0800</lastBuildDate><atom:link href="http://yeejian.tech/categories/" rel="self" type="application/rss+xml" /><item>
+    <title>Open Source</title>
+    <link>http://yeejian.tech/categories/open-source/</link>
+    <pubDate>Sun, 31 May 2020 23:19:29 &#43;0800</pubDate>
+    <author>Author</author>
+    <guid>http://yeejian.tech/categories/open-source/</guid>
+    <description><![CDATA[]]></description>
+</item></channel>
 </rss>
