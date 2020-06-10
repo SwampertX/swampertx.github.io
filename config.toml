@@ -1,9 +1,10 @@
-baseURL = "http://yeejian.tech/"
+baseURL = "https://swampertx.github.io/"
 # [en, zh-cn, fr, ...] determines default content language
 defaultContentLanguage = "en"
 # language code
 languageCode = "en"
 title = "Tan Yee Jian"
+publishDir = '.'
 
 # Change the default theme to be use when building the site with Hugo
 theme = "LoveIt"
