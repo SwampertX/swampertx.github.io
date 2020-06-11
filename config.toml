@@ -4,7 +4,7 @@ defaultContentLanguage = "en"
 # language code
 languageCode = "en"
 title = "Tan Yee Jian"
-publishDir = '.'
+publishDir = 'public'
 
 # Change the default theme to be use when building the site with Hugo
 theme = "LoveIt"
