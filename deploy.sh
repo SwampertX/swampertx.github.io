@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-hugo --minify --destination public
+hugo
 git checkout master
 git checkout hugo -- public
 ls | rg -v public | xargs rm -r
