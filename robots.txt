@@ -61,4 +61,4 @@ Disallow: /
 User-agent: ZoominfoBot
 Disallow: /
 
-Sitemap: https://blog.yeejian.dev/sitemap.xml
+Sitemap: https://swampertx.github.io/sitemap.xml
