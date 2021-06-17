@@ -3,6 +3,7 @@ set -euo pipefail
 
 git add .
 git commit -m "Automated commit by deploy.sh"
+git push origin hugo
 hugo
 git checkout master
 git checkout hugo -- public
