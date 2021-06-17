@@ -6,8 +6,6 @@ git commit -m "Automated commit by deploy.sh"
 git push origin hugo
 hugo
 git checkout master
-git checkout hugo -- public
-ls | rg -v public | xargs rm -r
 mv -f public/* .
 rm -rf public
 git add .
