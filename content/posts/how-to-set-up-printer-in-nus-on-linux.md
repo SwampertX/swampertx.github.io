@@ -1,14 +1,14 @@
 ---
-title: "How to set up printer in NUS on Linux"
+title: "How to set up printer in NUS Cinnamon College on Linux"
 subtitle: "UTown in particular"
-date: "2020-06-04"
+date: "2021-05-24"
 template: "post"
 draft: false
 category: Technology
-tags: 
- - technology
- - guide
- - NUS
+tags:
+  - technology
+  - guide
+  - NUS
 description: "A step-by-step guide to setting up printer using CUPS and its web interface in Cinnamon College"
 featuredImage: "/images/cinnamon.jpg"
 featuredImagePreview: "/images/cinnamon.jpg"
@@ -17,40 +17,59 @@ featuredImagePreview: "/images/cinnamon.jpg"
 This is a step-by-step guide in setting up printing service in [Cinnamon
 College,
 NUS](http://www.usp.nus.edu.sg/life-at-usp/usp-housing-and-support/cinnamon-college-usp/).
+This guide might be useful for MacOS users as well whose OS uses CUPS for the underlying
+printing service, but I have not tried on a Mac before.
 
-The general idea is that as Linux users, we can follow the MacOS guides
-available, with some not-so-nice web interface to set it up.
+{{< admonition>}}
 
-A typical setup instruction looks like this:
+As of May 2021, the printers in Cinnamon College uses Samba to provide printing service. If you
+are familiar with CUPS and SAMBA, you can skip most of this post with these pointers:
 
-![MacOS Printer Setup Instructions](/media/cups/cinna_printing_instructions.jpg)
-*Credits: USP Survival Guide 290719v2.pdf*
 
-**What can we do?!** They all assume linux users are dangerous enough and know
-what they are doing. But **everyone starts somewhere!**
+1. Add the printer using the `HP LaserJet Series PCL 6 CUPS` PPD instead of the
+   recommended `Generic PostScript Printer`. Using the latter always messes up the
+   paper size to `Others`, despite your printer settings. The release station will not
+   allow you to print documents of size `Others`, but using the HP PPD will respect your
+   paper size settings.
+2. After adding the printer into CUPS, you have to manually edit the correct printer under
+   `/etc/cups/printers.conf` to contain the line:
 
-*Let this be the somewhere.*
+```
+AuthInfoRequired username,password
+```
 
-## Step 1: install CUPS
+You will be prompted to login using your NUSNET ID as the username (`nusstu\e1234567x`) and
+your password. If you run GNOME or have `gnome-keyring` installed, your password
+can be remembered.
+
+3. That should be all. Remember to restart CUPS (`systemctl restart cups.service`) after editing
+   `/etc/cups/printers.conf`.
+
+{{< /admonition >}}
+
+## Step 1: install CUPS and SAMBA
 
 The [Common Unix Printer Service (CUPS)](https://www.cups.org), an open source
-printer server developed by Apple, is what we will use today. Install it using
-your favourite package manager: we will demonstrate using APT on Ubuntu below.
+printer server developed by Apple, is what we will use today. As of May 2021,
+Cinnamon College printers use Samba. Install it using your favourite package
+manager: we will demonstrate using APT on Ubuntu below.
 
-```bash
-sudo apt install cups
+```
+sudo apt install cups samba
 ```
 
 ## Step 2: Start the CUPS service
 
-```bash
-sudo systemctl enable cups
+```
+sudo systemctl enable --now cups
+sudo systemctl enable --now smbd
 ```
 
-You can verify that the CUPS service is already running with
+You can verify that the CUPS and Samba services are already running with
 
 ```
 systemctl status cups
+systemctl status smbd
 ```
 
 ## Step 3: Use the web-based CUPS interface
@@ -63,7 +82,7 @@ browser, and navigate to `localhost:631`.
 In the middle column, choose `Adding Printers and Classes`, then `Add Printer`.
 
 You will be promted to key in your username and password, which refers to your
-current user (with sudo privileges. To check your username, open up a terminal
+current user (with sudo privileges). To check your username, open up a terminal
 and enter `whoami` to determine your username if you don't already know it.
 
 ## Step 4: Enter printer-specific information
@@ -96,12 +115,12 @@ whatever you like to help you distinguish between the different printers you add
 to CUPS.
 
 ## Step 5: Select a PPD file for your printer
+
 PostScript Printer Description (PPD) files are instruction sets created by
 printer vendors to describe what their printers can do, and how to invoke these
 functions.
 
-Refer again to the MacOS setup document, we are told to select a `Generic
-PostScript Printer` PPD. Selecting the `Make` as `Generic`, I chose the PPD as
+Refer again to the MacOS setup document, we are told to select a `Generic PostScript Printer` PPD. Selecting the `Make` as `Generic`, I chose the PPD as
 below, because it seems to match the description the most.
 
 ![Select the PPD for your printer](/media/cups/cups_ppd2.jpg)
@@ -124,4 +143,4 @@ Voila - now you are done! You can check your newly installed printer at
 
 ![Printer status page](/media/cups/cups_printer_status.jpg)
 
-Hope this guide benefits you. (*Updated 14 Aug 2019*)
+Hope this guide benefits you. (_Updated 14 Aug 2019_)

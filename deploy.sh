@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+git add .
+git commit -m "Automated commit by deploy.sh"
 hugo
 git checkout master
 git checkout hugo -- public

@@ -76,6 +76,21 @@ enableEmoji = true
     # amount of RSS pages
     rss = 10
 
+  [params.home.profile]
+    enable = true
+    avatarURL = "/images/icon_hoodie.svg"
+    subtitle = "blah blah blah."
+    typeit = true
+    social = true
+
+  [params.social]
+    Github = "SwampertX"
+    Linkedin = "yeejian-tan"
+    Gitlab = "SwampertX"
+    Telegram = "SwampertX"
+    Email = "tanyeejian@gmail.com"
+    RSS = true
+
   # Page config
   [params.page]
     # whether to hide a page from home page
@@ -96,90 +111,81 @@ enableEmoji = true
     linkToMarkdown = true
     # whether to show the full text content in RSS
     rssFullText = false
-
-  [params.home.profile]
-    enable = true
-    avatarURL = "/images/icon_hoodie.svg"
-    subtitle = "blah blah blah."
-    typeit = true
-    social = true
-
-  [params.social]
-    Github = "SwampertX"
-    Linkedin = "yeejian-tan"
-    Gitlab = "SwampertX"
-    Telegram = "SwampertX"
-    Email = "tanyeejian@gmail.com"
-    RSS = true
-
-  [params.page.comment.utterances]
-    enable = true
-    repo = "SwampertX/swampertx.github.io"
-    issueTerm = "pathname"
-    label = "utterances"
-    lightTheme = "github-light"
-    darkTheme = "github-dark"
-
-  [params.page.share]
-    enable = true
-    Twitter = true
-    Facebook = true
-    Linkedin = true
-    Whatsapp = true
-    Pinterest = false
-    Tumblr = false
-    HackerNews = true
-    Reddit = true
-
-  [params.page.library]
-    [params.page.library.css]
-      # someCSS = "some.css"
-      # located in "assets/" 位于 "assets/"
-      # Or 或者
-      # someCSS = "https://cdn.example.com/some.css"
-    [params.page.library.js]
-      # someJavascript = "some.js"
-      # located in "assets/" 位于 "assets/"
-      # Or 或者
-      # someJavascript = "https://cdn.example.com/some.js"
-
-  # SEO config
-  [params.page.seo]
-    # Publisher info
-    # 出版者信息
-    [params.page.seo.publisher]
-      name = "Tan Yee Jian"
-      [params.page.seo.publisher.logo]
-        url = "logo.png"
-        width = 127
-        height = 40
-    # Logo info
-    # Logo 信息
-    [params.page.seo.logo]
-      url = "logo.png"
-      width = 127
-      height = 40
-    # Image info
-    # 图片信息
-    [params.page.seo.image]
-      url = "cover.png"
-      width = 800
-      height = 600
-
-  [params.page.code]
-    copy = true
-    maxShownLines = 10
-
-  [params.page.math]
-    enable = false
-    # default block delimiter is $$ ... $$ and \\[ ... \\]
-    blockLeftDelimiter = ""
-    blockRightDelimiter = ""
-    # default inline delimiter is $ ... $ and \\( ... \\)
-    inlineLeftDelimiter = ""
-    inlineRightDelimiter = ""
-    # KaTeX extension copy_tex
-    copyTex = false
+      [params.page.comment.utterances]
+        enable = true
+        repo = "SwampertX/swampertx.github.io"
+        issueTerm = "pathname"
+        label = "utterances"
+        lightTheme = "github-light"
+        darkTheme = "github-dark"
+      [params.page.share]
+        enable = true
+        Twitter = true
+        Facebook = true
+        Linkedin = true
+        Whatsapp = true
+        Pinterest = false
+        Tumblr = false
+        HackerNews = true
+        Reddit = true
+      [params.page.library]
+        [params.page.library.css]
+          # someCSS = "some.css"
+          # located in "assets/" 位于 "assets/"
+          # Or 或者
+          # someCSS = "https://cdn.example.com/some.css"
+        [params.page.library.js]
+          # someJavascript = "some.js"
+          # located in "assets/" 位于 "assets/"
+          # Or 或者
+          # someJavascript = "https://cdn.example.com/some.js"
+      # SEO config
+      [params.page.seo]
+        # Publisher info
+        # 出版者信息
+        [params.page.seo.publisher]
+          name = "Tan Yee Jian"
+          [params.page.seo.publisher.logo]
+            url = "logo.png"
+            width = 127
+            height = 40
+        # Logo info
+        # Logo 信息
+        [params.page.seo.logo]
+          url = "logo.png"
+          width = 127
+          height = 40
+        # Image info
+        # 图片信息
+        [params.page.seo.image]
+          url = "cover.png"
+          width = 800
+          height = 600
+    [params.page.code]
+      # whether to show the copy button of the code block
+      # 是否显示代码块的复制按钮
+      copy = true
+      # the maximum number of lines of displayed code by default
+      # 默认展开显示的代码行数
+      maxShownLines = 1
+    # KaTeX mathematical formulas config (KaTeX https://katex.org/)
+    # KaTeX 数学公式配置 (KaTeX https://katex.org/)
+    [params.page.math]
+      enable = false
+      # default block delimiter is $$ ... $$ and \\[ ... \\]
+      # 默认块定界符是 $$ ... $$ 和 \\[ ... \\]
+      blockLeftDelimiter = ""
+      blockRightDelimiter = ""
+      # default inline delimiter is $ ... $ and \\( ... \\)
+      # 默认行内定界符是 $ ... $ 和 \\( ... \\)
+      inlineLeftDelimiter = ""
+      inlineRightDelimiter = ""
+      # KaTeX extension copy_tex
+      # KaTeX 插件 copy_tex
+      copyTex = true
+      # KaTeX extension mhchem
+      # KaTeX 插件 mhchem
+      mhchem = true
 
   [params.search]
     enable = true
