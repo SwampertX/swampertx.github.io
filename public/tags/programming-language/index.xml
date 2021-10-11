@@ -1,18 +1,19 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
-    <channel>
-        <title>programming language - Tag - Tan Yee Jian</title>
-        <link>https://blog.yeejian.dev/tags/programming-language/</link>
-        <description>programming language - Tag - Tan Yee Jian</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>tanyeejian@gmail.com (Tan Yee Jian)</managingEditor>
-            <webMaster>tanyeejian@gmail.com (Tan Yee Jian)</webMaster><lastBuildDate>Sun, 09 Feb 2020 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://blog.yeejian.dev/tags/programming-language/" rel="self" type="application/rss+xml" /><item>
-    <title>Lessons learned writing the Source Stepper - Part 1</title>
-    <link>https://blog.yeejian.dev/2020/02/lessons-learned-writing-the-source-stepper-part-1/</link>
-    <pubDate>Sun, 09 Feb 2020 00:00:00 &#43;0000</pubDate>
-    <author>Author</author>
-    <guid>https://blog.yeejian.dev/2020/02/lessons-learned-writing-the-source-stepper-part-1/</guid>
-    <description><![CDATA[<div class="featured-image">
-                <img src="/media/forest.png" referrerpolicy="no-referrer">
-            </div>In this part, I will talk about what is the Source Language, what is the Source Stepper, and some primer knowledge to understanding how the Source Stepper Works.
-What is the Source Stepper? The Source Stepper is an implementation of the Source language that is purely based on lambda calculus-style substitution rules. The Source language is a family of languages, split into 4 chapters, each a sub-language of the next, and all are EcmaScript2016-compliant.]]></description>
-</item></channel>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>programming language on Yee Jian&#39;s Blog</title>
+    <link>/tags/programming-language/</link>
+    <description>Recent content in programming language on Yee Jian&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 09 Feb 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/programming-language/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Lessons learned writing the Source Stepper - Part 1</title>
+      <link>/posts/posts/lessons-learned-writing-the-source-stepper-part-1/</link>
+      <pubDate>Sun, 09 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/posts/lessons-learned-writing-the-source-stepper-part-1/</guid>
+      <description>In this part, I will talk about what is the Source Language, what is the Source Stepper, and some prior knowledge to understanding how the Source Stepper Works.</description>
+    </item>
+    
+  </channel>
 </rss>

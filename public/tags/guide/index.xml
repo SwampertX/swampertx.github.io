@@ -1,27 +1,28 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
-    <channel>
-        <title>Guide - Tag - Tan Yee Jian</title>
-        <link>https://blog.yeejian.dev/tags/guide/</link>
-        <description>Guide - Tag - Tan Yee Jian</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>tanyeejian@gmail.com (Tan Yee Jian)</managingEditor>
-            <webMaster>tanyeejian@gmail.com (Tan Yee Jian)</webMaster><lastBuildDate>Mon, 24 May 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://blog.yeejian.dev/tags/guide/" rel="self" type="application/rss+xml" /><item>
-    <title>How to set up printer in NUS Cinnamon College on Linux</title>
-    <link>https://blog.yeejian.dev/2021/05/how-to-set-up-printer-in-nus-on-linux/</link>
-    <pubDate>Mon, 24 May 2021 00:00:00 &#43;0000</pubDate>
-    <author>Author</author>
-    <guid>https://blog.yeejian.dev/2021/05/how-to-set-up-printer-in-nus-on-linux/</guid>
-    <description><![CDATA[<div class="featured-image">
-                <img src="/images/cinnamon.jpg" referrerpolicy="no-referrer">
-            </div>This is a step-by-step guide in setting up printing service in Cinnamon College, NUS. This guide might be useful for MacOS users as well whose OS uses CUPS for the underlying printing service, but I have not tried on a Mac before.
-Note  As of May 2021, the printers in Cinnamon College uses Samba to provide printing service. If you are familiar with CUPS and SAMBA, you can skip most of this post with these pointers:]]></description>
-</item><item>
-    <title>Creating My First Pull Request</title>
-    <link>https://blog.yeejian.dev/2020/05/creating-my-first-pull-request/</link>
-    <pubDate>Sun, 31 May 2020 23:19:29 &#43;0800</pubDate>
-    <author>Author</author>
-    <guid>https://blog.yeejian.dev/2020/05/creating-my-first-pull-request/</guid>
-    <description><![CDATA[<div class="featured-image">
-                <img src="/images/gitlab-logo-white-rgb.png" referrerpolicy="no-referrer">
-            </div>How I contributed the first time to GitLab, and what it meant to me]]></description>
-</item></channel>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Guide on Yee Jian&#39;s Blog</title>
+    <link>/tags/guide/</link>
+    <description>Recent content in Guide on Yee Jian&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 24 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/guide/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to set up printer in NUS Cinnamon College on Linux</title>
+      <link>/posts/how-to-set-up-printer-in-nus-on-linux/</link>
+      <pubDate>Mon, 24 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/how-to-set-up-printer-in-nus-on-linux/</guid>
+      <description>A step-by-step guide to setting up printer using CUPS and its web interface in Cinnamon College.</description>
+    </item>
+    
+    <item>
+      <title>Creating My First Pull Request</title>
+      <link>/posts/creating-my-first-pull-request/</link>
+      <pubDate>Sun, 31 May 2020 23:19:29 +0800</pubDate>
+      
+      <guid>/posts/creating-my-first-pull-request/</guid>
+      <description>How I contributed the first time to GitLab, and what it meant to me.</description>
+    </item>
+    
+  </channel>
 </rss>

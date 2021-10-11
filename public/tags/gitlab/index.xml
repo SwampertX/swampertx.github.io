@@ -1,17 +1,19 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
-    <channel>
-        <title>gitlab - Tag - Tan Yee Jian</title>
-        <link>https://blog.yeejian.dev/tags/gitlab/</link>
-        <description>gitlab - Tag - Tan Yee Jian</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>tanyeejian@gmail.com (Tan Yee Jian)</managingEditor>
-            <webMaster>tanyeejian@gmail.com (Tan Yee Jian)</webMaster><lastBuildDate>Sun, 31 May 2020 23:19:29 &#43;0800</lastBuildDate><atom:link href="https://blog.yeejian.dev/tags/gitlab/" rel="self" type="application/rss+xml" /><item>
-    <title>Creating My First Pull Request</title>
-    <link>https://blog.yeejian.dev/2020/05/creating-my-first-pull-request/</link>
-    <pubDate>Sun, 31 May 2020 23:19:29 &#43;0800</pubDate>
-    <author>Author</author>
-    <guid>https://blog.yeejian.dev/2020/05/creating-my-first-pull-request/</guid>
-    <description><![CDATA[<div class="featured-image">
-                <img src="/images/gitlab-logo-white-rgb.png" referrerpolicy="no-referrer">
-            </div>How I contributed the first time to GitLab, and what it meant to me]]></description>
-</item></channel>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gitlab on Yee Jian&#39;s Blog</title>
+    <link>/tags/gitlab/</link>
+    <description>Recent content in gitlab on Yee Jian&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 31 May 2020 23:19:29 +0800</lastBuildDate><atom:link href="/tags/gitlab/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Creating My First Pull Request</title>
+      <link>/posts/creating-my-first-pull-request/</link>
+      <pubDate>Sun, 31 May 2020 23:19:29 +0800</pubDate>
+      
+      <guid>/posts/creating-my-first-pull-request/</guid>
+      <description>How I contributed the first time to GitLab, and what it meant to me.</description>
+    </item>
+    
+  </channel>
 </rss>

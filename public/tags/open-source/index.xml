@@ -1,27 +1,19 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
-    <channel>
-        <title>Open Source - Tag - Tan Yee Jian</title>
-        <link>https://blog.yeejian.dev/tags/open-source/</link>
-        <description>Open Source - Tag - Tan Yee Jian</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>tanyeejian@gmail.com (Tan Yee Jian)</managingEditor>
-            <webMaster>tanyeejian@gmail.com (Tan Yee Jian)</webMaster><lastBuildDate>Sun, 31 May 2020 23:19:29 &#43;0800</lastBuildDate><atom:link href="https://blog.yeejian.dev/tags/open-source/" rel="self" type="application/rss+xml" /><item>
-    <title>Creating My First Pull Request</title>
-    <link>https://blog.yeejian.dev/2020/05/creating-my-first-pull-request/</link>
-    <pubDate>Sun, 31 May 2020 23:19:29 &#43;0800</pubDate>
-    <author>Author</author>
-    <guid>https://blog.yeejian.dev/2020/05/creating-my-first-pull-request/</guid>
-    <description><![CDATA[<div class="featured-image">
-                <img src="/images/gitlab-logo-white-rgb.png" referrerpolicy="no-referrer">
-            </div>How I contributed the first time to GitLab, and what it meant to me]]></description>
-</item><item>
-    <title>Why you should use Firefox instead of Chrome</title>
-    <link>https://blog.yeejian.dev/2020/01/why-you-should-use-firefox-instead-of-chrome/</link>
-    <pubDate>Thu, 23 Jan 2020 00:00:00 &#43;0000</pubDate>
-    <author>Author</author>
-    <guid>https://blog.yeejian.dev/2020/01/why-you-should-use-firefox-instead-of-chrome/</guid>
-    <description><![CDATA[<div class="featured-image">
-                <img src="/media/firefox_switch.jpg" referrerpolicy="no-referrer">
-            </div>Google has been collecting enough of your data. I used to thought that YouTube recommending me the relevant videos that I really love seeing is a great thing, and when I slide left on my Android phone to look at Google Now, I can see all the news relevant to me which is really convenient.
-Until one day, I read an article about how the Internet now is unlike years ago when it was created - a space where everyone can have an identity, independent of their real life.]]></description>
-</item></channel>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Open Source on Yee Jian&#39;s Blog</title>
+    <link>/tags/open-source/</link>
+    <description>Recent content in Open Source on Yee Jian&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 31 May 2020 23:19:29 +0800</lastBuildDate><atom:link href="/tags/open-source/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Creating My First Pull Request</title>
+      <link>/posts/creating-my-first-pull-request/</link>
+      <pubDate>Sun, 31 May 2020 23:19:29 +0800</pubDate>
+      
+      <guid>/posts/creating-my-first-pull-request/</guid>
+      <description>How I contributed the first time to GitLab, and what it meant to me.</description>
+    </item>
+    
+  </channel>
 </rss>
