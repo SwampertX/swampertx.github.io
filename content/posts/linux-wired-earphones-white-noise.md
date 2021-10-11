@@ -2,7 +2,7 @@
 title: "Linux wired earphones white noise solution"
 date: 2021-08-04T22:48:55+08:00
 lastmod: 2021-08-04T22:48:55+08:00
-summary: "TLDR: Try amixer -c0 set \"Auto-Mute Mode\" Enabled"
+summary: 'TLDR: Try `amixer -c0 set "Auto-Mute Mode" Enabled`'
 
 ---
 
@@ -16,7 +16,10 @@ I went to `alsamixer` and choose the correct sound card (HDA Intel PCH).
 
 Then press right until you see the `Auto-Mute` option. **Enable** it.
 
-That solved the issue for me.
+That solved the issue for me. Nowadays, I just use the command:
+```bash
+amixer -c0 set "Auto-Mute Mode" Enabled
+```
 
 ## Some descriptions for original problem.
 
