@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Java on Yee Jian&#39;s Blog</title>
+    <link>/tags/java/</link>
+    <description>Recent content in Java on Yee Jian&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 20 Jan 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CS2103 Software Engineering in Neovim - A Post Reflection</title>
+      <link>/posts/posts/cs2103-in-nvim-&#43;-cli-a-post-reflection/</link>
+      <pubDate>Mon, 20 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/posts/cs2103-in-nvim-&#43;-cli-a-post-reflection/</guid>
+      <description>The lessons I learned after using both NeoVim and IntelliJ.</description>
+    </item>
+    
+    <item>
+      <title>CS2103 Software Engineering in Neovim</title>
+      <link>/posts/cs2103-in-nvim-cli-week-2/</link>
+      <pubDate>Fri, 13 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/cs2103-in-nvim-cli-week-2/</guid>
+      <description>My (old) setup trying out software engineering in Java on an editor, rather than IDE. Because why not?</description>
+    </item>
+    
+  </channel>
+</rss>

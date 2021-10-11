@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>functional programming on Yee Jian&#39;s Blog</title>
+    <link>/tags/functional-programming/</link>
+    <description>Recent content in functional programming on Yee Jian&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 09 Feb 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/functional-programming/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Lessons learned writing the Source Stepper - Part 1</title>
+      <link>/posts/posts/lessons-learned-writing-the-source-stepper-part-1/</link>
+      <pubDate>Sun, 09 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/posts/lessons-learned-writing-the-source-stepper-part-1/</guid>
+      <description>In this part, I will talk about what is the Source Language, what is the Source Stepper, and some prior knowledge to understanding how the Source Stepper Works.</description>
+    </item>
+    
+  </channel>
+</rss>

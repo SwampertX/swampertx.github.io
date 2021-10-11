@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.88.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>CS2103 Software Engineering in Neovim - A Post Reflection &middot; Yee Jian&#39;s Blog</title>
+  <meta name="description" content="" />
+
+  
+  <link type="text/css" rel="stylesheet" href="css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="css/poole.css">
+  <link type="text/css" rel="stylesheet" href="css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class=" ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href=""><h1>Yee Jian&#39;s Blog</h1></a>
+      <p class="lead">
+       Some reflections.
+ 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="">Posts</a> </li>
+        <li><a href="/about"> About </a></li><li><a href="https://github.com/SwampertX"> CV </a></li><li><a href="https://github.com/SwampertX"> Github </a></li><li><a href="/projects"> Projects </a></li>
+      </ul>
+    </nav>
+
+    <p>&copy; 2021. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>CS2103 Software Engineering in Neovim - A Post Reflection</h1>
+  
+  <time datetime=2020-01-20T00:00:00Z class="post-date">Mon, Jan 20, 2020</time>
+  
+  <p>Now that <strong>CS2103 Software Engineering</strong> is over, is using NeoVim as a Java Editor worth it?</p>
+<p>My answer: the learning was worth it, but the functionalities of IntelliJ totally crushed
+Java development. It is <em>the killer app</em> that you need, if you are doing serious Java development.</p>
+<h2 id="the-pros-and-cons-with-nvim">The Pros and Cons with NVim</h2>
+<h3 id="pros">Pros</h3>
+<p>Vim&rsquo;s many keybindings makes text editing enjoyable. With all the familiar jumps, yanking paragraphs,
+search and replace - I absolutely loved the &ldquo;fingers never leave the home row&rdquo; experience.</p>
+<p>With many other tools, such as fzf bindings for vim, and tim pope&rsquo;s commentary.vim, surround.vim and
+<a href="https://github.com/wellle/targets.vim">https://github.com/wellle/targets.vim</a> made editing a breeze.</p>
+<p>Commenting out code is just <code>gc&lt;object&gt;</code>, and since Java has quite a bit of method chaining, using
+targets.vim to clear out chained function call is just <code>di.</code> since method calls are chained by dots.</p>
+<p>With a usual tiling manager, like the i3 that I am using, I am able to have a workspace with a regular
+terminal running vim, a narrow terminal allow me to try things out in jshell or just build my project,
+and tiled with the built project for manual testing. Most importantly, switching between them is a
+breeze with the normal keybindings (self-defined, if need be)!</p>
+<h3 id="cons">Cons</h3>
+<p>COC&rsquo;s Java was really CPU intensive, there are many times it just hogs up the CPU and hangs the
+nvim instance. I am not sure where the problem is, but I would imagine in a huge project this
+is not feasible at all. Also when you switch between buffers, there will be some time when the
+language server parses the new buffer and introduces waits around 3-4 seconds, which can be quite
+unbearable to wait.</p>
+<h3 id="the-pros-and-cons-with-intellij">The Pros and Cons with IntelliJ</h3>
+<p>A friend of mine, once a Java developer, saw me developing in NVim and hence convinced me to give
+IntelliJ a whirl, showing me the power of the IDE itself. It certainly does not disappoint, and
+even taught me new things about the whole <code>:CocAction</code> business.</p>
+<h3 id="pros-1">Pros</h3>
+<p>IntelliJ was the result of many, many years of development and is extremely feature rich.
+I recommend anyone using IntelliJ take some time to go through a course, maybe a good
+Video Tutorial series to learn some useful features before you start. It is a waste if you use
+your IntelliJ just like a Gedit with a terminal and a file explorer.</p>
+<p>For example, upon writing a few classes in Java you realized that they share some functionalities
+and you would like to extract out a few functions from these classes into an Interface. IntelliJ
+has it. You want to delete a class and all of its occurrences. In NVim, you can delete the class,
+and use some command line tools like <code>grep</code> or <code>rg</code> to search for occurrences, and then delete them,
+which although is possible, is a lot more work. Renaming a package and have to change all the
+child classes&rsquo;s package declaracion? You can do it with one button in IntelliJ. In CLI, you probably
+need some data wrangling skills, and with some sed magic and some Googling. In any case, IntelliJ
+was way more powerful than I realized.</p>
+<h3 id="cons-1">Cons</h3>
+<p>As almost all IntelliJ users would complain - it is too memory-intensive. Also for such a huge
+IDE, you will need some time to get used to the different key bindings, such as switching between
+the editor and terminal, and I can&rsquo;t seem to remember them because they differ with my usual ones
+a lot. Also auto format on save is not available out of the box and requires some keyboard macro
+recording. Although I would say in the long run, these would be outweighed by the benefits if
+you do Java programming for a living.</p>
+<h2 id="final-reflection">Final reflection</h2>
+<p>I realized that there should have been a standard translation protocol which translates Java
+checkstyle into a formatting standard, recognized by the IDEs. Currently users can import
+styleguides (not checkstyle), which might conflict with a checkstyle file. Also checkstyle file
+often warns for code-quality issues (such as trailing spaces, bracing, and comments), which
+would be good if can be integrated by the IDE/NVim. Maybe there is one which I am not aware of,
+but it would be really useful!</p>
+<p>It was a long journey and I think I have discovered a bit more about NVim and Editors through
+this little experiment.</p>
+
+</div>
+
+
+    </main>
+
+    
+      
+    
+  </body>
+</html>
