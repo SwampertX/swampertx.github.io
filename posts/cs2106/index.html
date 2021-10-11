@@ -1,0 +1,4101 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CS2106 Operating Systems | </title>
+<meta name="keywords" content="" />
+<meta name="description" content="Lecture 6 IPC, Threads  Archipelago Q&amp;A    Why not set the Time Quantum to the Interval of Timer Interrupt, since that is the only important time to run the scheduler? A: ITI is hardware specific, and QT is set by kernel.
+  If there is only one job in RR, then will there be context switch every TQ before the job ends? A: No, but some stack will still be saved upon the running of the Interrupt Routine.">
+<meta name="author" content="Tan Yee Jian">
+<link rel="canonical" href="/posts/cs2106/" />
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.6cba0d81b5f3f42bb578d49f402ba4175aa72b43def148780b8ad714c957c6f5.css" integrity="sha256-bLoNgbXz9Cu1eNSfQCukF1qnK0Pe8Uh4C4rXFMlXxvU=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.7680afc38aa6b15ddf158a4f3780b7b1f7dde7e91d26f073e6229bb7a0793c92.js" integrity="sha256-doCvw4qmsV3fFYpPN4C3sffd5&#43;kdJvBz5iKbt6B5PJI="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="mask-icon" href="safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.87.0" />
+<meta property="og:title" content="CS2106 Operating Systems" />
+<meta property="og:description" content="Lecture 6 IPC, Threads  Archipelago Q&amp;A    Why not set the Time Quantum to the Interval of Timer Interrupt, since that is the only important time to run the scheduler? A: ITI is hardware specific, and QT is set by kernel.
+  If there is only one job in RR, then will there be context switch every TQ before the job ends? A: No, but some stack will still be saved upon the running of the Interrupt Routine." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/cs2106/" /><meta property="article:section" content="posts" />
+
+<meta property="og:site_name" content="Yee Jian&#39;s Blog" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="CS2106 Operating Systems"/>
+<meta name="twitter:description" content="Lecture 6 IPC, Threads  Archipelago Q&amp;A    Why not set the Time Quantum to the Interval of Timer Interrupt, since that is the only important time to run the scheduler? A: ITI is hardware specific, and QT is set by kernel.
+  If there is only one job in RR, then will there be context switch every TQ before the job ends? A: No, but some stack will still be saved upon the running of the Interrupt Routine."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Posts",
+      "item": "/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "CS2106 Operating Systems",
+      "item": "/posts/cs2106/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CS2106 Operating Systems",
+  "name": "CS2106 Operating Systems",
+  "description": "Lecture 6 IPC, Threads  Archipelago Q\u0026amp;A    Why not set the Time Quantum to the Interval of Timer Interrupt, since that is the only important time to run the scheduler? A: ITI is hardware specific, and QT is set by kernel.\n  If there is only one job in RR, then will there be context switch every TQ before the job ends? A: No, but some stack will still be saved upon the running of the Interrupt Routine.",
+  "keywords": [
+    
+  ],
+  "articleBody": " Lecture 6 IPC, Threads  Archipelago Q\u0026A    Why not set the Time Quantum to the Interval of Timer Interrupt, since that is the only important time to run the scheduler? A: ITI is hardware specific, and QT is set by kernel.\n  If there is only one job in RR, then will there be context switch every TQ before the job ends? A: No, but some stack will still be saved upon the running of the Interrupt Routine.\n    Inter-process Communication  Mechanisms:\nShared memory   Message passing  Can be either Blocking or Non-blocking.\nReceiver  Blocking receive is the most common\n  Sender  Asynchronous  Even asynchronous can be blocking, since the mailbox(buffer) can be full. If sent before receiver calls receive, is blocked until the receiver receives the message using the receive function call.\n  Synchronous  Also known as Rendezvous, since both process have to meet at a known point in time. There is no immediate buffering, the sender have to be blocked until the receiver is ready.\n    Pros and Cons  Pros    Can send across different machines\n  Cross-platform, as long as message is standard\n  Easier synchronization\n    Cons    Inefficient\n  Messages are limited in size and format\n        Pipes (Unix)  One of the earliest UPC mechanism\n  FIFO\n  Blocking\n  Writers wait when buffer is full\n  Readers wait when buffer is empty\n      Signal (Unix)  SIGH\\*, programs which receive that either handle it with it's own handlers, or use the default handlers given by the system.\n    Threads  Motivation: Processes are\n  heavy/expensive\n  hard to context switch\n  IPC is hard, since each process have independent memory space\n  and threads can help us with\n  achieving multi-core programming\n  even on 1 core, we can move I/O intensive tasks to a thread to prevent blocking, and enable doing some other CPU tasks at the main process\n  Brain teaser: would we want to run two threads with exact same code? Answer: Yes, probably on different data. Egg. searching for a number in an array - data-centric parallelization\n What can Threads share?\n  GPR - No. They will interfere with one another\n  Special registers - No\n  Text segment - Yes\n  Data segment - Yes\n  Heap - Yes\n  Stack - No. Different fn calls\n  PID - Yes\n  Files - Yes\n  Instruction cache - not relevant\n  Data cache - not relevant\n  In short, anything other than Stack and Registers are shared. Threads can be implemented as User or Kernel threads, the former cannot utilize multiple cores, and the latter can.\nUser Thread  A user process A spawns multiple threads A1, A2,… and the OS deems A as just one thread.\n  Advantages:\n  Any OS\n  Thread operations are library calls\n  Can design your own thread scheduling policy\n    Disadvantages:\n  Cannot exploit multiple cores\n      Kernel Thread    Advantages:\n  Can run on multiple CPUs!\n    Disadvantages:\n  Now thread operations are system calls, and is more expensive\n  If thread operations are too feature intensive, it becomes very heavy to run, and too feature-poor for the converse\n          — Uncle Soo  Djordje —   Lecture 6 Synchronization  Race Condition  Reason: each operation is a few machine instructions which can interleave Solution: designate section that will race, as Critical Section\n  Only one process can run in the CS\n  The Toilet Analogy  You want toilet to be a Critical Section: only one person (process/thread) can be in it Therefore, it should have 4 properties:\n  Mutual Exclusion Only one guy in the toilet\n  Progress If no one is in toilet, one of the queuing guy can use\n  Bounded Wait If you are queuing, your waiting time is bounded\n  Independence If you are not anywhere near the toilet, you can not block (book) it\n    Bad Synchronization  The \"meet each other in corridor\" analogy\nDeadlock  Both insist walking on the same side of corridor\n  Livelock  Both switch sides together to \"make way\", end up blocking each other\n  Starvation  Some people never get to pass through the corridor\n    Critical Section Implementations  EnterCS() # do something dangerous ExitCS()  And we wish to implement EnterCS() and ExitCS().\nAssembly level Implementation  A TestAndSet instruction which\n  Fetches memory from a Lock to a register\n  Set the content of the memory to 1\n  all in one instruction.\nvoid EnterCS(int* Lock) { // loop until lock is free, ie == 1  while (TestAndSet(Lock) == 1); } /*Do CS Stuff Here*/ void ExitCS(int* Lock) { *Lock = 0; } // exit by setting lock free   Criteria check - Passed!    Mutual Exclusion - Yes The lock is 0 or 1\n  Progress - Yes The lock is 0 then others can use\n  Bounded Wait - Depends Only possible if scheduling is fair - other processes get to use the lock\n  Independence - Yes\n    Catches  Busy Waiting - due to the while loop when waiting to use the lock\n    High-level language Implementation  Attempt 1 - Violates Mutual Exclusion  We first notice that setting a Lock to 0 for free, and 1 for locked does not work - because checking and setting locks are multiple instructions. This will allow the Mutual Exclusion requirement to fail, since multiple process perceive the lock as free. lousy solution: disable interrupts, hence only one process at a time. But this disables the scheduler!\n  Attempt 2 - Violates Independence  Now the Lock value determines which process can use: if A and B wants to use the CS, 1 represents A use, and 0 represents B use. Problem: this violates the Independence property.\n  Attempt 3 - Deadlock  want[myId] = 1; while (want[otherId] == 1); // CS code want[myId] = 0;  Problem: What if both myId and otherId are both 1 (ie, they both want to use)? Answer: They will both wait for each other to give up (via the while loop), which will not happen\n  Peterson's Algorithm  Combining Attempt 2 and 3: Recall Attempt 3's problem: Both let each other run We add a \"Judge\" variable: Turn We will only wait when the other process wants to run and does not let me run\n Turn variable gives \"priority\" to a process, so the deadlock in Attempt 3 will not happen\n  Criteria check - Passed (Peterson)    Mutual Exclusion - Yes Determined by Turn variable - it can only be one value at a time\n  Progress - Yes Resets Want[myId] when coming out of the CS\n  Bounded Wait - Depends If scheduling is fair\n  Independence - Yes complements want[myId] with a Turn variable to facilitate switching\n    Peterson's Algorithm: Disadvantages    Busy Waiting\n  Low-Level\n  2 processes only\n      High-level abstraction, implemented as Assembly  By Dijkstra\nSemaphore  A generalized synchronization mechanism. Is a specification, rather than implementation. A Semaphore is a Data Structure that contains:\n  An integer value S\n  A queue of processes\n  and it supports two functions to be called by processes/threads:\n  Wait(sem) (Down(sem))\n  If S S  0 and then decrement and continue executing\n  Else, decrement S and continue executing\n    Signal(sem) (Up(sem)) S++. Wake up S processes\n  Properties  Given \\(S_{initial} \\geq 0\\), then \\(S_{current} = S_{initial} + \\#signal(S) - \\#wait(s)\\) is an invariant. Where\n  \\(#signal(S)\\) = no. of signal() executed, and\n  \\(#wait(S)\\) = no. of wait() completed\n    Proof that Semaphore eliminates Deadlock and Starvation     Criteria check    Mutual Exclusion\n  Progress\n  Bounded Wait\n  Independence\n          Classical Synchronization Problems  Producer Consumer  Specification    Processes share a bounded buffer (fixed size array, or stack) of size K\n  Producers insert to the end of buffer if items  Consumer remove item from the end if items  0\n      Readers Writers  Specification  Processes share a data structure D Writer must have exclusive access to D Reader can read with other readers concurrently\n        Tutorial 5  Question 1    Process, since we sometimes want to detach the running program when shell exits.\n  protects, acts as a sandbox for programs running\n  does not need to share memory space\n    Process? There is no need to share the heap\n  same as previous, need to protect separate memory space\n    Thread. Share the heap, and many entities, process is too heavy\n  IPC has higher overhead\n    Thread would be fine, as they can share cache of some sort in-memory\n    Question 2    We list down the instructions:\n  Load, inc, store\n  Load, inc, store. label these (1-6),\n  Load, mult, store. label these 7-9.\n    1-6 and 7-9 are sequential. then equivalent to 9 choose 3. 84 scenarios\n  Ignoring operations, we have 6C2 = 15 scenarios\n  Listing them:\n   sequence outcome notes     123456 2*2 = 4    123546 2    125346 2    152346 0    512346 0    123564 1    125364 2    152364 2    512364     125634     152634     512634     156234     516234     561234      0, 1, 2, 3, 4 are possible\n    Question 3  Yes it would avoid, since only the current thread/process can run without interrupt, but it can never be killed\n  does not work in multicore\n  might not have privilege to disable\n  if disable timer -\n    Question 4  S1 = 1, S2 = 0 Therefore A must be blocked and can only happen after C. B and C can happen freely. then BCA, CAB, CBA are possible ones\n  Question 5  int arrived = 0; Semaphore mutex = 1; Semaphore waitQ = 0; void Barrier(N) { wait(mutex); arrived++; signal(mutex); // everyone steps pass this except for the nth  if(arrived == N) signal(waitQ); // CRUCIAL  // N - 1 has called this and waits in the queue  wait(waitQ); // crucial happens. then first process goes below and releases the second  // continues until all N go through  signal(waitQ); }  This barrier is un-reusable.\n  Question 6  in GeneralWait() : if two processes have not reached wait(queue) then count = -2, mutex = but two\n    Lecture 7 Memory Management  Recap - memory usage of process    Text for instructions\n  Data for global variables\n  Heap for dynamic allocation\n  Stack for function invocations\n    Summary    Source code to Executable - memory locations are relative\n  Executable to Actual Process - OS loads and run into memory\n  Topics to explore:\n  Memory Abstraction\n  Contiguous Memory Allocation allocating chunks of memory\n  Disjoint Memory Allocation like a linked list\n  Virtual Memory Management secondary storage (ie hard drive)\n    Memory Abstraction  Without Abstraction  What if a process uses physical address directly? In a timesharing OS, there will be memory collision for processes that access the same location!\nFix Attempt - Address Relocation  Going through the whole executable, adding a starting position to ALL memory addresses.\n Problem: Very time consuming. Also in assembly code, it is almost impossible to tell part addresses and values since there is no data type!\n  Fix Attempt 2 - Base + Limit Registers  Compile executables with Base and Limit register values. Hence all memory addresses are compiled with the offset, and Limit can protect your memory space\n    Logical address  A process' view of the memory space - they think they have all the memory space\n  Store Memory concept Von Neumann Architecture - both instruction and data in memory\n  Load-Store Memory execution model\n  Assumptions    A process occupies a contiguous memory region\n  Physical memory is large enough to contain whole processes\n      Memory Partition  Fixed-Size Partition  Split memory into partitions that are sufficient for the largest of programs. Then processes are allocated memory space of any of the fixed partitions.\n Cons: Memory wastage (eg. 2gb memory for \"Hello World\")\n  Variable-Size Partition  Give processes as much memory as they need.\n Problem: When a process terminates, the fragmented \"holes\", or free memory fragments are insufficient for one process, but enough when combined\n  Linked-list partition - the Buddy Algorithm    Given Memory of size 2^K\n  Array of K elements Each entry A[i] = linked list of memory address of free chunks of size 2^i\n  Initialization = Each A[i] is empty, except for A[K] = 0 (whole block of 0 to 2^k memory)\n  Algorithm:\n  Allocating Memory\n  We have a process that needs X bytes of memory\n  Calculate minimum n such that 2^n  X We will need a memory block from A[n]\n  If A[n] is empty\n  We go to A[n+1] and look at its first entry (recurse up if A[n+1] is also empty)\n  say the address is a. Thus a to a+2^n+1 is a free memory block\n  Split the memory by:\n  Remove a from the linked list at A[n+1]\n  Add entries a, a+2^n at A[n]. These two entries are defined as \"buddies\" of each other.\n      Allocate the first element in the linked list at A[n] for the process\n  Remove it from the linked list\n    Deallocating Memory\n  If process occupying memory address a of size 2^n is done, we return the entry a to (the end/beginning of) A[n].\n  If the buddy of a, ie a+2^n is in A[n], merge both of them together by:\n  Remove a and a+2^n from A[n]\n  Add (to the end/beginning of) A[n+1] a\n  Repeat this whole step until either n = K, or no buddy is found.\n    Time complexity:\n  O(1)\n  There are maximally 2^(k+1-n)/2 elements in the linked list at A[n]. (verify) and thus in the worst case, we keep adding up from that to 2^0. O(2^k)\n              Tutorial 6    We just need to make sure the addition is atomic.\nint atomic_increment(int* t) { int at_t = *t; while(!_sync_bool_compare_and_swap(t, at_t, at_t+1)) int at_t = *t; }      Two people from different directions meet at a point on bridge, deadlock\n  No problem. Probably inefficient, as per C solves\n  Allow people from the same side to join the bridge if there is already someone.\nSemaphore mutex = 1; int count = 0; void enter_bridge(int dir) { int pass = 0; if (dir == 1) { while(!pass) { wait(mutex); if(count = 0) { pass = 1; count ++; } signal(mutex); } } else { while(!pass) { wait(mutex); if(count  0) { pass = 1; count --; } signal(mutex); } } } void exit_bridge(int dir) { if (dir == 1) { wait(mutex); count--; signal(mutex); } else { wait(mutex); count++; signal(mutex); } }    Busy waiting.\n    We notice this is the dining philosopher's problem. The X, Y, Z are philosophers while A, B, C are chopsticks\n  No. Without loss of generality, if X and Y are running simultaneously, either X gets B or Y gets B. The process that gets B will run, and return the resource.\n  X takes A, Y takes B, and Z takes C.\n  (answer) Z to acquire A before C. Recalling Tanenbaum's solution:\n#define THINKING 0 #define EATING 1 #define HUNGRY 2  #define NEXT (i+1)%N #define PREV (i+N-1)%N #define N 100  int state[N]; Semaphore mutex = 1; Semaphore s[N] = {1}; void philosopher(int i) { while(1) { think(); takeChopsticks(i); eat(); putChopsticks(i); } } void takeChopsticks(int i) { wait(mutex); state[i] = HUNGRY; safeToEat(i); signal(mutex); wait(s[i]); } void safeToEat(int i) { if (state[i] == HUNGRY \u0026\u0026 state[PREV] != EATING \u0026\u0026 state[NEXT] != EATING){ state[i] = EATING; signal(s[i]); } } void putChopsticks(int i) { wait(mutex); state[i] = THINKING; safeToEat(LEFT); safeToEat(RIGHT); signal(mutex); }        P2 - P3 - P1\n  Yes\n  P1 - P2 - P3 is a happy path\n  No. 2314 is a happy path\n    We just show that any of\n  Mutual Exclusion\n  Hold and Wait\n  No-preempt\n  Circular wait\n  is impossible. Turns out that Hold and Wait is eliminated, since a philosopher either takes both chopsticks and eat, or wait until both chopsticks are available.\n    Tutorial 7       1 1 1 1 1 1 0 0     0 0 0 0 0 0 0 0        Find how many blocks to allocate. n = X / sizeof(smallest alloc unit)\n  Look for the first occurence of 0 in bitmap.  finding the most significant 1 on (1s complement of bitmap)\n  Apparently the way to get the MSSB is just to iterate through and get it.\n    Simply AND the bitmap with all 1 except for X bits starting from Y as 0\n  It will be merged automatically.\n        Min Max Remarks     a \\= max 2 ^ 12 * (1) Use an array. No need starting address/size   b 13? 2^12 * 4 * (13) Linked list   c 2^(24-10)/8           Algo 200 400 600 500 300 250 Remarks     First Fit  357(1) 210(2) 468(3)   491(4) waits. O(n) average   Best Fit  357(1) 491(4) 468(3)  210(2) O(n) average   Worst Fit   357(1) 210(2)   468, 491 wait. O(n) average    Most efficient: best fit. Best average runtime: first fit. Best to use: first fit\n  From the ordering of first fit, we realize the new algorithm has the same runtime given the example.\n On average, it reduces the search space and is generally faster if we wrap-around in our search, since first fit tends to fill up the first few memory spaces.\n  Linked List of processes id:usesmem(at) A:240(0), B:60(256), C:100(384), D:128(512) Buddy Table:\n   Size(KB) init a b c d e f g     1024 0          512  512 512 512    0   256  256   768 0, 768 0, 768 (0, 256) ,768   128   384  640 640 384, 640 (256, 384), 640   64   320 320 320 320 320 (256, 320)   32           16           8           4           2           1                Lecture 7 Disjoint Memory Space  Paging  Physical memory - into frames Logical memory (for a process) - into pages each are of the same size = 4KB\nLogical Address Translation  Strategies:\n  Frame size as a power of 2 (to get the first k bits as frame number)\n  Physical frame size == Logical page size\n  Exercise LA = 11|10 PA = 101|10\n  Implementing Paging Scheme    Paging is costly (to save and retrieve page table)\n  Pure software implementation: store page table inside memory context\n  Instead we use a cache, known as Translation Look-aside Buffer (TLB)\n  Is a fully associative cache, need to iterate through (in parallel) to find the page to frame translation\n  50 times faster\n  Hit: time taken = TLB access (1ns) + memory access (50ns)\n  Miss: time taken = TLB access (1ns, miss) + memory access(50ns, check actual paging table) + memory access (50ns)\n    Fragmentation\n  External fragmentation (unused frames) is impossible\n  Internal fragmentation (within frames) is possible, if a page is not fully utilized in a frame\n    Question: what to save when switching a process? Preliminary answer: no need for tlb, just overwrite if irrelevant; if the process has not terminated, page table should remain there, which means physical frames should not be touched.\n  TLB? Flush. Store to speed up\n  Page table? Different process's page0 is different. Swap out\n  Physical frames (in the memory)?\n  Nothing?\n    Protection\n  Can save valid, rwx bits in each page\n    How to share memory\n  share a page, page tables point to the same frame\n    How to fork?\n  First share the same page table, until write\n  Then we copy over the modified page only.\n    Separate Text, Heap, Stack\n   Segment Base Limit     Text     Data     Stack     Heap       If our access to (segment, address) where address  limit, it is a Segmentation Fault. Segment table usually stored in CPU, since it is very small. (4 entries only in our example)\n  Now we further \"Paginate\" our segments. then our segment table:\n   Segment Page table base     Then given a (segment, address) has the address converted into (frame, offset) from the entry in the page table.\n          Tutorial 8    page 0,1: text, pages 2,3: data\n  Page table:\n   page# frame# valid     0 5 1   1 2 1   2 10 1   3 (blank) 0       page content frame     0 inst 1 5    inst 2     inst 3     inst 4    1 inst 5 2    inst 6     word 1     word 2    2 word 3 10    word 4     word 5     -    3 - 9    -     -     -        processor action logical address physical address     fetch inst 1 0000 0 010100 20   load word 2 0111 7 001011 11   load word 3 1000 8 101000 49   load word 6 1011 11 100111 39      Segment table:\n   segment base address limit     0 (text) 50 6   1 (data) 23 5       action Logical address physical address     fetch inst 1 0,0 50    1,1 24    1,2 25    1,5 segfault      Segment/page table:\n   segment pages frame valid     text 0 7 1    1 4 1    2 1 0    3 2 0   data 0 9 1    1 3 1    2 14 0    3 6 0       processor action logical address physical address     fetch inst 1 0,0,00 0111,00 28   load word 2 1,0,01 1001,10 37   load word 3 1,0,10 1001,11 38   load word 6 1,1,10 0011,10 14        Design 3, since it is dynamic.\n    Global variable in the text segment.\n  Query page table (50ns)\n  Get the data (50ns)\n    In the case of hit: just 50ns. otherwise 100.\nprint(50*0.75+100*0.25)  62.5    no of entries = 75% of the number of frames in RAM. write memory efficient programs. 0.75 * (2^32 / 2^12) 32 to 1024 in real life with 99% hit rate due to temporal and spatial locality\n    Internal fragmentation is related to the minimum memory chunk size. If it is 2^k bytes, then the average internal fragmentation \\[\\sum^{2^k-1}_{i=1}\\frac{i}{2^k} = \\frac{2^k(2^k-1)}{2^{k+1}} = \\frac{2^k-1}{2}\\]\n    Contiguous memory allocation: Impossible for contiguous, since we have no way of allocating extra memory space if it runs out. Or possibly, can throw runtime error.\n  Pure paging: You can keep getting new pages until all memory have exhausted.\n  Pure segmentation: You can possibly grow each segment.\n      Use the same page table, but with its write bits set to 0.\n  When child or parent process is going to write to any page.\n  An extra bit denoting has forked. if attempt to write and the bit is set, then copy the memory.\n      Lecture 9 Virtual Memory Scheme  Destroy: memory context is always in RAM\nVirtual memory space    Compared to Logical memory address: now you can page into swap\n  A page is either memory resident (in RAM, physical memory) or non-memory resident (in secondary memory)\n  If a page is in secondary memory, it is consider invalid (by the valid bit). Invalid memory access (by hardware) will trap to OS, which load the memory into physical memory and continue with operation.\n    Page Table Structure  Direct Paging    If we have k bit of addresses, and each page is 2^m bits, we have 2^k-m entries.\n    2-Level    A table of page tables. This prevents having many page entries that are invalid.\n  Invalid tables are simply represented by a single null pointer entry\n    Inverse Table    Frame as key, value is PID and page number\n  Queries are in PID, page number, and have to search through the table\n  Advantage: just one table Disadvantage: slow translation\n      Page Replacement Algorithms  If, during a page fault (page not in memory), there is no more memory left, we need to evict a memory page.\n  If page is dirty (modified from swap last time it is used), need to write back\n  Optimum  Evict the one that is not going to be used for the longest time. Impossible to implement.\n  FIFO  Evict the guy who reaches earliest. Since it does not exploit temporal locality (it might be used recently), causes Belady's Anomaly: when frame number increases, does not have less page faults.\n  Least Recently Used   Second-Chance  Keep a bit denoting whether a page has been reference again since it's first appearance in page table. Keep a wraparound pointer that evict pages that have the bit unset. If the bit is set, pointer passes through it will unset it.\n    Frame Allocation  Limited frames for programs. How to allocate? Simple approaches\n  Equal allocation: everyone gets same amount, distributed equally\n  Proportional allocation: if you need more memory, you get more frames\n  Think about this: when we replace page, we can either replace the process's own frames (local replacement) or steal others' frames (global replacement)\n  Local: stable performance, but might be low\n  Global: dynamic, but can affect others\n  Thrashing  Heavy I/O to get non-resident pages to memory\n Cascading Thrashing: Process A thrashes, evicts memory from another process B, which then thrashes when it's running, and runs down the loop.\n  Working Set Model  There might be a working set of frames that causes no heavy change in number of frames, or otherwise. We call them stable and transient working sets.\n      Tutorial 9        Virtual Address -   TLB for page\n  If TLB Miss, trap to OS OS look for page-frame mapping in page table save it in TLB. Replace TLB entry via some caching algorithm, for example remove the last least recently used\n  Else jump to 4\n    Is page# memory resident?\n  It is not, then OS will put it into physical memory. If physical memory is occupied, then need to \"swap\" the page in swap and the frame in memory. Which to kick off to swap is decided by the algorithms.\n  Else just read\n    Read\n    TLB\n   page no Frame no     3 7   0 4     Page Table\n   page no frame/swap page no memory resident valid     0             32bits, ie number of bytes = 2^32bits number of pages possible = 2^32-12 = 2^20 page table space = 2^20+2 = 2^22 = 4MB\n virtual address = page dir index - pt index - offset offset = to uniquely identify each byte in a page = 12 bits pt index = to uniquely identify each pt entry = 4kb / 4b = 10 bits\n we will have 128k pages = 512MB/4kbper page = 2^(29-12)\n  Same amount since each frame is fully utilized?\n  how many frames? 2^(29-12) = 2^17 hence size = 2^(17+3) = 2^20\n        A04\n   ref bit 0 0 0 (pointer) 1      Save frame 2 in a swap slot Bring A08 to frame 2 Update TLB for A\n      B17\n  Maybe\n   frame content     1 A31   3 A17   2 A08   0 B13      OS knows a frame has to be evicted. It will keep a variable call victim, and\n  if victim doesn't have an entry, then increment, otherwise\n  check it's reference bit.\n          Lecture 10 File System     Memory Management Files System Management    File    as an abstract data type\n  Hard Disk lingo: Track: a concentric circle on the drive Geometric sector: a sector (a slice of pie) on the hard disk\n  Therefore sector is the smallest unit of transfer for a hard drive. This is bigger if the rotations per minute is high\n    File System  Criteria:\n  Self contained (plug and play to different OS)\n  Persistent (to power off)\n  Efficient: minimum bookkeeping\n    Directory     Lecture 11 File System Implementation  General Disk Organization    Partitions, each contain a filesystem\n  Contains:\n   OS boot block Partition details directory structure files info files data      Before any partition, at the start of a disk: Master Boot Record Simple Boot Code + Partition Table MBR leads you to the start of each partition which contains the boot code for that OS (in that filesystem)\n    File implementation    Logical view of a file: a collection of logical blocks (of smallest allocatable size) criteria: minimal overhead + fast access of logical blocks.\n  Scheme 1: Contiguous Block Allocation    Simple, just need start location and length to identify each file\n  Fast access\n  External fragmentation\n    Scheme 2: Linked List Allocation    Just need to head to identify. Last logical block will be specially marked\n  Keep track the end of it for easy appending.\n  Slow access to the rest of the file\n  Unreliable - one corrupted block can kill off the whole file.\n    Scheme 3: File Allocation Table    Keep linked list 'next' in the RAM instead of the hard disk.\n  Optimizing: we might not need the whole table (of next's) at all time.\n  'Index' this table in a logical block.\n  What if the block is too small to index the whole file?\n  Link-list to the next or\n  Multi-level indexing.\n      Scheme 3: Hybrid    Within one logical block:\n  some entries points to blocks directly\n  one point to a index table\n  one point to a double-level-index\n  one point to a triple …\n        Free Space Management  Objectives  able to allocate and free\n  Scheme 1: Bitmap  each block is mapped to a bit.\n  Scheme 2: Free Blocks    Have a table listing free blocks. The end of it points to another table\n  Each table reside in some logical block (which in turn would not be free)\n      Directory Structure  Objectives    Keep track of the files (names) in it\n  Map the file name to the file info\n    Implementation 1: Linear list    ie a table of the files inside, the starting logical block number, ending number etc.\n  locate a file: linear search.\n    Implementation 2: Hash Table    fast lookup\n  but limited size and depends on a good hash function to prevent collision\n      Combining knowledge (an example)  Create a file    We want to create a file with filepath.\n  We check if the path is valid. Go to the Directory Structure part of the filesystem and check.\n  Check if there is enough free space - look at Partition Details whether we have that free space.\n  To create, say if we use index, create a index block and stuff.\n    Open a file    Open a file with a path.\n  OS provides a file descriptor\n  Points to the open file table (OS-wide), with a pointer\n  The pointer points to the logical blocks (?)\n    Magnetic Disk    We want to read from a sector.\n  Needle change to the right track. Seek Time, 2-10ms\n  Rotate to the sector on the track. Rotational Latency, 4800 to 15000 RPM needs 12.5 to 4ms respectively.\n  Transfer Time. Transfer rate is around 125MB/s. this is Seek Time, Rotational Latency\n      Disk I/O Scheduling  Objective  To minimize Seek Time and Rotational Latency\n  Algorithm 1: FCFS    not good\n    Algorithm 2: Shortest Seek First    go to the nearest track first\n  potential starvation\n    Algorithm 3: Elevator    Think of track numbers as floor numbers\n  Lift goes all the way down, then all the way up (bi-direction)\n  Or just move up. When reach the top, go from ground.(bi-direction)\n        Tutorial 10      W(9,3)=2 (3,5) W(11,3)=3 (2,3,5) W(9,4)=3 (2,3,5) W(11,5)=3 (2,3,5)\n  Solution: preemptively loads pages into memory when a process transits to running state. Or prevent more programs from running when memory is full (as predicted by the working set) By principle of locality, the future is likely to use a similar number of frames, can allocate that delta value can average a\n  the times when the values are used\n      abstraction from OS (different syscalls), error checking and handling (again, system interrupts)\n  trigger is 1024. buffer size is 1kb. When newline character is added, the buffer is flushed.\n  Read buffersize of things first. Then write it into outputArray arraySize times. If no more complete item left, read again to fill buffer.\n    Lock the writing file. Will first check the per-process open file table\n  fd saves file permission and path resolution\n  Hao Wei's notes    Linux uses inode ls -i to identify files\n  Permissions: User-Group-Others, in that priority.\n  Open File Table\n  System-wide table: one entry per file\n  Per-process table: keep track of fd, and other info such as offset\n    Soft links can point to directories but hard links cannot. Soft links are special files.\n      Lecture 12 File System Case Studies  FAT12  which Bill Gates wrote it in 5 days\nStructure of a FAT12 partition     Boot FAT FAT Duplicate Root Directory Data blocks     File Allocation Table is a map from logical block number to either status (if not in use) of the location of the next logical block of the file.\n Structure of a FAT:\n   block number status or next      BAD    5    EOF (end of file)    FREE     FAT16 means there can maximally be 2^16 data blocks (or 16 bits when identifying a next block)\n  A Directory    is saved as a special file. contains at least one data block\n  is an array of entries of 32 bytes.\n  An entry is:\n   File name (8)   File Ext (3)   Attributes (1)   Directory Entry   Creation Date, Time (2,2)   First Disk Block (2)   File Size in Bytes (4)        Some common operations  Reading a file, lab5/ex1.c    lab5 is in a data block. How to find out? relative to the root\n  The data block in lab5 have many entries, one of which contains ex1.c\n  The entry containing ex1.c contains ex1.c's first disk block.\n    Delete a file, lab5/ex1.c  What needs to be done?    remove entry from the parent directory's block. Mark the entry as invalid, by changing the first byte of the entry (hence file name) with 0xE5. If this is used as the first character of file name, use 0x05 to represent it instead. HACKS!\n  ex1.c has multiple blocks in the partition, hence multiple entries in the FAT. Say it is 3-8-5-12, we need to write all of the FAT entries associated with the file with FREE.\n  Should we wipe the data blocks? Too expensive, leave data blocks as is.\n    What can we recover from a deleted file?    File name: lose the first byte (due to FAT change)\n  File content: maybe lost or not, depending whether the blocks are used (allocated to new files by OS).\n      Count free space in folder?    In the whole disk: count the number of FREE entries in the FAT\n  In a specific folder that is not root:\n  Take out the directory's data block\n  recursively check???\n        Improvements  Larger partition size!    Disk Cluster: a FAT entry to address multiple continuous disk blocks. However increases internal fragmentation.\n  FAT Size: use more bits to address a block. 32 bits can address 16TB with 4KB clusters.\n    Long File Name Support  Virtual FAT, use exactly the same filesystem that supports filenames 255 characters.\n      Ext2  Partition Structure     Boot Block Group 0 Block Group 1 …     Each Block Group contains\n   Super-block   Group Descriptors   block bitmap (0 free, 1 occupied)   inode bitmap   inode array   data blocks      Group Descriptors: Describes EVERY SINGLE BLOCK GROUP in the partition\n  Super Block: describes the whole filesystem. Both GD and SB are duplicated in every block group, redundancy makes fs very robust.\n    Inode structure    128 bytes\n  Contains information of\n  Mode(2)\n  Owner Info (4)\n  File Size (4/8)\n  Timestamps (3*4)\n  Data Block Pointers (15*4) file-specific. first 12 point to direct blocks (containing data) 13th block points to a data block with 1-level paging 14th - 2-level paging and so on\n    Inode Example    Allows fast access to small files\n  Yet can handle huge files\n  First 12 blocks\n  Then (block size/ block address size) blocks\n  Then ^ squared blocks\n  Cubed, etc\n      Directory Example    Also represented as an Inode\n  The first data pointer points to a data block\n  That data block is a linked list, containing file name, filename length, file or directory, and the inode number. Chaining to the next child in the directory.\n    Examples  Accessing /sub/file  Inode for / is 2\n  Inode table, entry 2 points to a inode.\n  The inode's data block pointer points to 15\n  Disk block 15 contains a link list. Say the first node of the link list is sub, with inode 8\n  Inode-table 8 will give an inode (in a data block?) which has a data block pointer, first entry is 20\n  Disk block 20 contains the link list describing the folder /sub/, and say file is the first element of the linked list, with inode = 6\n  Checking inode table for 6th entry yields an inode, and the data block pointers are as described previously, point to either direct data or a few paging levels.\n    Deleting /sub/file    check the /sub/file inode, which gives the location of actual data blocks of file.\n  First, remove the /sub/file from /sub/. Easily remove that node from the linked list.\n  Now, there is no more /sub/file, then we need to remove its inode and actual data. We can do this by setting the relevant bits to zero in the block bitmap (for data) and inode bitmap respectively.\n    Hard/Symbolic Link with Inode    Soft links give DAG, Hard links give Graphs\n  Hard Link    Point to the same inode. A file has inode 8, then multiple directories can have a linkedlist node that has 8.\n  If we want to delete the file, what if someone else still needs it?\n  Actually referece count store in inode, recording number of dirs using it. When 0, remove.\n    Soft Link    A new file, regular like normal file, but file content is special and content the actual path of the file it is pointing to.\n          Extra Topics!  What if FS is inconsistent, due to Power loss/crash?  Tools: CHKDSK in windows, fsck in linux\n  Defragmentation    Linux has auto, claim to have no frag if usage is less than 90%\n        Tutorial 11      Free capacity = count 1s in the block bitmap: 12 Directory View: / – y – i, h – f – x – g – z – k\n    /y/i Get root directory from dir block 0. y is a directory, thus go to its directory block 3. Directory block 3 finds file i.\n  /x/z/i Get root directory from dir block, finds dir x, whose details is at block 1. Block 1 points to z at block 2, and i is not found in block 2, abort.\n      /x/z/k /Dir blocks 0 to 1 to 2. k has first data block 6, and it ends there. File content is :)\n  /y/h Dir blocks 0 to 3. start block at 27. Traversal:\n   Block Content     27 OP   30 ER   21 AT   14 IN   4 GS   23 YS   7 TE   10 M:   28 _(        /y/n 0 to 3. Create a new directory entry, with filename n. 5 blocks:\n   Block Next     8 13   13 15   15 16   16 20   20 22     Hence the directory entry should have 8 and 22\n      FCFS: since the relative order is unchanged, FCFS will yield the same result.\n  C-SCAN: single direction scan. Assuming increasing, make 18 arrive very late so the first round not pick it up.\n      If the requests overlap in terms of sectors, ie request A reads sector 1,2, and request B reads 2,3 in any capacity.\n  less operations and thus less hardware overhead.\n  reading a small part of data might be delay if merged with a larger read request. Limit the number of max num of sector?\n  Waiting for mergable requests can reduce total waiting time.\n  Might miss the elevator while waiting to merge or merging requests.\n    Can address more space, but at the cost of more internal fragmentation.\n    PYP To Review Questions  19/20 Sem 1  MCQs: 14, 19, 20, 22, 25\n    ",
+  "wordCount" : "6164",
+  "inLanguage": "en",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Tan Yee Jian"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/posts/cs2106/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: #1d1e20;
+                --entry: #2e2e33;
+                --primary: rgba(255, 255, 255, 0.84);
+                --secondary: rgba(255, 255, 255, 0.56);
+                --tertiary: rgba(255, 255, 255, 0.16);
+                --content: rgba(255, 255, 255, 0.74);
+                --hljs-bg: #2e2e33;
+                --code-bg: #37383e;
+                --border: #333;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </span>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      CS2106 Operating Systems
+    </h1>
+    <div class="post-meta">Tan Yee Jian
+</div>
+  </header> 
+  <div class="post-content">
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+Lecture 6 IPC, Threads
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<div id="outline-container-headline-2" class="outline-3">
+<h3 id="headline-2">
+Archipelago Q&amp;A
+</h3>
+<div id="outline-text-headline-2" class="outline-text-3">
+<ol>
+<li>
+<p>Why not set the Time Quantum to the Interval of Timer Interrupt, since that
+is the only important time to run the scheduler?
+A: ITI is hardware specific, and QT is set by kernel.</p>
+</li>
+<li>
+<p>If there is only one job in RR, then will there be context switch every TQ
+before the job ends?
+A: No, but some stack will still be saved upon the running of the Interrupt Routine.</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-3" class="outline-3">
+<h3 id="headline-3">
+Inter-process Communication
+</h3>
+<div id="outline-text-headline-3" class="outline-text-3">
+<p>Mechanisms:</p>
+<div id="outline-container-headline-4" class="outline-4">
+<h4 id="headline-4">
+Shared memory
+</h4>
+</div>
+<div id="outline-container-headline-5" class="outline-4">
+<h4 id="headline-5">
+Message passing
+</h4>
+<div id="outline-text-headline-5" class="outline-text-4">
+<p>Can be either <strong>Blocking</strong> or <strong>Non-blocking</strong>.</p>
+<div id="outline-container-headline-6" class="outline-5">
+<h5 id="headline-6">
+Receiver
+</h5>
+<div id="outline-text-headline-6" class="outline-text-5">
+<p>Blocking receive is the most common</p>
+</div>
+</div>
+<div id="outline-container-headline-7" class="outline-5">
+<h5 id="headline-7">
+Sender
+</h5>
+<div id="outline-text-headline-7" class="outline-text-5">
+<div id="outline-container-headline-8" class="outline-6">
+<h6 id="headline-8">
+Asynchronous
+</h6>
+<div id="outline-text-headline-8" class="outline-text-6">
+<p>Even asynchronous can be blocking, since the mailbox(buffer) can be full.
+If sent before receiver calls <code class="verbatim">receive</code>, is blocked until the receiver receives
+the message using the <code class="verbatim">receive</code> function call.</p>
+</div>
+</div>
+<div id="outline-container-headline-9" class="outline-6">
+<h6 id="headline-9">
+Synchronous
+</h6>
+<div id="outline-text-headline-9" class="outline-text-6">
+<p>Also known as <strong>Rendezvous</strong>, since both process have to meet at a known point in time.
+There is no immediate buffering, the sender have to be blocked until the
+receiver is ready.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-10" class="outline-5">
+<h5 id="headline-10">
+Pros and Cons
+</h5>
+<div id="outline-text-headline-10" class="outline-text-5">
+<div id="outline-container-headline-11" class="outline-6">
+<h6 id="headline-11">
+Pros
+</h6>
+<div id="outline-text-headline-11" class="outline-text-6">
+<ul>
+<li>
+<p>Can send across different machines</p>
+</li>
+<li>
+<p>Cross-platform, as long as message is standard</p>
+</li>
+<li>
+<p>Easier synchronization</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-12" class="outline-6">
+<h6 id="headline-12">
+Cons
+</h6>
+<div id="outline-text-headline-12" class="outline-text-6">
+<ul>
+<li>
+<p>Inefficient</p>
+</li>
+<li>
+<p>Messages are limited in size and format</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-13" class="outline-4">
+<h4 id="headline-13">
+Pipes (Unix)
+</h4>
+<div id="outline-text-headline-13" class="outline-text-4">
+<p>One of the earliest UPC mechanism</p>
+<ul>
+<li>
+<p>FIFO</p>
+</li>
+<li>
+<p>Blocking</p>
+<ul>
+<li>
+<p>Writers wait when buffer is full</p>
+</li>
+<li>
+<p>Readers wait when buffer is empty</p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-14" class="outline-4">
+<h4 id="headline-14">
+Signal (Unix)
+</h4>
+<div id="outline-text-headline-14" class="outline-text-4">
+<p><strong>SIGH\*</strong>, programs which receive that either handle it with it&#39;s own handlers, or
+ use the default handlers given by the system.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-15" class="outline-3">
+<h3 id="headline-15">
+Threads
+</h3>
+<div id="outline-text-headline-15" class="outline-text-3">
+<p><strong>Motivation</strong>: Processes are</p>
+<ul>
+<li>
+<p>heavy/expensive</p>
+</li>
+<li>
+<p>hard to context switch</p>
+</li>
+<li>
+<p>IPC is hard, since each process have independent memory space</p>
+</li>
+</ul>
+<p>and threads can help us with</p>
+<ul>
+<li>
+<p>achieving multi-core programming</p>
+</li>
+<li>
+<p>even on 1 core, we can move I/O intensive tasks to a thread to prevent
+blocking, and enable doing some other CPU tasks at the main process</p>
+</li>
+</ul>
+<p><strong>Brain teaser: would we want to run two threads with exact same code?</strong>
+Answer: Yes, probably on different data. Egg. searching for a number in an
+array - data-centric parallelization</p>
+<p>
+What can Threads share?</p>
+<ul>
+<li>
+<p>GPR - No. They will interfere with one another</p>
+</li>
+<li>
+<p>Special registers - No</p>
+</li>
+<li>
+<p>Text segment - Yes</p>
+</li>
+<li>
+<p>Data segment - Yes</p>
+</li>
+<li>
+<p>Heap - Yes</p>
+</li>
+<li>
+<p>Stack - No. Different fn calls</p>
+</li>
+<li>
+<p>PID - Yes</p>
+</li>
+<li>
+<p>Files - Yes</p>
+</li>
+<li>
+<p>Instruction cache - not relevant</p>
+</li>
+<li>
+<p>Data cache - not relevant</p>
+</li>
+</ul>
+<p>In short, anything other than <strong>Stack and Registers</strong> are shared.
+    Threads can be implemented as User or Kernel threads, the former cannot
+    utilize multiple cores, and the latter can.</p>
+<div id="outline-container-headline-16" class="outline-4">
+<h4 id="headline-16">
+User Thread
+</h4>
+<div id="outline-text-headline-16" class="outline-text-4">
+<p>A user process A spawns multiple threads A1, A2,… and the OS deems A as just
+one thread.</p>
+<ul>
+<li>
+<p>Advantages:</p>
+<ul>
+<li>
+<p>Any OS</p>
+</li>
+<li>
+<p>Thread operations are library calls</p>
+</li>
+<li>
+<p>Can design your own thread scheduling policy</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Disadvantages:</p>
+<ul>
+<li>
+<p>Cannot exploit multiple cores</p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-17" class="outline-4">
+<h4 id="headline-17">
+Kernel Thread
+</h4>
+<div id="outline-text-headline-17" class="outline-text-4">
+<ul>
+<li>
+<p>Advantages:</p>
+<ul>
+<li>
+<p>Can run on multiple CPUs!</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Disadvantages:</p>
+<ul>
+<li>
+<p>Now thread operations are system calls, and is more expensive</p>
+</li>
+<li>
+<p>If thread operations are too feature intensive, it becomes very heavy to
+run, and too feature-poor for the converse</p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-18" class="outline-2">
+<h2 id="headline-18">
+— Uncle Soo &gt;&gt; Djordje —
+</h2>
+</div>
+<div id="outline-container-headline-19" class="outline-2">
+<h2 id="headline-19">
+Lecture 6 Synchronization
+</h2>
+<div id="outline-text-headline-19" class="outline-text-2">
+<div id="outline-container-headline-20" class="outline-3">
+<h3 id="headline-20">
+Race Condition
+</h3>
+<div id="outline-text-headline-20" class="outline-text-3">
+<p>Reason: each operation is a few machine instructions which can interleave
+Solution: designate section that will race, as <strong>Critical Section</strong></p>
+<ul>
+<li>
+<p>Only one process can run in the CS</p>
+</li>
+</ul>
+<div id="outline-container-headline-21" class="outline-4">
+<h4 id="headline-21">
+The Toilet Analogy
+</h4>
+<div id="outline-text-headline-21" class="outline-text-4">
+<p>You want toilet to be a Critical Section: only one person (process/thread) can
+be in it
+Therefore, it should have 4 properties:</p>
+<ol>
+<li>
+<p>Mutual Exclusion
+Only one guy in the toilet</p>
+</li>
+<li>
+<p>Progress
+If no one is in toilet, one of the queuing guy can use</p>
+</li>
+<li>
+<p>Bounded Wait
+If you are queuing, your waiting time is bounded</p>
+</li>
+<li>
+<p>Independence
+If you are not anywhere near the toilet, you can not block (book) it</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-22" class="outline-4">
+<h4 id="headline-22">
+Bad Synchronization
+</h4>
+<div id="outline-text-headline-22" class="outline-text-4">
+<p>The &#34;meet each other in corridor&#34; analogy</p>
+<div id="outline-container-headline-23" class="outline-5">
+<h5 id="headline-23">
+Deadlock
+</h5>
+<div id="outline-text-headline-23" class="outline-text-5">
+<p>Both insist walking on the same side of corridor</p>
+</div>
+</div>
+<div id="outline-container-headline-24" class="outline-5">
+<h5 id="headline-24">
+Livelock
+</h5>
+<div id="outline-text-headline-24" class="outline-text-5">
+<p>Both switch sides together to &#34;make way&#34;, end up blocking each other</p>
+</div>
+</div>
+<div id="outline-container-headline-25" class="outline-5">
+<h5 id="headline-25">
+Starvation
+</h5>
+<div id="outline-text-headline-25" class="outline-text-5">
+<p>Some people never get to pass through the corridor</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-26" class="outline-4">
+<h4 id="headline-26">
+Critical Section Implementations
+</h4>
+<div id="outline-text-headline-26" class="outline-text-4">
+<div class="src src-python3">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python3" data-lang="python3">EnterCS()
+<span style="color:#75715e"># do something dangerous</span>
+ExitCS()</code></pre></div>
+</div>
+<p><strong>And we wish to implement <code class="verbatim">EnterCS()</code> and <code class="verbatim">ExitCS()</code>.</strong></p>
+<div id="outline-container-headline-27" class="outline-5">
+<h5 id="headline-27">
+Assembly level Implementation
+</h5>
+<div id="outline-text-headline-27" class="outline-text-5">
+<p>A <code class="verbatim">TestAndSet</code> instruction which</p>
+<ol>
+<li>
+<p>Fetches memory from a Lock to a register</p>
+</li>
+<li>
+<p>Set the content of the memory to <code class="verbatim">1</code></p>
+</li>
+</ol>
+<p>all in one instruction.</p>
+<div class="src src-c">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">EnterCS</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> Lock) {
+    <span style="color:#75715e">// loop until lock is free, ie == 1
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> (TestAndSet(Lock) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>);
+}
+
+<span style="color:#75715e">/*Do CS Stuff Here*/</span>
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">ExitCS</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> Lock) { <span style="color:#f92672">*</span>Lock <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; }
+<span style="color:#75715e">// exit by setting lock free
+</span></code></pre></div>
+</div>
+<div id="outline-container-headline-28" class="outline-6">
+<h6 id="headline-28">
+Criteria check - Passed!
+</h6>
+<div id="outline-text-headline-28" class="outline-text-6">
+<ol>
+<li>
+<p>Mutual Exclusion - <strong>Yes</strong>
+The lock is 0 or 1</p>
+</li>
+<li>
+<p>Progress - <strong>Yes</strong>
+The lock is 0 then others can use</p>
+</li>
+<li>
+<p>Bounded Wait - <strong>Depends</strong>
+Only possible if scheduling is fair - other processes get to use the lock</p>
+</li>
+<li>
+<p>Independence - <strong>Yes</strong></p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-29" class="outline-6">
+<h6 id="headline-29">
+Catches
+</h6>
+<div id="outline-text-headline-29" class="outline-text-6">
+<p>Busy Waiting - due to the while loop when waiting to use the lock</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-30" class="outline-5">
+<h5 id="headline-30">
+High-level language Implementation
+</h5>
+<div id="outline-text-headline-30" class="outline-text-5">
+<div id="outline-container-headline-31" class="outline-6">
+<h6 id="headline-31">
+Attempt 1 - Violates Mutual Exclusion
+</h6>
+<div id="outline-text-headline-31" class="outline-text-6">
+<p>We first notice that setting a Lock to 0 for free, and 1 for locked does not
+work - because <strong>checking and setting locks are multiple instructions</strong>.
+This will allow the <em>Mutual Exclusion</em> requirement to fail, since multiple
+process perceive the lock as free.
+<strong>lousy solution</strong>: disable interrupts, hence only one process at a time. <em>But
+this disables the scheduler</em>!</p>
+</div>
+</div>
+<div id="outline-container-headline-32" class="outline-6">
+<h6 id="headline-32">
+Attempt 2 - Violates Independence
+</h6>
+<div id="outline-text-headline-32" class="outline-text-6">
+<p>Now the Lock value determines which process can use:
+if A and B wants to use the CS, 1 represents A use, and 0 represents B use.
+<strong>Problem</strong>: this violates the <em>Independence</em> property.</p>
+</div>
+</div>
+<div id="outline-container-headline-33" class="outline-6">
+<h6 id="headline-33">
+Attempt 3 - Deadlock
+</h6>
+<div id="outline-text-headline-33" class="outline-text-6">
+<div class="src src-c">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">want[myId] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+<span style="color:#66d9ef">while</span> (want[otherId] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>);
+<span style="color:#75715e">// CS code
+</span><span style="color:#75715e"></span>want[myId] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;</code></pre></div>
+</div>
+<p>Problem: What if both <code class="verbatim">myId</code> and <code class="verbatim">otherId</code> are both 1 (ie, they both want to
+use)?
+Answer: They will both wait for each other to give up (via the while loop),
+which will not happen</p>
+</div>
+</div>
+<div id="outline-container-headline-34" class="outline-6">
+<h6 id="headline-34">
+Peterson&#39;s Algorithm
+</h6>
+<div id="outline-text-headline-34" class="outline-text-6">
+<p>Combining Attempt 2 and 3:
+Recall Attempt 3&#39;s problem: Both let each other run
+We add a &#34;Judge&#34; variable: <code class="verbatim">Turn</code>
+We will only wait when the other process wants to run and does not let me run</p>
+<p>
+<code class="verbatim">Turn</code> variable gives &#34;priority&#34; to a process, so the deadlock in Attempt 3 will
+not happen</p>
+</div>
+</div>
+<div id="outline-container-headline-35" class="outline-6">
+<h6 id="headline-35">
+Criteria check - Passed (Peterson)
+</h6>
+<div id="outline-text-headline-35" class="outline-text-6">
+<ol>
+<li>
+<p>Mutual Exclusion - <strong>Yes</strong>
+Determined by <code class="verbatim">Turn</code> variable - it can only be one value at a time</p>
+</li>
+<li>
+<p>Progress - <strong>Yes</strong>
+Resets <code class="verbatim">Want[myId]</code> when coming out of the CS</p>
+</li>
+<li>
+<p>Bounded Wait - <strong>Depends</strong>
+If scheduling is fair</p>
+</li>
+<li>
+<p>Independence - <strong>Yes</strong>
+complements <code class="verbatim">want[myId]</code> with a <code class="verbatim">Turn</code> variable to facilitate switching</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-36" class="outline-6">
+<h6 id="headline-36">
+Peterson&#39;s Algorithm: Disadvantages
+</h6>
+<div id="outline-text-headline-36" class="outline-text-6">
+<ul>
+<li>
+<p>Busy Waiting</p>
+</li>
+<li>
+<p>Low-Level</p>
+</li>
+<li>
+<p>2 processes only</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-37" class="outline-5">
+<h5 id="headline-37">
+High-level abstraction, implemented as Assembly
+</h5>
+<div id="outline-text-headline-37" class="outline-text-5">
+<p>By Dijkstra</p>
+<div id="outline-container-headline-38" class="outline-6">
+<h6 id="headline-38">
+Semaphore
+</h6>
+<div id="outline-text-headline-38" class="outline-text-6">
+<p>A generalized synchronization mechanism. Is a specification, rather than
+implementation.
+A Semaphore is a Data Structure that contains:</p>
+<ul>
+<li>
+<p>An integer value <code class="verbatim">S</code></p>
+</li>
+<li>
+<p>A queue of processes</p>
+</li>
+</ul>
+<p>and it supports two functions to be called by processes/threads:</p>
+<ol>
+<li>
+<p><code class="verbatim">Wait(sem)</code> (<code class="verbatim">Down(sem)</code>)</p>
+<ul>
+<li>
+<p>If <code class="verbatim">S</code> &lt;= 0, then wait in the queue until <code class="verbatim">S</code> &gt; 0 and then decrement and
+continue executing</p>
+</li>
+<li>
+<p>Else, decrement <code class="verbatim">S</code> and continue executing</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code class="verbatim">Signal(sem)</code> (<code class="verbatim">Up(sem)</code>)
+<code class="verbatim">S++</code>. Wake up <code class="verbatim">S</code> processes</p>
+</li>
+</ol>
+<div id="outline-container-headline-39" class="outline-7">
+<h7 id="headline-39">
+Properties
+</h7>
+<div id="outline-text-headline-39" class="outline-text-7">
+<p>Given \(S_{initial} \geq 0\), then \(S_{current} = S_{initial} + \#signal(S) -
+\#wait(s)\) is an invariant.
+Where</p>
+<ul>
+<li>
+<p>\(#signal(S)\) = no. of <code class="verbatim">signal()</code> executed, and</p>
+</li>
+<li>
+<p>\(#wait(S)\) = no. of <code class="verbatim">wait()</code> <strong>completed</strong></p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-40" class="outline-7">
+<h7 id="headline-40">
+Proof that Semaphore eliminates Deadlock and Starvation
+</h7>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-41" class="outline-6">
+<h6 id="headline-41">
+Criteria check
+</h6>
+<div id="outline-text-headline-41" class="outline-text-6">
+<ol>
+<li>
+<p>Mutual Exclusion</p>
+</li>
+<li>
+<p>Progress</p>
+</li>
+<li>
+<p>Bounded Wait</p>
+</li>
+<li>
+<p>Independence</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-42" class="outline-3">
+<h3 id="headline-42">
+Classical Synchronization Problems
+</h3>
+<div id="outline-text-headline-42" class="outline-text-3">
+<div id="outline-container-headline-43" class="outline-4">
+<h4 id="headline-43">
+Producer Consumer
+</h4>
+<div id="outline-text-headline-43" class="outline-text-4">
+<div id="outline-container-headline-44" class="outline-5">
+<h5 id="headline-44">
+Specification
+</h5>
+<div id="outline-text-headline-44" class="outline-text-5">
+<ul>
+<li>
+<p>Processes share a bounded buffer (fixed size array, or stack) of size <strong>K</strong></p>
+</li>
+<li>
+<p><strong>Producers</strong> insert to the end of buffer if items &lt; K</p>
+</li>
+<li>
+<p><strong>Consumer</strong> remove item from the end if items &gt; 0</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-45" class="outline-4">
+<h4 id="headline-45">
+Readers Writers
+</h4>
+<div id="outline-text-headline-45" class="outline-text-4">
+<div id="outline-container-headline-46" class="outline-5">
+<h5 id="headline-46">
+Specification
+</h5>
+<div id="outline-text-headline-46" class="outline-text-5">
+<p>Processes share a data structure D
+<strong>Writer</strong> must have <strong>exclusive</strong> access to D
+<strong>Reader</strong> can read with other readers <strong>concurrently</strong></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-47" class="outline-2">
+<h2 id="headline-47">
+Tutorial 5
+</h2>
+<div id="outline-text-headline-47" class="outline-text-2">
+<div id="outline-container-headline-48" class="outline-3">
+<h3 id="headline-48">
+Question 1
+</h3>
+<div id="outline-text-headline-48" class="outline-text-3">
+<ol>
+<li>
+<p>Process, since we sometimes want to detach the running program when shell exits.</p>
+<ul>
+<li>
+<p>protects, acts as a sandbox for programs running</p>
+</li>
+<li>
+<p>does not need to share memory space</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Process? There is no need to share the heap</p>
+<ul>
+<li>
+<p>same as previous, need to protect separate memory space</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Thread. Share the heap, and many entities, process is too heavy</p>
+<ul>
+<li>
+<p>IPC has higher overhead</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Thread would be fine, as they can share cache of some sort in-memory</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-49" class="outline-3">
+<h3 id="headline-49">
+Question 2
+</h3>
+<div id="outline-text-headline-49" class="outline-text-3">
+<ul>
+<li>
+<p>We list down the instructions:</p>
+<ol>
+<li>
+<p>Load, inc, store</p>
+</li>
+<li>
+<p>Load, inc, store. label these (1-6),</p>
+</li>
+<li>
+<p>Load, mult, store. label these 7-9.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>1-6 and 7-9 are sequential. then equivalent to 9 choose 3. 84 scenarios</p>
+</li>
+<li>
+<p>Ignoring operations, we have 6C2 = 15 scenarios</p>
+</li>
+<li>
+<p>Listing them:</p>
+<table>
+<thead>
+<tr>
+<th class="align-right">sequence</th>
+<th class="align-right">outcome</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="align-right">123456</td>
+<td class="align-right">2*2 = 4</td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">123546</td>
+<td class="align-right">2</td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">125346</td>
+<td class="align-right">2</td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">152346</td>
+<td class="align-right">0</td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">512346</td>
+<td class="align-right">0</td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">123564</td>
+<td class="align-right">1</td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">125364</td>
+<td class="align-right">2</td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">152364</td>
+<td class="align-right">2</td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">512364</td>
+<td class="align-right"></td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">125634</td>
+<td class="align-right"></td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">152634</td>
+<td class="align-right"></td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">512634</td>
+<td class="align-right"></td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">156234</td>
+<td class="align-right"></td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">516234</td>
+<td class="align-right"></td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">561234</td>
+<td class="align-right"></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>0, 1, 2, 3, 4 are possible</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-50" class="outline-3">
+<h3 id="headline-50">
+Question 3
+</h3>
+<div id="outline-text-headline-50" class="outline-text-3">
+<p>Yes it would avoid, since only the current thread/process can run without
+interrupt, but it can never be killed</p>
+<ul>
+<li>
+<p>does not work in multicore</p>
+</li>
+<li>
+<p>might not have privilege to disable</p>
+</li>
+<li>
+<p>if disable timer -</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-51" class="outline-3">
+<h3 id="headline-51">
+Question 4
+</h3>
+<div id="outline-text-headline-51" class="outline-text-3">
+<p>S1 = 1, S2 = 0
+Therefore A must be blocked and can only happen after C.
+B and C can happen freely. then
+BCA, CAB, CBA are possible ones</p>
+</div>
+</div>
+<div id="outline-container-headline-52" class="outline-3">
+<h3 id="headline-52">
+Question 5
+</h3>
+<div id="outline-text-headline-52" class="outline-text-3">
+<div class="src src-c">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> arrived <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+Semaphore mutex <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+Semaphore waitQ <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Barrier</span>(N) {
+    wait(mutex);
+    arrived<span style="color:#f92672">++</span>;
+    signal(mutex);
+
+    <span style="color:#75715e">// everyone steps pass this except for the nth
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span>(arrived <span style="color:#f92672">==</span> N)
+        signal(waitQ); <span style="color:#75715e">// CRUCIAL
+</span><span style="color:#75715e"></span>
+    <span style="color:#75715e">// N - 1 has called this and waits in the queue
+</span><span style="color:#75715e"></span>    wait(waitQ);
+
+    <span style="color:#75715e">// crucial happens. then first process goes below and releases the second
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// continues until all N go through
+</span><span style="color:#75715e"></span>    signal(waitQ);
+}</code></pre></div>
+</div>
+<p>This barrier is un-reusable.</p>
+</div>
+</div>
+<div id="outline-container-headline-53" class="outline-3">
+<h3 id="headline-53">
+Question 6
+</h3>
+<div id="outline-text-headline-53" class="outline-text-3">
+<p>in <code class="verbatim">GeneralWait()</code> :
+if two processes have not reached <code class="verbatim">wait(queue)</code>
+then count = -2, mutex =
+but two</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-54" class="outline-2">
+<h2 id="headline-54">
+Lecture 7 Memory Management
+</h2>
+<div id="outline-text-headline-54" class="outline-text-2">
+<div id="outline-container-headline-55" class="outline-3">
+<h3 id="headline-55">
+Recap - memory usage of process
+</h3>
+<div id="outline-text-headline-55" class="outline-text-3">
+<ul>
+<li>
+<p><strong>Text</strong> for instructions</p>
+</li>
+<li>
+<p><strong>Data</strong> for global variables</p>
+</li>
+<li>
+<p><strong>Heap</strong> for dynamic allocation</p>
+</li>
+<li>
+<p><strong>Stack</strong> for function invocations</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-56" class="outline-3">
+<h3 id="headline-56">
+Summary
+</h3>
+<div id="outline-text-headline-56" class="outline-text-3">
+<ul>
+<li>
+<p><strong>Source code to Executable</strong> - memory locations are relative</p>
+</li>
+<li>
+<p><strong>Executable to Actual Process</strong> - OS loads and run into memory</p>
+</li>
+</ul>
+<p>Topics to explore:</p>
+<ol>
+<li>
+<p>Memory Abstraction</p>
+</li>
+<li>
+<p>Contiguous Memory Allocation
+allocating chunks of memory</p>
+</li>
+<li>
+<p>Disjoint Memory Allocation
+like a linked list</p>
+</li>
+<li>
+<p>Virtual Memory Management
+secondary storage (ie hard drive)</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-57" class="outline-3">
+<h3 id="headline-57">
+Memory Abstraction
+</h3>
+<div id="outline-text-headline-57" class="outline-text-3">
+<div id="outline-container-headline-58" class="outline-4">
+<h4 id="headline-58">
+Without Abstraction
+</h4>
+<div id="outline-text-headline-58" class="outline-text-4">
+<p>What if a process uses physical address directly?
+In a timesharing OS, there will be memory collision for processes that access
+the same location!</p>
+<div id="outline-container-headline-59" class="outline-5">
+<h5 id="headline-59">
+Fix Attempt - Address Relocation
+</h5>
+<div id="outline-text-headline-59" class="outline-text-5">
+<p>Going through the <strong>whole executable</strong>, adding a starting position to <strong>ALL</strong> memory
+addresses.</p>
+<p>
+<span style="text-decoration: underline;">Problem</span>: Very time consuming. Also in assembly code, it is almost impossible
+to tell part <strong>addresses</strong> and <strong>values</strong> since there is no data type!</p>
+</div>
+</div>
+<div id="outline-container-headline-60" class="outline-5">
+<h5 id="headline-60">
+Fix Attempt 2 - Base + Limit Registers
+</h5>
+<div id="outline-text-headline-60" class="outline-text-5">
+<p>Compile executables with <strong>Base</strong> and <strong>Limit</strong> register values.
+Hence all memory addresses are compiled with the offset, and <strong>Limit</strong> can protect
+your memory space</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-61" class="outline-4">
+<h4 id="headline-61">
+Logical address
+</h4>
+<div id="outline-text-headline-61" class="outline-text-4">
+<p>A process&#39; view of the memory space - they think they have all the memory space</p>
+<ul>
+<li>
+<p>Store Memory concept
+Von Neumann Architecture - both instruction and data in memory</p>
+</li>
+<li>
+<p>Load-Store Memory execution model</p>
+</li>
+</ul>
+<div id="outline-container-headline-62" class="outline-5">
+<h5 id="headline-62">
+Assumptions
+</h5>
+<div id="outline-text-headline-62" class="outline-text-5">
+<ol>
+<li>
+<p>A process occupies a <strong>contiguous memory region</strong></p>
+</li>
+<li>
+<p>Physical memory is large enough to contain whole processes</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-63" class="outline-4">
+<h4 id="headline-63">
+Memory Partition
+</h4>
+<div id="outline-text-headline-63" class="outline-text-4">
+<div id="outline-container-headline-64" class="outline-5">
+<h5 id="headline-64">
+Fixed-Size Partition
+</h5>
+<div id="outline-text-headline-64" class="outline-text-5">
+<p>Split memory into partitions that are sufficient for the largest of programs.
+Then processes are allocated memory space of any of the fixed partitions.</p>
+<p>
+<strong>Cons</strong>: Memory wastage (eg. 2gb memory for &#34;Hello World&#34;)</p>
+</div>
+</div>
+<div id="outline-container-headline-65" class="outline-5">
+<h5 id="headline-65">
+Variable-Size Partition
+</h5>
+<div id="outline-text-headline-65" class="outline-text-5">
+<p>Give processes as much memory as they need.</p>
+<p>
+<strong>Problem</strong>: When a process terminates, the fragmented &#34;holes&#34;, or free memory
+ fragments are insufficient for one process, but enough when combined</p>
+</div>
+</div>
+<div id="outline-container-headline-66" class="outline-5">
+<h5 id="headline-66">
+Linked-list partition - the Buddy Algorithm
+</h5>
+<div id="outline-text-headline-66" class="outline-text-5">
+<ul>
+<li>
+<p>Given Memory of size 2^K</p>
+</li>
+<li>
+<p>Array of K elements
+Each entry A[i] = linked list of memory address of free chunks of size 2^i</p>
+</li>
+<li>
+<p>Initialization = Each A[i] is empty, except for A[K] = 0 (whole block of 0 to
+2^k memory)</p>
+</li>
+<li>
+<p>Algorithm:</p>
+<ol>
+<li>
+<p>Allocating Memory</p>
+<ol>
+<li>
+<p>We have a process that needs X bytes of memory</p>
+</li>
+<li>
+<p>Calculate minimum n such that 2^n &gt; X
+We will need a memory block from A[n]</p>
+</li>
+<li>
+<p>If A[n] is empty</p>
+<ul>
+<li>
+<p>We go to A[n+1] and look at its first entry (recurse up if A[n+1] is
+also empty)</p>
+</li>
+<li>
+<p>say the address is <code class="verbatim">a</code>. Thus <code class="verbatim">a</code> to <code class="verbatim">a+2^n+1</code> is a free memory block</p>
+</li>
+<li>
+<p>Split the memory by:</p>
+<ol>
+<li>
+<p>Remove <code class="verbatim">a</code> from the linked list at A[n+1]</p>
+</li>
+<li>
+<p>Add entries <code class="verbatim">a</code>, <code class="verbatim">a+2^n</code> at A[n]. These two entries are defined as
+&#34;buddies&#34; of each other.</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>
+<p>Allocate the first element in the linked list at A[n] for the process</p>
+</li>
+<li>
+<p>Remove it from the linked list</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Deallocating Memory</p>
+<ol>
+<li>
+<p>If process occupying memory address <code class="verbatim">a</code> of size <code class="verbatim">2^n</code> is done, we return
+the entry <code class="verbatim">a</code> to (the end/beginning of) A[n].</p>
+</li>
+<li>
+<p>If the buddy of a, ie <code class="verbatim">a+2^n</code> is in A[n], merge both of them together
+by:</p>
+<ol>
+<li>
+<p>Remove <code class="verbatim">a</code> and <code class="verbatim">a+2^n</code> from A[n]</p>
+</li>
+<li>
+<p>Add (to the end/beginning of) A[n+1] <code class="verbatim">a</code></p>
+</li>
+<li>
+<p>Repeat this whole step until either n = K, or no buddy is found.</p>
+</li>
+</ol>
+</li>
+</ol>
+<p>Time complexity:</p>
+<ol>
+<li>
+<p>O(1)</p>
+</li>
+<li>
+<p>There are maximally 2^(k+1-n)/2 elements in the linked list at A[n].
+(verify) and thus in the worst case, we keep adding up from that to 2^0.
+O(2^k)</p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-67" class="outline-2">
+<h2 id="headline-67">
+Tutorial 6
+</h2>
+<div id="outline-text-headline-67" class="outline-text-2">
+<ol>
+<li>
+<p>We just need to make sure the addition is atomic.</p>
+<div class="src src-c">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">atomic_increment</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> t) {
+ <span style="color:#66d9ef">int</span> at_t <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>t;
+ <span style="color:#66d9ef">while</span>(<span style="color:#f92672">!</span>_sync_bool_compare_and_swap(t, at_t, at_t<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>))
+     <span style="color:#66d9ef">int</span> at_t <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>t;
+}</code></pre></div>
+</div>
+</li>
+<li>
+<ol>
+<li>
+<p>Two people from different directions meet at a point on bridge, deadlock</p>
+</li>
+<li>
+<p>No problem. Probably inefficient, as per C solves</p>
+</li>
+<li>
+<p>Allow people from the same side to join the bridge if there is already
+someone.</p>
+<div class="src src-c">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">Semaphore mutex <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+<span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">enter_bridge</span>(<span style="color:#66d9ef">int</span> dir) {
+<span style="color:#66d9ef">int</span> pass <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+<span style="color:#66d9ef">if</span> (dir <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) {
+  <span style="color:#66d9ef">while</span>(<span style="color:#f92672">!</span>pass) {
+      wait(mutex);
+      <span style="color:#66d9ef">if</span>(count <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>) {
+          pass <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+          count <span style="color:#f92672">++</span>;
+      }
+      signal(mutex);
+  }
+} <span style="color:#66d9ef">else</span> {
+  <span style="color:#66d9ef">while</span>(<span style="color:#f92672">!</span>pass) {
+      wait(mutex);
+      <span style="color:#66d9ef">if</span>(count <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>) {
+          pass <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+          count <span style="color:#f92672">--</span>;
+      }
+      signal(mutex);
+  }
+}
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">exit_bridge</span>(<span style="color:#66d9ef">int</span> dir) {
+<span style="color:#66d9ef">if</span> (dir <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) {
+  wait(mutex);
+  count<span style="color:#f92672">--</span>;
+  signal(mutex);
+} <span style="color:#66d9ef">else</span> {
+  wait(mutex);
+  count<span style="color:#f92672">++</span>;
+  signal(mutex);
+}
+}</code></pre></div>
+</div>
+</li>
+<li>
+<p>Busy waiting.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>We notice this is the dining philosopher&#39;s problem. The X, Y, Z are
+philosophers while A, B, C are chopsticks</p>
+<ol>
+<li>
+<p>No. Without loss of generality, if X and Y are running simultaneously,
+either X gets B or Y gets B. The process that gets B will run, and return
+the resource.</p>
+</li>
+<li>
+<p>X takes A, Y takes B, and Z takes C.</p>
+</li>
+<li>
+<p>(answer) Z to acquire A before C.
+Recalling Tanenbaum&#39;s solution:</p>
+<div class="src src-c">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define THINKING 0
+</span><span style="color:#75715e">#define EATING 1
+</span><span style="color:#75715e">#define HUNGRY 2
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">#define NEXT (i+1)%N
+</span><span style="color:#75715e">#define PREV (i+N-1)%N
+</span><span style="color:#75715e">#define N 100
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">int</span> state[N];
+Semaphore mutex <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+Semaphore s[N] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">1</span>};
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">philosopher</span>(<span style="color:#66d9ef">int</span> i) {
+<span style="color:#66d9ef">while</span>(<span style="color:#ae81ff">1</span>) {
+  think();
+  takeChopsticks(i);
+  eat();
+  putChopsticks(i);
+}
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">takeChopsticks</span>(<span style="color:#66d9ef">int</span> i) {
+wait(mutex);
+state[i] <span style="color:#f92672">=</span> HUNGRY;
+safeToEat(i);
+signal(mutex);
+wait(s[i]);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">safeToEat</span>(<span style="color:#66d9ef">int</span> i) {
+<span style="color:#66d9ef">if</span> (state[i] <span style="color:#f92672">==</span> HUNGRY
+<span style="color:#f92672">&amp;&amp;</span> state[PREV] <span style="color:#f92672">!=</span> EATING
+<span style="color:#f92672">&amp;&amp;</span> state[NEXT] <span style="color:#f92672">!=</span> EATING){
+  state[i] <span style="color:#f92672">=</span> EATING;
+  signal(s[i]);
+}
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">putChopsticks</span>(<span style="color:#66d9ef">int</span> i) {
+wait(mutex);
+state[i] <span style="color:#f92672">=</span> THINKING;
+safeToEat(LEFT);
+safeToEat(RIGHT);
+signal(mutex);
+}</code></pre></div>
+</div>
+</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>
+<p>P2 -&gt; P3 -&gt; P1</p>
+</li>
+<li>
+<p>Yes</p>
+</li>
+<li>
+<p>P1 -&gt; P2 -&gt; P3 is a happy path</p>
+</li>
+<li>
+<p>No. 2314 is a happy path</p>
+</li>
+</ol>
+</li>
+<li>
+<p>We just show that any of</p>
+<ul>
+<li>
+<p>Mutual Exclusion</p>
+</li>
+<li>
+<p>Hold and Wait</p>
+</li>
+<li>
+<p>No-preempt</p>
+</li>
+<li>
+<p>Circular wait</p>
+</li>
+</ul>
+<p>is impossible. Turns out that Hold and Wait is eliminated, since a
+philosopher either takes both chopsticks and eat, or wait until both
+chopsticks are available.</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-68" class="outline-2">
+<h2 id="headline-68">
+Tutorial 7
+</h2>
+<div id="outline-text-headline-68" class="outline-text-2">
+<ol>
+<li>
+<table>
+<thead>
+<tr>
+<th class="align-right">1</th>
+<th class="align-right">1</th>
+<th class="align-right">1</th>
+<th class="align-right">1</th>
+<th class="align-right">1</th>
+<th class="align-right">1</th>
+<th class="align-right">0</th>
+<th class="align-right">0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="align-right">0</td>
+<td class="align-right">0</td>
+<td class="align-right">0</td>
+<td class="align-right">0</td>
+<td class="align-right">0</td>
+<td class="align-right">0</td>
+<td class="align-right">0</td>
+<td class="align-right">0</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>
+<ol>
+<li>
+<p>Find how many blocks to allocate. n = X / sizeof(smallest alloc unit)</p>
+</li>
+<li>
+<p>Look for the first occurence of 0 in bitmap.
+&lt;=&gt; finding the most significant 1 on (1s complement of bitmap)</p>
+</li>
+<li>
+<p>Apparently the way to get the MSSB is just to iterate through and get it.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Simply <code class="verbatim">AND</code> the bitmap with all <code class="verbatim">1</code> except for X bits starting from Y as <code class="verbatim">0</code></p>
+</li>
+<li>
+<p>It will be merged automatically.</p>
+</li>
+</ol>
+</li>
+<li>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Min</th>
+<th>Max</th>
+<th>Remarks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>\= max</td>
+<td>2 ^ 12 * (1)</td>
+<td>Use an array. No need starting address/size</td>
+</tr>
+<tr>
+<td>b</td>
+<td>13?</td>
+<td>2^12 * 4 * (13)</td>
+<td>Linked list</td>
+</tr>
+<tr>
+<td>c</td>
+<td>2^(24-10)/8</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<table>
+<thead>
+<tr>
+<th>Algo</th>
+<th class="align-right">200</th>
+<th>400</th>
+<th>600</th>
+<th>500</th>
+<th class="align-right">300</th>
+<th class="align-right">250</th>
+<th>Remarks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First Fit</td>
+<td class="align-right"></td>
+<td>357(1)</td>
+<td>210(2)</td>
+<td>468(3)</td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td>491(4) waits. O(n) average</td>
+</tr>
+<tr>
+<td>Best Fit</td>
+<td class="align-right"></td>
+<td>357(1)</td>
+<td>491(4)</td>
+<td>468(3)</td>
+<td class="align-right"></td>
+<td class="align-right">210(2)</td>
+<td>O(n) average</td>
+</tr>
+<tr>
+<td>Worst Fit</td>
+<td class="align-right"></td>
+<td></td>
+<td>357(1)</td>
+<td>210(2)</td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td>468, 491 wait. O(n) average</td>
+</tr>
+</tbody>
+</table>
+<p>Most efficient: best fit. Best average runtime: first fit. Best to use: first fit</p>
+</li>
+<li>
+<p>From the ordering of first fit, we realize the new algorithm has the same
+runtime given the example.</p>
+<p>
+On average, it reduces the search space and is generally faster if we
+wrap-around in our search, since first fit tends to fill up the first few
+memory spaces.</p>
+</li>
+<li>
+<p>Linked List of processes <code class="verbatim">id:usesmem(at)</code>
+A:240(0), B:60(256), C:100(384), D:128(512)
+Buddy Table:</p>
+<table>
+<thead>
+<tr>
+<th class="align-right">Size(KB)</th>
+<th class="align-right">init</th>
+<th class="align-right">a</th>
+<th class="align-right">b</th>
+<th class="align-right">c</th>
+<th class="align-right">d</th>
+<th class="align-right">e</th>
+<th>f</th>
+<th>g</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="align-right">1024</td>
+<td class="align-right">0</td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">512</td>
+<td class="align-right"></td>
+<td class="align-right">512</td>
+<td class="align-right">512</td>
+<td class="align-right">512</td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td></td>
+<td>0</td>
+</tr>
+<tr>
+<td class="align-right">256</td>
+<td class="align-right"></td>
+<td class="align-right">256</td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right">768</td>
+<td class="align-right">0, 768</td>
+<td>0, 768</td>
+<td><del>(0, 256)</del> ,768</td>
+</tr>
+<tr>
+<td class="align-right">128</td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right">384</td>
+<td class="align-right"></td>
+<td class="align-right">640</td>
+<td class="align-right">640</td>
+<td>384, 640</td>
+<td><del>(256, 384)</del>, 640</td>
+</tr>
+<tr>
+<td class="align-right">64</td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right">320</td>
+<td class="align-right">320</td>
+<td class="align-right">320</td>
+<td class="align-right">320</td>
+<td>320</td>
+<td><del>(256, 320)</del></td>
+</tr>
+<tr>
+<td class="align-right">32</td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">16</td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">8</td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">4</td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">2</td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="align-right">1</td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td class="align-right"></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-69" class="outline-2">
+<h2 id="headline-69">
+Lecture 7 Disjoint Memory Space
+</h2>
+<div id="outline-text-headline-69" class="outline-text-2">
+<div id="outline-container-headline-70" class="outline-3">
+<h3 id="headline-70">
+Paging
+</h3>
+<div id="outline-text-headline-70" class="outline-text-3">
+<p>Physical memory - into frames
+Logical memory (for a process) - into pages
+each are of the same size = 4KB</p>
+<div id="outline-container-headline-71" class="outline-4">
+<h4 id="headline-71">
+Logical Address Translation
+</h4>
+<div id="outline-text-headline-71" class="outline-text-4">
+<p>Strategies:</p>
+<ul>
+<li>
+<p>Frame size as a power of 2 (to get the first k bits as frame number)</p>
+</li>
+<li>
+<p>Physical frame size == Logical page size</p>
+</li>
+</ul>
+<p>Exercise
+LA = <code class="verbatim">11|10</code>
+PA = <code class="verbatim">101|10</code></p>
+</div>
+</div>
+<div id="outline-container-headline-72" class="outline-4">
+<h4 id="headline-72">
+Implementing Paging Scheme
+</h4>
+<div id="outline-text-headline-72" class="outline-text-4">
+<ul>
+<li>
+<p>Paging is costly (to save and retrieve page table)</p>
+</li>
+<li>
+<p>Pure software implementation: store page table inside memory context</p>
+</li>
+<li>
+<p>Instead we use a <strong>cache</strong>, known as <strong>Translation Look-aside Buffer (TLB)</strong></p>
+<ul>
+<li>
+<p>Is a fully associative cache, need to iterate through (in parallel) to find
+the page to frame translation</p>
+</li>
+<li>
+<p>50 times faster</p>
+</li>
+<li>
+<p>Hit: time taken = TLB access (1ns) + memory access (50ns)</p>
+</li>
+<li>
+<p>Miss: time taken = TLB access (1ns, miss) + memory access(50ns, check actual
+paging table) + memory access (50ns)</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Fragmentation</p>
+<ul>
+<li>
+<p>External fragmentation (unused frames) is impossible</p>
+</li>
+<li>
+<p>Internal fragmentation (within frames) is possible, if a page is not fully
+utilized in a frame</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Question: what to save when switching a process?
+Preliminary answer: no need for tlb, just overwrite if irrelevant; if the
+process has not terminated, page table should remain there, which means
+physical frames should not be touched.</p>
+<ul>
+<li>
+<p>TLB? <strong>Flush. Store to speed up</strong></p>
+</li>
+<li>
+<p>Page table? <strong>Different process&#39;s page0 is different. Swap out</strong></p>
+</li>
+<li>
+<p>Physical frames (in the memory)?</p>
+</li>
+<li>
+<p>Nothing?</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Protection</p>
+<ul>
+<li>
+<p>Can save valid, rwx bits in each page</p>
+</li>
+</ul>
+</li>
+<li>
+<p>How to share memory</p>
+<ul>
+<li>
+<p>share a page, page tables point to the same frame</p>
+</li>
+</ul>
+</li>
+<li>
+<p>How to fork?</p>
+<ul>
+<li>
+<p>First share the same page table, until write</p>
+</li>
+<li>
+<p>Then we copy over <strong>the modified page only</strong>.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Separate Text, Heap, Stack</p>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th>Base</th>
+<th>Limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Text</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Data</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Stack</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Heap</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>
+If our access to <code class="verbatim">(segment, address)</code> where address &gt; limit, it is a
+<strong>Segmentation Fault</strong>. Segment table usually stored in CPU, since it is very
+small. (4 entries only in our example)</p>
+<ul>
+<li>
+<p>Now we further &#34;Paginate&#34; our segments. then our segment table:</p>
+<table>
+<tbody>
+<tr>
+<td>Segment</td>
+<td>Page table base</td>
+</tr>
+</tbody>
+</table>
+<p>
+Then given a <code class="verbatim">(segment, address)</code> has the address converted into <code class="verbatim">(frame,
+offset)</code> from the entry in the page table.</p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-73" class="outline-2">
+<h2 id="headline-73">
+Tutorial 8
+</h2>
+<div id="outline-text-headline-73" class="outline-text-2">
+<ol>
+<li>
+<p>page 0,1: <code class="verbatim">text</code>, pages 2,3: <code class="verbatim">data</code></p>
+<ol>
+<li>
+<p>Page table:</p>
+<table>
+<thead>
+<tr>
+<th class="align-right">page#</th>
+<th class="align-right">frame#</th>
+<th class="align-right">valid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="align-right">0</td>
+<td class="align-right">5</td>
+<td class="align-right">1</td>
+</tr>
+<tr>
+<td class="align-right">1</td>
+<td class="align-right">2</td>
+<td class="align-right">1</td>
+</tr>
+<tr>
+<td class="align-right">2</td>
+<td class="align-right">10</td>
+<td class="align-right">1</td>
+</tr>
+<tr>
+<td class="align-right">3</td>
+<td class="align-right">(blank)</td>
+<td class="align-right">0</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th class="align-right">page</th>
+<th>content</th>
+<th class="align-right">frame</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="align-right">0</td>
+<td>inst 1</td>
+<td class="align-right">5</td>
+</tr>
+<tr>
+<td class="align-right"></td>
+<td>inst 2</td>
+<td class="align-right"></td>
+</tr>
+<tr>
+<td class="align-right"></td>
+<td>inst 3</td>
+<td class="align-right"></td>
+</tr>
+<tr>
+<td class="align-right"></td>
+<td>inst 4</td>
+<td class="align-right"></td>
+</tr>
+<tr>
+<td class="align-right">1</td>
+<td>inst 5</td>
+<td class="align-right">2</td>
+</tr>
+<tr>
+<td class="align-right"></td>
+<td>inst 6</td>
+<td class="align-right"></td>
+</tr>
+<tr>
+<td class="align-right"></td>
+<td>word 1</td>
+<td class="align-right"></td>
+</tr>
+<tr>
+<td class="align-right"></td>
+<td>word 2</td>
+<td class="align-right"></td>
+</tr>
+<tr>
+<td class="align-right">2</td>
+<td>word 3</td>
+<td class="align-right">10</td>
+</tr>
+<tr>
+<td class="align-right"></td>
+<td>word 4</td>
+<td class="align-right"></td>
+</tr>
+<tr>
+<td class="align-right"></td>
+<td>word 5</td>
+<td class="align-right"></td>
+</tr>
+<tr>
+<td class="align-right"></td>
+<td>-</td>
+<td class="align-right"></td>
+</tr>
+<tr>
+<td class="align-right">3</td>
+<td>-</td>
+<td class="align-right">9</td>
+</tr>
+<tr>
+<td class="align-right"></td>
+<td>-</td>
+<td class="align-right"></td>
+</tr>
+<tr>
+<td class="align-right"></td>
+<td>-</td>
+<td class="align-right"></td>
+</tr>
+<tr>
+<td class="align-right"></td>
+<td>-</td>
+<td class="align-right"></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>processor action</th>
+<th>logical address</th>
+<th>physical address</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fetch inst 1</td>
+<td><code class="verbatim">0000</code> 0</td>
+<td><code class="verbatim">010100</code> 20</td>
+</tr>
+<tr>
+<td>load word 2</td>
+<td><code class="verbatim">0111</code> 7</td>
+<td><code class="verbatim">001011</code> 11</td>
+</tr>
+<tr>
+<td>load word 3</td>
+<td><code class="verbatim">1000</code> 8</td>
+<td><code class="verbatim">101000</code> 49</td>
+</tr>
+<tr>
+<td>load word 6</td>
+<td><code class="verbatim">1011</code> 11</td>
+<td><code class="verbatim">100111</code> 39</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Segment table:</p>
+<table>
+<thead>
+<tr>
+<th>segment</th>
+<th class="align-right">base address</th>
+<th class="align-right">limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0 (text)</td>
+<td class="align-right">50</td>
+<td class="align-right">6</td>
+</tr>
+<tr>
+<td>1 (data)</td>
+<td class="align-right">23</td>
+<td class="align-right">5</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>action</th>
+<th>Logical address</th>
+<th class="align-right">physical address</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fetch inst 1</td>
+<td><code class="verbatim">0,0</code></td>
+<td class="align-right">50</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="verbatim">1,1</code></td>
+<td class="align-right">24</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="verbatim">1,2</code></td>
+<td class="align-right">25</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="verbatim">1,5</code></td>
+<td class="align-right">segfault</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Segment/page table:</p>
+<table>
+<thead>
+<tr>
+<th>segment</th>
+<th class="align-right">pages</th>
+<th class="align-right">frame</th>
+<th class="align-right">valid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>text</td>
+<td class="align-right">0</td>
+<td class="align-right">7</td>
+<td class="align-right">1</td>
+</tr>
+<tr>
+<td></td>
+<td class="align-right">1</td>
+<td class="align-right">4</td>
+<td class="align-right">1</td>
+</tr>
+<tr>
+<td></td>
+<td class="align-right">2</td>
+<td class="align-right">1</td>
+<td class="align-right">0</td>
+</tr>
+<tr>
+<td></td>
+<td class="align-right">3</td>
+<td class="align-right">2</td>
+<td class="align-right">0</td>
+</tr>
+<tr>
+<td>data</td>
+<td class="align-right">0</td>
+<td class="align-right">9</td>
+<td class="align-right">1</td>
+</tr>
+<tr>
+<td></td>
+<td class="align-right">1</td>
+<td class="align-right">3</td>
+<td class="align-right">1</td>
+</tr>
+<tr>
+<td></td>
+<td class="align-right">2</td>
+<td class="align-right">14</td>
+<td class="align-right">0</td>
+</tr>
+<tr>
+<td></td>
+<td class="align-right">3</td>
+<td class="align-right">6</td>
+<td class="align-right">0</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>processor action</th>
+<th>logical address</th>
+<th>physical address</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fetch inst 1</td>
+<td><code class="verbatim">0,0,00</code></td>
+<td><code class="verbatim">0111,00</code> 28</td>
+</tr>
+<tr>
+<td>load word 2</td>
+<td><code class="verbatim">1,0,01</code></td>
+<td><code class="verbatim">1001,10</code> 37</td>
+</tr>
+<tr>
+<td>load word 3</td>
+<td><code class="verbatim">1,0,10</code></td>
+<td><code class="verbatim">1001,11</code> 38</td>
+</tr>
+<tr>
+<td>load word 6</td>
+<td><code class="verbatim">1,1,10</code></td>
+<td><code class="verbatim">0011,10</code> 14</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+</li>
+<li>
+<p>Design 3, since it is dynamic.</p>
+</li>
+<li>
+<ol>
+<li>
+<p>Global variable in the text segment.</p>
+<ol>
+<li>
+<p>Query page table (50ns)</p>
+</li>
+<li>
+<p>Get the data (50ns)</p>
+</li>
+</ol>
+</li>
+<li>
+<p>In the case of hit: just 50ns. otherwise 100.</p>
+<div class="src src-python">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">print(<span style="color:#ae81ff">50</span><span style="color:#f92672">*</span><span style="color:#ae81ff">0.75</span><span style="color:#f92672">+</span><span style="color:#ae81ff">100</span><span style="color:#f92672">*</span><span style="color:#ae81ff">0.25</span>)</code></pre></div>
+</div>
+<pre class="example">
+62.5
+</pre>
+</li>
+<li>
+<p>no of entries = 75% of the number of frames in RAM.
+write memory efficient programs.
+0.75 * (2^32 / 2^12)
+32 to 1024 in real life with 99% hit rate due to temporal and spatial locality</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Internal fragmentation is related to the minimum memory chunk size. If it is
+<code class="verbatim">2^k</code> bytes, then the average internal fragmentation
+\[\sum^{2^k-1}_{i=1}\frac{i}{2^k} = \frac{2^k(2^k-1)}{2^{k+1}} =
+\frac{2^k-1}{2}\]</p>
+</li>
+<li>
+<ol>
+<li>
+<p><strong>Contiguous memory allocation</strong>: Impossible for contiguous, since we have no way of allocating extra memory
+space if it runs out. Or possibly, can throw runtime error.</p>
+</li>
+<li>
+<p><strong>Pure paging</strong>: You can keep getting new pages until all memory have exhausted.</p>
+</li>
+<li>
+<p><strong>Pure segmentation</strong>: You can possibly grow each segment.</p>
+</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>
+<p>Use the same page table, but with its write bits set to 0.</p>
+</li>
+<li>
+<p>When child or parent process is going to write to any page.</p>
+</li>
+<li>
+<p>An extra bit denoting has forked. if attempt to write and the bit is set,
+then copy the memory.</p>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-74" class="outline-2">
+<h2 id="headline-74">
+Lecture 9 Virtual Memory Scheme
+</h2>
+<div id="outline-text-headline-74" class="outline-text-2">
+<p>Destroy: memory context is always in RAM</p>
+<div id="outline-container-headline-75" class="outline-3">
+<h3 id="headline-75">
+Virtual memory space
+</h3>
+<div id="outline-text-headline-75" class="outline-text-3">
+<ul>
+<li>
+<p>Compared to <strong>Logical memory address</strong>: now you can page into swap</p>
+</li>
+<li>
+<p>A page is either <strong>memory resident</strong> (in RAM, physical memory) or <strong>non-memory
+resident</strong> (in secondary memory)</p>
+</li>
+<li>
+<p>If a page is in secondary memory, it is consider <strong>invalid</strong> (by the valid bit).
+Invalid memory access (by hardware) will trap to OS, which load the memory
+into physical memory and continue with operation.</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-76" class="outline-3">
+<h3 id="headline-76">
+Page Table Structure
+</h3>
+<div id="outline-text-headline-76" class="outline-text-3">
+<div id="outline-container-headline-77" class="outline-4">
+<h4 id="headline-77">
+Direct Paging
+</h4>
+<div id="outline-text-headline-77" class="outline-text-4">
+<ul>
+<li>
+<p>If we have k bit of addresses, and each page is 2^m bits, we have 2^k-m
+entries.</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-78" class="outline-4">
+<h4 id="headline-78">
+2-Level
+</h4>
+<div id="outline-text-headline-78" class="outline-text-4">
+<ul>
+<li>
+<p>A table of page tables. This prevents having many page entries that are
+invalid.</p>
+</li>
+<li>
+<p>Invalid tables are simply represented by a single null pointer entry</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-79" class="outline-4">
+<h4 id="headline-79">
+Inverse Table
+</h4>
+<div id="outline-text-headline-79" class="outline-text-4">
+<ul>
+<li>
+<p>Frame as key, value is PID and page number</p>
+</li>
+<li>
+<p>Queries are in PID, page number, and have to search through the table</p>
+</li>
+<li>
+<p>Advantage: just one table
+Disadvantage: slow translation</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-80" class="outline-3">
+<h3 id="headline-80">
+Page Replacement Algorithms
+</h3>
+<div id="outline-text-headline-80" class="outline-text-3">
+<p>If, during a page fault (page not in memory), there is no more memory left, we
+need to evict a memory page.</p>
+<ul>
+<li>
+<p>If page is dirty (modified from swap last time it is used), need to write back</p>
+</li>
+</ul>
+<div id="outline-container-headline-81" class="outline-4">
+<h4 id="headline-81">
+Optimum
+</h4>
+<div id="outline-text-headline-81" class="outline-text-4">
+<p>Evict the one that is not going to be used for the longest time. Impossible to
+implement.</p>
+</div>
+</div>
+<div id="outline-container-headline-82" class="outline-4">
+<h4 id="headline-82">
+FIFO
+</h4>
+<div id="outline-text-headline-82" class="outline-text-4">
+<p>Evict the guy who reaches earliest. Since it does not exploit temporal locality
+(it might be used recently), causes Belady&#39;s Anomaly: when frame number
+increases, does not have less page faults.</p>
+</div>
+</div>
+<div id="outline-container-headline-83" class="outline-4">
+<h4 id="headline-83">
+Least Recently Used
+</h4>
+</div>
+<div id="outline-container-headline-84" class="outline-4">
+<h4 id="headline-84">
+Second-Chance
+</h4>
+<div id="outline-text-headline-84" class="outline-text-4">
+<p>Keep a bit denoting whether a page has been reference again since it&#39;s first
+appearance in page table. Keep a wraparound pointer that evict pages that have
+the bit unset. If the bit is set, pointer passes through it will unset it.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-85" class="outline-3">
+<h3 id="headline-85">
+Frame Allocation
+</h3>
+<div id="outline-text-headline-85" class="outline-text-3">
+<p>Limited frames for programs. How to allocate? Simple approaches</p>
+<ul>
+<li>
+<p>Equal allocation: everyone gets same amount, distributed equally</p>
+</li>
+<li>
+<p>Proportional allocation: if you need more memory, you get more frames</p>
+</li>
+</ul>
+<p>Think about this: when we replace page, we can either replace the process&#39;s own
+frames (local replacement) or steal others&#39; frames (global replacement)</p>
+<ul>
+<li>
+<p>Local: stable performance, but might be low</p>
+</li>
+<li>
+<p>Global: dynamic, but can affect others</p>
+</li>
+</ul>
+<div id="outline-container-headline-86" class="outline-4">
+<h4 id="headline-86">
+Thrashing
+</h4>
+<div id="outline-text-headline-86" class="outline-text-4">
+<p>Heavy I/O to get non-resident pages to memory</p>
+<p>
+<strong>Cascading Thrashing</strong>: Process A thrashes, evicts memory from another process B,
+ which then thrashes when it&#39;s running, and runs down the loop.</p>
+</div>
+</div>
+<div id="outline-container-headline-87" class="outline-4">
+<h4 id="headline-87">
+Working Set Model
+</h4>
+<div id="outline-text-headline-87" class="outline-text-4">
+<p>There might be a working set of frames that causes no heavy change in number of
+frames, or otherwise. We call them stable and transient working sets.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-88" class="outline-2">
+<h2 id="headline-88">
+Tutorial 9
+</h2>
+<div id="outline-text-headline-88" class="outline-text-2">
+<ol>
+<li>
+<ol>
+<li>
+<ol>
+<li>
+<p>Virtual Address -&gt; &lt;Page#, offset&gt;</p>
+</li>
+<li>
+<p>TLB for page</p>
+<ol>
+<li>
+<p>If TLB Miss, trap to OS
+OS look for page-frame mapping in page table
+save it in TLB. Replace TLB entry via some caching algorithm, for
+example remove the last least recently used</p>
+</li>
+<li>
+<p>Else jump to 4</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Is page# memory resident?</p>
+<ol>
+<li>
+<p>It is not, then OS will put it into physical memory. If physical
+memory is occupied, then need to &#34;swap&#34; the page in swap and the
+frame in memory. Which to kick off to swap is decided by the
+algorithms.</p>
+</li>
+<li>
+<p>Else just read</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Read</p>
+</li>
+</ol>
+</li>
+<li>
+<p>TLB</p>
+<table>
+<thead>
+<tr>
+<th class="align-right">page no</th>
+<th class="align-right">Frame no</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="align-right">3</td>
+<td class="align-right">7</td>
+</tr>
+<tr>
+<td class="align-right">0</td>
+<td class="align-right">4</td>
+</tr>
+</tbody>
+</table>
+<p>
+Page Table</p>
+<table>
+<thead>
+<tr>
+<th class="align-right">page no</th>
+<th>frame/swap page no</th>
+<th>memory resident</th>
+<th>valid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="align-right">0</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>
+<p>32bits, ie number of bytes = 2^32bits
+number of pages possible = 2^32-12 = 2^20
+page table space = 2^20+2 = 2^22 = 4MB</p>
+<p>
+virtual address = page dir index - pt index - offset
+offset = to uniquely identify each byte in a page = 12 bits
+pt index = to uniquely identify each pt entry = 4kb / 4b = 10 bits</p>
+<p>
+we will have 128k pages = 512MB/4kbper page = 2^(29-12)</p>
+</li>
+<li>
+<p>Same amount since each frame is fully utilized?</p>
+</li>
+<li>
+<p>how many frames? 2^(29-12) = 2^17
+hence size = 2^(17+3) = 2^20</p>
+</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>
+<ol>
+<li>
+<p>A04</p>
+<table>
+<tbody>
+<tr>
+<td>ref bit</td>
+<td class="align-right">0</td>
+<td class="align-right">0</td>
+<td class="align-right">0</td>
+<td>(pointer) 1</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Save frame 2 in a swap slot
+Bring A08 to frame 2
+Update TLB for A</p>
+</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>
+<p>B17</p>
+</li>
+<li>
+<p>Maybe</p>
+<table>
+<thead>
+<tr>
+<th class="align-right">frame</th>
+<th>content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="align-right">1</td>
+<td>A31</td>
+</tr>
+<tr>
+<td class="align-right">3</td>
+<td>A17</td>
+</tr>
+<tr>
+<td class="align-right">2</td>
+<td>A08</td>
+</tr>
+<tr>
+<td class="align-right">0</td>
+<td>B13</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>OS knows a frame has to be evicted. It will keep a variable call
+victim, and</p>
+<ol>
+<li>
+<p>if victim doesn&#39;t have an entry, then increment, otherwise</p>
+</li>
+<li>
+<p>check it&#39;s reference bit.</p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-89" class="outline-2">
+<h2 id="headline-89">
+Lecture 10 File System
+</h2>
+<div id="outline-text-headline-89" class="outline-text-2">
+<table>
+<tbody>
+<tr>
+<td>Memory Management</td>
+<td>Files System Management</td>
+</tr>
+</tbody>
+</table>
+<div id="outline-container-headline-90" class="outline-3">
+<h3 id="headline-90">
+File
+</h3>
+<div id="outline-text-headline-90" class="outline-text-3">
+<ul>
+<li>
+<p>as an abstract data type</p>
+</li>
+<li>
+<p>Hard Disk lingo:
+Track: a concentric circle on the drive
+Geometric sector: a sector (a slice of pie) on the hard disk</p>
+</li>
+<li>
+<p>Therefore sector is the smallest unit of transfer for a hard drive. This is
+bigger if the rotations per minute is high</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-91" class="outline-3">
+<h3 id="headline-91">
+File System
+</h3>
+<div id="outline-text-headline-91" class="outline-text-3">
+<p>Criteria:</p>
+<ol>
+<li>
+<p>Self contained (plug and play to different OS)</p>
+</li>
+<li>
+<p>Persistent (to power off)</p>
+</li>
+<li>
+<p>Efficient: minimum bookkeeping</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-92" class="outline-3">
+<h3 id="headline-92">
+Directory
+</h3>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-93" class="outline-2">
+<h2 id="headline-93">
+Lecture 11 File System Implementation
+</h2>
+<div id="outline-text-headline-93" class="outline-text-2">
+<div id="outline-container-headline-94" class="outline-3">
+<h3 id="headline-94">
+General Disk Organization
+</h3>
+<div id="outline-text-headline-94" class="outline-text-3">
+<ul>
+<li>
+<p>Partitions, each contain a filesystem</p>
+</li>
+<li>
+<p>Contains:</p>
+<table>
+<tbody>
+<tr>
+<td>OS boot block</td>
+<td>Partition details</td>
+<td>directory structure</td>
+<td>files info</td>
+<td>files data</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Before any partition, at the start of a disk: Master Boot Record
+Simple Boot Code + Partition Table
+MBR leads you to the start of each partition which contains the boot code for
+that OS (in that filesystem)</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-95" class="outline-3">
+<h3 id="headline-95">
+File implementation
+</h3>
+<div id="outline-text-headline-95" class="outline-text-3">
+<ul>
+<li>
+<p>Logical view of a file: a collection of logical blocks (of smallest
+allocatable size)
+criteria: minimal overhead + fast access of logical blocks.</p>
+</li>
+</ul>
+<div id="outline-container-headline-96" class="outline-4">
+<h4 id="headline-96">
+Scheme 1: Contiguous Block Allocation
+</h4>
+<div id="outline-text-headline-96" class="outline-text-4">
+<ul>
+<li>
+<p>Simple, just need start location and length to identify each file</p>
+</li>
+<li>
+<p>Fast access</p>
+</li>
+<li>
+<p>External fragmentation</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-97" class="outline-4">
+<h4 id="headline-97">
+Scheme 2: Linked List Allocation
+</h4>
+<div id="outline-text-headline-97" class="outline-text-4">
+<ul>
+<li>
+<p>Just need to head to identify. Last logical block will be specially marked</p>
+</li>
+<li>
+<p>Keep track the end of it for easy appending.</p>
+</li>
+<li>
+<p>Slow access to the rest of the file</p>
+</li>
+<li>
+<p>Unreliable - one corrupted block can kill off the whole file.</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-98" class="outline-4">
+<h4 id="headline-98">
+Scheme 3: File Allocation Table
+</h4>
+<div id="outline-text-headline-98" class="outline-text-4">
+<ul>
+<li>
+<p>Keep linked list &#39;next&#39; in the RAM instead of the hard disk.</p>
+</li>
+<li>
+<p>Optimizing: we might not need the whole table (of next&#39;s) at all time.</p>
+</li>
+<li>
+<p>&#39;Index&#39; this table in a logical block.</p>
+</li>
+<li>
+<p>What if the block is too small to index the whole file?</p>
+<ul>
+<li>
+<p>Link-list to the next or</p>
+</li>
+<li>
+<p>Multi-level indexing.</p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-99" class="outline-4">
+<h4 id="headline-99">
+Scheme 3: Hybrid
+</h4>
+<div id="outline-text-headline-99" class="outline-text-4">
+<ul>
+<li>
+<p>Within one logical block:</p>
+<ul>
+<li>
+<p>some entries points to blocks directly</p>
+</li>
+<li>
+<p>one point to a index table</p>
+</li>
+<li>
+<p>one point to a double-level-index</p>
+</li>
+<li>
+<p>one point to a triple …</p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-100" class="outline-3">
+<h3 id="headline-100">
+Free Space Management
+</h3>
+<div id="outline-text-headline-100" class="outline-text-3">
+<div id="outline-container-headline-101" class="outline-4">
+<h4 id="headline-101">
+Objectives
+</h4>
+<div id="outline-text-headline-101" class="outline-text-4">
+<p>able to allocate and free</p>
+</div>
+</div>
+<div id="outline-container-headline-102" class="outline-4">
+<h4 id="headline-102">
+Scheme 1: Bitmap
+</h4>
+<div id="outline-text-headline-102" class="outline-text-4">
+<p>each block is mapped to a bit.</p>
+</div>
+</div>
+<div id="outline-container-headline-103" class="outline-4">
+<h4 id="headline-103">
+Scheme 2: Free Blocks
+</h4>
+<div id="outline-text-headline-103" class="outline-text-4">
+<ul>
+<li>
+<p>Have a table listing free blocks. The end of it points to another table</p>
+</li>
+<li>
+<p>Each table reside in some logical block (which in turn would not be free)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-104" class="outline-3">
+<h3 id="headline-104">
+Directory Structure
+</h3>
+<div id="outline-text-headline-104" class="outline-text-3">
+<div id="outline-container-headline-105" class="outline-4">
+<h4 id="headline-105">
+Objectives
+</h4>
+<div id="outline-text-headline-105" class="outline-text-4">
+<ul>
+<li>
+<p>Keep track of the files (names) in it</p>
+</li>
+<li>
+<p>Map the file name to the file info</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-106" class="outline-4">
+<h4 id="headline-106">
+Implementation 1: Linear list
+</h4>
+<div id="outline-text-headline-106" class="outline-text-4">
+<ul>
+<li>
+<p>ie a table of the files inside, the starting logical block number, ending
+number etc.</p>
+</li>
+<li>
+<p>locate a file: linear search.</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-107" class="outline-4">
+<h4 id="headline-107">
+Implementation 2: Hash Table
+</h4>
+<div id="outline-text-headline-107" class="outline-text-4">
+<ul>
+<li>
+<p>fast lookup</p>
+</li>
+<li>
+<p>but limited size and depends on a good hash function to prevent collision</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-108" class="outline-3">
+<h3 id="headline-108">
+Combining knowledge (an example)
+</h3>
+<div id="outline-text-headline-108" class="outline-text-3">
+<div id="outline-container-headline-109" class="outline-4">
+<h4 id="headline-109">
+Create a file
+</h4>
+<div id="outline-text-headline-109" class="outline-text-4">
+<ol>
+<li>
+<p>We want to create a file with <code class="verbatim">filepath</code>.</p>
+</li>
+<li>
+<p>We check if the path is valid. Go to the <code class="verbatim">Directory Structure</code> part of the
+filesystem and check.</p>
+</li>
+<li>
+<p>Check if there is enough free space - look at <code class="verbatim">Partition Details</code> whether we
+have that free space.</p>
+</li>
+<li>
+<p>To create, say if we use index, create a index block and stuff.</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-110" class="outline-4">
+<h4 id="headline-110">
+Open a file
+</h4>
+<div id="outline-text-headline-110" class="outline-text-4">
+<ol>
+<li>
+<p>Open a file with a path.</p>
+</li>
+<li>
+<p>OS provides a file descriptor</p>
+</li>
+<li>
+<p>Points to the open file table (OS-wide), with a pointer</p>
+</li>
+<li>
+<p>The pointer points to the logical blocks (?)</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-111" class="outline-4">
+<h4 id="headline-111">
+Magnetic Disk
+</h4>
+<div id="outline-text-headline-111" class="outline-text-4">
+<ol>
+<li>
+<p>We want to read from a sector.</p>
+</li>
+<li>
+<p>Needle change to the right track. <code class="verbatim">Seek Time</code>, 2-10ms</p>
+</li>
+<li>
+<p>Rotate to the sector on the track. <code class="verbatim">Rotational Latency</code>, 4800 to 15000 RPM
+needs 12.5 to 4ms respectively.</p>
+</li>
+<li>
+<p><code class="verbatim">Transfer Time</code>. Transfer rate is around 125MB/s. this is &lt;&lt; <code class="verbatim">Seek Time</code>,
+<code class="verbatim">Rotational Latency</code></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-112" class="outline-3">
+<h3 id="headline-112">
+Disk I/O Scheduling
+</h3>
+<div id="outline-text-headline-112" class="outline-text-3">
+<div id="outline-container-headline-113" class="outline-4">
+<h4 id="headline-113">
+Objective
+</h4>
+<div id="outline-text-headline-113" class="outline-text-4">
+<p>To minimize <code class="verbatim">Seek Time</code> and <code class="verbatim">Rotational Latency</code></p>
+</div>
+</div>
+<div id="outline-container-headline-114" class="outline-4">
+<h4 id="headline-114">
+Algorithm 1: FCFS
+</h4>
+<div id="outline-text-headline-114" class="outline-text-4">
+<ul>
+<li>
+<p>not good</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-115" class="outline-4">
+<h4 id="headline-115">
+Algorithm 2: Shortest Seek First
+</h4>
+<div id="outline-text-headline-115" class="outline-text-4">
+<ul>
+<li>
+<p>go to the nearest track first</p>
+</li>
+<li>
+<p>potential starvation</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-116" class="outline-4">
+<h4 id="headline-116">
+Algorithm 3: Elevator
+</h4>
+<div id="outline-text-headline-116" class="outline-text-4">
+<ul>
+<li>
+<p>Think of track numbers as floor numbers</p>
+</li>
+<li>
+<p>Lift goes all the way down, then all the way up (bi-direction)</p>
+</li>
+<li>
+<p>Or just move up. When reach the top, go from ground.(bi-direction)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-117" class="outline-2">
+<h2 id="headline-117">
+Tutorial 10
+</h2>
+<div id="outline-text-headline-117" class="outline-text-2">
+<ol>
+<li>
+<ol>
+<li>
+<p>W(9,3)=2 (3,5)
+W(11,3)=3 (2,3,5)
+W(9,4)=3 (2,3,5)
+W(11,5)=3 (2,3,5)</p>
+</li>
+<li>
+<p>Solution: preemptively loads pages into memory when a process transits to
+running state. Or prevent more programs from running when memory is full
+(as predicted by the working set)
+By principle of locality, the future is likely to use a similar number of
+frames, can allocate that
+delta value can average a</p>
+</li>
+<li>
+<p>the times when the values are used</p>
+</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>
+<p>abstraction from OS (different syscalls), error checking and handling
+(again, system interrupts)</p>
+</li>
+<li>
+<p>trigger is 1024. buffer size is 1kb. When newline character is added,
+the buffer is flushed.</p>
+</li>
+<li>
+<p>Read buffersize of things first. Then write it into outputArray arraySize
+times. If no more complete item left, read again to fill buffer.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Lock the writing file.
+Will first check the per-process open file table</p>
+</li>
+<li>
+<p>fd saves file permission and path resolution</p>
+</li>
+</ol>
+<div id="outline-container-headline-118" class="outline-3">
+<h3 id="headline-118">
+Hao Wei&#39;s notes
+</h3>
+<div id="outline-text-headline-118" class="outline-text-3">
+<ul>
+<li>
+<p>Linux uses inode <code class="verbatim">ls -i</code> to identify files</p>
+</li>
+<li>
+<p>Permissions: User-Group-Others, in that priority.</p>
+</li>
+<li>
+<p>Open File Table</p>
+<ul>
+<li>
+<p>System-wide table: one entry per file</p>
+</li>
+<li>
+<p>Per-process table: keep track of fd, and other info such as offset</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Soft links can point to directories but hard links cannot. Soft links are
+special files.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-119" class="outline-2">
+<h2 id="headline-119">
+Lecture 12 File System Case Studies
+</h2>
+<div id="outline-text-headline-119" class="outline-text-2">
+<div id="outline-container-headline-120" class="outline-3">
+<h3 id="headline-120">
+FAT12
+</h3>
+<div id="outline-text-headline-120" class="outline-text-3">
+<p>which Bill Gates wrote it in 5 days</p>
+<div id="outline-container-headline-121" class="outline-4">
+<h4 id="headline-121">
+Structure of a FAT12 partition
+</h4>
+<div id="outline-text-headline-121" class="outline-text-4">
+<table>
+<tbody>
+<tr>
+<td>Boot</td>
+<td>FAT</td>
+<td>FAT Duplicate</td>
+<td>Root Directory</td>
+<td>Data blocks</td>
+</tr>
+</tbody>
+</table>
+<p>
+File Allocation Table is a map from logical block number to either status (if
+not in use) of the location of the next logical block of the file.</p>
+<p>
+Structure of a FAT:</p>
+<table>
+<thead>
+<tr>
+<th>block number</th>
+<th>status or next</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>BAD</td>
+</tr>
+<tr>
+<td></td>
+<td>5</td>
+</tr>
+<tr>
+<td></td>
+<td>EOF (end of file)</td>
+</tr>
+<tr>
+<td></td>
+<td>FREE</td>
+</tr>
+</tbody>
+</table>
+<p>
+FAT16 means there can maximally be 2^16 data blocks (or 16 bits when identifying
+a next block)</p>
+</div>
+</div>
+<div id="outline-container-headline-122" class="outline-4">
+<h4 id="headline-122">
+A Directory
+</h4>
+<div id="outline-text-headline-122" class="outline-text-4">
+<ul>
+<li>
+<p>is saved as a special file. contains at least one data block</p>
+</li>
+<li>
+<p>is an array of entries of 32 bytes.</p>
+</li>
+<li>
+<p>An entry is:</p>
+<table>
+<tbody>
+<tr>
+<td>File name (8)</td>
+</tr>
+<tr>
+<td>File Ext (3)</td>
+</tr>
+<tr>
+<td>Attributes (1)</td>
+</tr>
+<tr>
+<td>Directory Entry</td>
+</tr>
+<tr>
+<td>Creation Date, Time (2,2)</td>
+</tr>
+<tr>
+<td>First Disk Block (2)</td>
+</tr>
+<tr>
+<td>File Size in Bytes (4)</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-123" class="outline-4">
+<h4 id="headline-123">
+Some common operations
+</h4>
+<div id="outline-text-headline-123" class="outline-text-4">
+<div id="outline-container-headline-124" class="outline-5">
+<h5 id="headline-124">
+Reading a file, <code class="verbatim">lab5/ex1.c</code>
+</h5>
+<div id="outline-text-headline-124" class="outline-text-5">
+<ol>
+<li>
+<p><code class="verbatim">lab5</code> is in a data block. How to find out? relative to the root</p>
+</li>
+<li>
+<p>The data block in <code class="verbatim">lab5</code> have many entries, one of which contains <code class="verbatim">ex1.c</code></p>
+</li>
+<li>
+<p>The entry containing <code class="verbatim">ex1.c</code> contains <code class="verbatim">ex1.c</code>&#39;s first disk block.</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-125" class="outline-5">
+<h5 id="headline-125">
+Delete a file, <code class="verbatim">lab5/ex1.c</code>
+</h5>
+<div id="outline-text-headline-125" class="outline-text-5">
+<div id="outline-container-headline-126" class="outline-6">
+<h6 id="headline-126">
+What needs to be done?
+</h6>
+<div id="outline-text-headline-126" class="outline-text-6">
+<ol>
+<li>
+<p>remove entry from the parent directory&#39;s block. Mark the entry as invalid, by
+changing the first byte of the entry (hence file name) with <code class="verbatim">0xE5</code>. If this
+is used as the first character of file name, use <code class="verbatim">0x05</code> to represent it
+instead. HACKS!</p>
+</li>
+<li>
+<p><code class="verbatim">ex1.c</code> has multiple blocks in the partition, hence multiple entries in the
+FAT. Say it is <code class="verbatim">3-8-5-12</code>, we need to write all of the FAT entries associated
+with the file with <code class="verbatim">FREE</code>.</p>
+</li>
+<li>
+<p>Should we wipe the data blocks? Too expensive, leave data blocks as is.</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-127" class="outline-6">
+<h6 id="headline-127">
+What can we recover from a deleted file?
+</h6>
+<div id="outline-text-headline-127" class="outline-text-6">
+<ul>
+<li>
+<p>File name: lose the first byte (due to FAT change)</p>
+</li>
+<li>
+<p>File content: maybe lost or not, depending whether the blocks are used
+(allocated to new files by OS).</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-128" class="outline-5">
+<h5 id="headline-128">
+Count free space in folder?
+</h5>
+<div id="outline-text-headline-128" class="outline-text-5">
+<ul>
+<li>
+<p>In the whole disk: count the number of <code class="verbatim">FREE</code> entries in the FAT</p>
+</li>
+<li>
+<p>In a specific folder that is not root:</p>
+<ol>
+<li>
+<p>Take out the directory&#39;s data block</p>
+</li>
+<li>
+<p>recursively check???</p>
+</li>
+</ol>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-129" class="outline-4">
+<h4 id="headline-129">
+Improvements
+</h4>
+<div id="outline-text-headline-129" class="outline-text-4">
+<div id="outline-container-headline-130" class="outline-5">
+<h5 id="headline-130">
+Larger partition size!
+</h5>
+<div id="outline-text-headline-130" class="outline-text-5">
+<ol>
+<li>
+<p>Disk Cluster: a FAT entry to address multiple continuous disk blocks. However
+increases internal fragmentation.</p>
+</li>
+<li>
+<p>FAT Size: use more bits to address a block. 32 bits can address 16TB with 4KB
+clusters.</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-131" class="outline-5">
+<h5 id="headline-131">
+Long File Name Support
+</h5>
+<div id="outline-text-headline-131" class="outline-text-5">
+<p>Virtual FAT, use exactly the same filesystem that supports filenames 255 characters.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-132" class="outline-3">
+<h3 id="headline-132">
+Ext2
+</h3>
+<div id="outline-text-headline-132" class="outline-text-3">
+<div id="outline-container-headline-133" class="outline-4">
+<h4 id="headline-133">
+Partition Structure
+</h4>
+<div id="outline-text-headline-133" class="outline-text-4">
+<table>
+<tbody>
+<tr>
+<td>Boot</td>
+<td>Block Group 0</td>
+<td>Block Group 1</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>
+Each Block Group contains</p>
+<table>
+<tbody>
+<tr>
+<td>Super-block</td>
+</tr>
+<tr>
+<td>Group Descriptors</td>
+</tr>
+<tr>
+<td>block bitmap (0 free, 1 occupied)</td>
+</tr>
+<tr>
+<td>inode bitmap</td>
+</tr>
+<tr>
+<td>inode array</td>
+</tr>
+<tr>
+<td>data blocks</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p>Group Descriptors:
+Describes EVERY SINGLE BLOCK GROUP in the partition</p>
+</li>
+<li>
+<p>Super Block: describes the whole filesystem.
+Both GD and SB are duplicated in every block group, redundancy makes fs very
+robust.</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-134" class="outline-4">
+<h4 id="headline-134">
+Inode structure
+</h4>
+<div id="outline-text-headline-134" class="outline-text-4">
+<ul>
+<li>
+<p>128 bytes</p>
+</li>
+<li>
+<p>Contains information of</p>
+<ul>
+<li>
+<p>Mode(2)</p>
+</li>
+<li>
+<p>Owner Info (4)</p>
+</li>
+<li>
+<p>File Size (4/8)</p>
+</li>
+<li>
+<p>Timestamps (3*4)</p>
+</li>
+<li>
+<p>Data Block Pointers (15*4)
+file-specific. first 12 point to direct blocks (containing data)
+13th block points to a data block with 1-level paging
+14th - 2-level paging and so on</p>
+</li>
+</ul>
+</li>
+</ul>
+<div id="outline-container-headline-135" class="outline-5">
+<h5 id="headline-135">
+Inode Example
+</h5>
+<div id="outline-text-headline-135" class="outline-text-5">
+<ul>
+<li>
+<p>Allows fast access to small files</p>
+</li>
+<li>
+<p>Yet can handle huge files</p>
+</li>
+<li>
+<p>First 12 blocks</p>
+</li>
+<li>
+<p>Then (block size/ block address size) blocks</p>
+</li>
+<li>
+<p>Then ^ squared blocks</p>
+</li>
+<li>
+<p>Cubed, etc</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-136" class="outline-4">
+<h4 id="headline-136">
+Directory Example
+</h4>
+<div id="outline-text-headline-136" class="outline-text-4">
+<ul>
+<li>
+<p>Also represented as an Inode</p>
+</li>
+<li>
+<p>The first data pointer points to a data block</p>
+</li>
+<li>
+<p>That data block is a linked list, containing file name, filename length, file
+or directory, and the inode number. Chaining to the next child in the directory.</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-137" class="outline-4">
+<h4 id="headline-137">
+Examples
+</h4>
+<div id="outline-text-headline-137" class="outline-text-4">
+<div id="outline-container-headline-138" class="outline-5">
+<h5 id="headline-138">
+Accessing <code class="verbatim">/sub/file</code>
+</h5>
+<div id="outline-text-headline-138" class="outline-text-5">
+<p>Inode for <code class="verbatim">/</code> is 2</p>
+<ol>
+<li>
+<p>Inode table, entry 2 points to a inode.</p>
+</li>
+<li>
+<p>The inode&#39;s data block pointer points to 15</p>
+</li>
+<li>
+<p>Disk block 15 contains a link list. Say the first node of the link list is
+<code class="verbatim">sub</code>, with inode 8</p>
+</li>
+<li>
+<p>Inode-table 8 will give an inode (in a data block?) which has a data block
+pointer, first entry is 20</p>
+</li>
+<li>
+<p>Disk block 20 contains the link list describing the folder <code class="verbatim">/sub/</code>, and say
+<code class="verbatim">file</code> is the first element of the linked list, with inode = 6</p>
+</li>
+<li>
+<p>Checking inode table for 6th entry yields an inode, and the data block
+pointers are as described previously, point to either direct data or a few
+paging levels.</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-139" class="outline-5">
+<h5 id="headline-139">
+Deleting <code class="verbatim">/sub/file</code>
+</h5>
+<div id="outline-text-headline-139" class="outline-text-5">
+<ol>
+<li>
+<p>check the <code class="verbatim">/sub/file</code> inode, which gives the location of actual data blocks
+of <code class="verbatim">file</code>.</p>
+</li>
+<li>
+<p>First, remove the <code class="verbatim">/sub/file</code> from <code class="verbatim">/sub/</code>. Easily remove that node from the
+linked list.</p>
+</li>
+<li>
+<p>Now, there is no more <code class="verbatim">/sub/file</code>, then we need to remove its inode and
+actual data. We can do this by setting the relevant bits to zero in the block
+bitmap (for data) and inode bitmap respectively.</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-140" class="outline-5">
+<h5 id="headline-140">
+Hard/Symbolic Link with Inode
+</h5>
+<div id="outline-text-headline-140" class="outline-text-5">
+<ul>
+<li>
+<p>Soft links give DAG, Hard links give Graphs</p>
+</li>
+</ul>
+<div id="outline-container-headline-141" class="outline-6">
+<h6 id="headline-141">
+Hard Link
+</h6>
+<div id="outline-text-headline-141" class="outline-text-6">
+<ul>
+<li>
+<p>Point to the same inode. A file has inode <code class="verbatim">8</code>, then multiple directories can
+have a linkedlist node that has 8.</p>
+</li>
+<li>
+<p>If we want to delete the file, what if someone else still needs it?</p>
+</li>
+<li>
+<p>Actually referece count store in inode, recording number of dirs using it.
+When 0, remove.</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-142" class="outline-6">
+<h6 id="headline-142">
+Soft Link
+</h6>
+<div id="outline-text-headline-142" class="outline-text-6">
+<ul>
+<li>
+<p>A new file, regular like normal file, but file content is special and content
+the actual path of the file it is pointing to.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-143" class="outline-3">
+<h3 id="headline-143">
+Extra Topics!
+</h3>
+<div id="outline-text-headline-143" class="outline-text-3">
+<div id="outline-container-headline-144" class="outline-4">
+<h4 id="headline-144">
+What if FS is inconsistent, due to Power loss/crash?
+</h4>
+<div id="outline-text-headline-144" class="outline-text-4">
+<p>Tools: <code class="verbatim">CHKDSK</code> in windows, <code class="verbatim">fsck</code> in linux</p>
+</div>
+</div>
+<div id="outline-container-headline-145" class="outline-4">
+<h4 id="headline-145">
+Defragmentation
+</h4>
+<div id="outline-text-headline-145" class="outline-text-4">
+<ul>
+<li>
+<p>Linux has auto, claim to have no frag if usage is less than 90%</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-146" class="outline-2">
+<h2 id="headline-146">
+Tutorial 11
+</h2>
+<div id="outline-text-headline-146" class="outline-text-2">
+<ol>
+<li>
+<ol>
+<li>
+<p>Free capacity = count 1s in the block bitmap: <code class="verbatim">12</code>
+Directory View:
+/ – y – i, h
+  – f
+  – x – g
+       – z – k</p>
+</li>
+<li>
+<ul>
+<li>
+<p><code class="verbatim">/y/i</code> Get root directory from dir block 0. y is a directory, thus go to
+its directory block 3. Directory block 3 finds file <code class="verbatim">i</code>.</p>
+</li>
+<li>
+<p><code class="verbatim">/x/z/i</code> Get root directory from dir block, finds dir x, whose details
+is at block 1. Block 1 points to <code class="verbatim">z</code> at block 2, and <code class="verbatim">i</code> is not found in
+block 2, abort.</p>
+</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>
+<p><code class="verbatim">/x/z/k</code> /Dir blocks 0 to 1 to 2. <code class="verbatim">k</code> has first data block <code class="verbatim">6</code>, and it ends there.
+File content is <code class="verbatim">:)</code></p>
+</li>
+<li>
+<p><code class="verbatim">/y/h</code> Dir blocks 0 to 3. start block at <code class="verbatim">27</code>. Traversal:</p>
+<table>
+<thead>
+<tr>
+<th class="align-right">Block</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="align-right">27</td>
+<td>OP</td>
+</tr>
+<tr>
+<td class="align-right">30</td>
+<td>ER</td>
+</tr>
+<tr>
+<td class="align-right">21</td>
+<td>AT</td>
+</tr>
+<tr>
+<td class="align-right">14</td>
+<td>IN</td>
+</tr>
+<tr>
+<td class="align-right">4</td>
+<td>GS</td>
+</tr>
+<tr>
+<td class="align-right">23</td>
+<td>YS</td>
+</tr>
+<tr>
+<td class="align-right">7</td>
+<td>TE</td>
+</tr>
+<tr>
+<td class="align-right">10</td>
+<td>M:</td>
+</tr>
+<tr>
+<td class="align-right">28</td>
+<td>_(</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</li>
+<li>
+<p><code class="verbatim">/y/n</code> 0 to 3. Create a new directory entry, with filename <code class="verbatim">n</code>. 5 blocks:</p>
+<table>
+<thead>
+<tr>
+<th class="align-right">Block</th>
+<th class="align-right">Next</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="align-right">8</td>
+<td class="align-right">13</td>
+</tr>
+<tr>
+<td class="align-right">13</td>
+<td class="align-right">15</td>
+</tr>
+<tr>
+<td class="align-right">15</td>
+<td class="align-right">16</td>
+</tr>
+<tr>
+<td class="align-right">16</td>
+<td class="align-right">20</td>
+</tr>
+<tr>
+<td class="align-right">20</td>
+<td class="align-right">22</td>
+</tr>
+</tbody>
+</table>
+<p>
+Hence the directory entry should have 8 and 22</p>
+</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>
+<p>FCFS: since the relative order is unchanged, FCFS will yield the same result.</p>
+</li>
+<li>
+<p>C-SCAN: single direction scan. Assuming increasing, make 18 arrive very
+late so the first round not pick it up.</p>
+</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>
+<p>If the requests overlap in terms of sectors, ie request A reads sector
+1,2, and request B reads 2,3 in any capacity.</p>
+</li>
+<li>
+<p>less operations and thus less hardware overhead.</p>
+</li>
+<li>
+<p>reading a small part of data might be delay if merged with a larger read
+request. Limit the number of max num of sector?</p>
+</li>
+<li>
+<p>Waiting for mergable requests can reduce total waiting time.</p>
+</li>
+<li>
+<p>Might miss the elevator while waiting to merge or merging requests.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Can address more space, but at the cost of more internal fragmentation.</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-147" class="outline-2">
+<h2 id="headline-147">
+PYP To Review Questions
+</h2>
+<div id="outline-text-headline-147" class="outline-text-2">
+<div id="outline-container-headline-148" class="outline-3">
+<h3 id="headline-148">
+19/20 Sem 1
+</h3>
+<div id="outline-text-headline-148" class="outline-text-3">
+<p>MCQs: 14, 19, 20, 22, 25</p>
+</div>
+</div>
+</div>
+</div>
+
+
+  </div>
+  <footer class="post-footer">
+  </footer>
+</article>
+    </main>
+    <footer class="footer">
+    <span>&copy; 2021 <a href=""></a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+    menu.onscroll = function () {
+        localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = 'copy';
+
+        function copyingDone() {
+            copybutton.innerText = 'copied!';
+            setTimeout(() => {
+                copybutton.innerText = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

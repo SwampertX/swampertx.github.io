@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.88.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Linux Wired Earphones White Noise Solution &middot; Yee Jian&#39;s Blog</title>
+  <meta name="description" content="" />
+
+  
+  <link type="text/css" rel="stylesheet" href="css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="css/poole.css">
+  <link type="text/css" rel="stylesheet" href="css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class=" ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href=""><h1>Yee Jian&#39;s Blog</h1></a>
+      <p class="lead">
+       Some reflections.
+ 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="">Posts</a> </li>
+        <li><a href="/about"> About </a></li><li><a href="https://github.com/SwampertX"> CV </a></li><li><a href="https://github.com/SwampertX"> Github </a></li><li><a href="/projects"> Projects </a></li>
+      </ul>
+    </nav>
+
+    <p>&copy; 2021. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>Linux Wired Earphones White Noise Solution</h1>
+  
+  <time datetime=0001-01-01T00:00:00Z class="post-date">Mon, Jan 1, 0001</time>
+  
+  
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+There was white noise.
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<p>This is a short write-up on how I solve the issue in the title.</p>
+</div>
+</div>
+<div id="outline-container-headline-2" class="outline-2">
+<h2 id="headline-2">
+How I solved it
+</h2>
+<div id="outline-text-headline-2" class="outline-text-2">
+<p>I went to <code class="verbatim">alsamixer</code> and choose the correct sound card (HDA Intel PCH).</p>
+<p>
+Then press right until you see the <strong>Auto-Mute</strong> option. <strong>Enable</strong> it.</p>
+<p>
+That solved the issue for me.</p>
+</div>
+</div>
+<div id="outline-container-headline-3" class="outline-2">
+<h2 id="headline-3">
+Some descriptions for the original problem.
+</h2>
+<div id="outline-text-headline-3" class="outline-text-2">
+<p>There was white noise whenever I plugged in my earphones since a few weeks ago.</p>
+<p>
+There was no such white noise in my bluetooth earbuds and from speaker, so it is
+unlikely a kernel/sound card issue.</p>
+<p>
+I read online that the sound might go away if the laptop is not charging.
+Indeed, sometimes the idle white noise go away when unplugged, but appears again
+when any media is played.</p>
+<p>
+Updating BIOS didn&#39;t work. Changing from <em>PulseAudio</em> to <em>PipeWire</em> also did not
+work.</p>
+<p>
+Finally, this solution worked for me. No perceived problem yet. Playbacks sound
+clear now.</p>
+</div>
+</div>
+
+</div>
+
+
+    </main>
+
+    
+      
+    
+  </body>
+</html>
