@@ -1,5 +1,5 @@
 ---
-title: 'CS2103 in NVim + CLI - A Post Reflection'
+title: 'CS2103 Software Engineering in Neovim - A Post Reflection'
 date: '2020-01-20'
 template: 'post'
 draft: false
@@ -12,7 +12,7 @@ tags:
   - Vim
   - Java
   - Gradle
-description: 'The lessons I learned using both NeoVim and IntelliJ.'
+summary: 'The lessons I learned after using both NeoVim and IntelliJ.'
 featuredImage: "/images/neovim-logo.png"
 featuredImagePreview: "/images/neovim-logo.png"
 ---

@@ -1,0 +1,18 @@
+theme = "hyde"
+
+title = "Yee Jian's Blog"
+
+[Menus]
+main = [
+    {Name = "CV", URL = "https://github.com/SwampertX"},
+    {Name = "Github", URL = "https://github.com/SwampertX"},
+    {Name = "About", URL = "/about"},
+    {Name = "Projects", URL = "/projects"}
+]
+
+[Params]
+title = "Yee Jian's Blog"
+description = '''
+Some reflections.
+'''
+# themeColor = "theme-base-08"

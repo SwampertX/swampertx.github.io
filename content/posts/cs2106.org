@@ -1,4 +1,7 @@
 #+TITLE: CS2106 Operating Systems
+#+DRAFT: 1
+Some notes on CS2106, taught by Uncle Soo.
+
 * Lecture 6 IPC, Threads
 ** Archipelago Q&A
 1. Why not set the Time Quantum to the Interval of Timer Interrupt, since that

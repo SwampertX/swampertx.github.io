@@ -10,6 +10,7 @@ tags:
   - guide
   - NUS
 description: "A step-by-step guide to setting up printer using CUPS and its web interface in Cinnamon College"
+summary: "A step-by-step guide to setting up printer using CUPS and its web interface in Cinnamon College."
 featuredImage: "/images/cinnamon.jpg"
 featuredImagePreview: "/images/cinnamon.jpg"
 ---
@@ -19,8 +20,6 @@ College,
 NUS](http://www.usp.nus.edu.sg/life-at-usp/usp-housing-and-support/cinnamon-college-usp/).
 This guide might be useful for MacOS users as well whose OS uses CUPS for the underlying
 printing service, but I have not tried on a Mac before.
-
-{{< admonition>}}
 
 As of May 2021, the printers in Cinnamon College uses Samba to provide printing service. If you
 are familiar with CUPS and SAMBA, you can skip most of this post with these pointers:
@@ -44,8 +43,6 @@ can be remembered.
 
 3. That should be all. Remember to restart CUPS (`systemctl restart cups.service`) after editing
    `/etc/cups/printers.conf`.
-
-{{< /admonition >}}
 
 ## Step 1: install CUPS and SAMBA
 

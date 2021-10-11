@@ -1,0 +1,14 @@
+theme = "PaperMod"
+
+[Params]
+title = "Yee Jian's Blog"
+description = "Stuff I am too lazy to remember."
+author = "Tan Yee Jian"
+showCodeCopyButtons = true
+defaultTheme = "auto"
+
+[Params.homeInfoParams]
+title = "Yee Jian's Blog"
+content = '''
+Some random posts. Reflections and stuff that I am too lazy to remember.
+'''

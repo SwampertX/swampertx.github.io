@@ -4,9 +4,7 @@ subtitle: ""
 date: 2020-06-04T22:48:55+08:00
 lastmod: 2020-06-04T22:48:55+08:00
 draft: false
-author: ""
-authorLink: ""
-description: ""
+Summary: "How to SSH Jump when you are outside the NUS Network."
 
 tags: []
 categories: []

@@ -10,12 +10,16 @@ tags:
   - 'functional programming'
   - 'programming language'
 description: 'and what I understand about the substituter implementation of Source'
+summary: "In this part, I will talk about what is the Source Language, what is the Source Stepper,
+and some prior knowledge to understanding how the Source Stepper Works."
+
 featuredImage: "/media/forest.png"
 featuredImagePreview: "/media/forest.png"
+
 ---
 
 In this part, I will talk about what is the Source Language, what is the Source Stepper,
-and some primer knowledge to understanding how the Source Stepper Works.
+and some prior knowledge to understanding how the Source Stepper Works.
 
 ![Source Stepper in action](/media/stepper.gif)
 

@@ -1,5 +1,5 @@
 ---
-title: "CS2103 in nVIM + CLI - Week 2"
+title: "CS2103 Software Engineering in Neovim"
 date: "2019-09-13"
 template: "post"
 draft: false
@@ -11,8 +11,8 @@ tags:
  - Vim
  - Java
  - Gradle
-description: "Because you can. Also I wanna try out the limits of nVIM.
-Java debugging in CLI? Let's see what can happen."
+summary: "My (old) setup trying out software engineering in Java on an editor, rather than IDE.
+Because why not?"
 featuredImage: "/images/neovim-logo.png"
 featuredImagePreview: "/images/neovim-logo.png"
 ---

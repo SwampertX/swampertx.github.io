@@ -4,9 +4,7 @@ subtitle: ""
 date: 2020-05-31T23:19:29+08:00
 lastmod: 2020-05-31T23:19:29+08:00
 draft: false
-author: ""
-authorLink: ""
-description: 'How I contributed the first time to GitLab, and what it meant to me'
+summary: "How I contributed the first time to GitLab, and what it meant to me."
 
 tags: ["Open Source", "gitlab", "Guide", "Reflection"]
 categories: ["Open Source"]
@@ -23,9 +21,8 @@ math:
   enable: false
 lightgallery: false
 license: ""
----
 
-<!--more-->
+---
 
 A few months ago, I wrote my first pull request to GitLab. I was genuinely
 thrilled seeing my own code being pushed to production, and I have learnt a lot

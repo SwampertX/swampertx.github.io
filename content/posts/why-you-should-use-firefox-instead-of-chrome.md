@@ -2,7 +2,7 @@
 title: 'Why you should use Firefox instead of Chrome'
 date: '2020-01-23'
 template: 'post'
-draft: false
+draft: true
 category: Technology
 tags:
   - Technology
