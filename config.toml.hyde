@@ -4,10 +4,11 @@ title = "Yee Jian's Blog"
 
 [Menus]
 main = [
-    {Name = "CV", URL = "https://github.com/SwampertX"},
+    {Name = "Resume", URL = "https://yeejian.dev/resume.pdf"},
+    {Name = "CV (Research)", URL = "https://yeejian.dev/cv.pdf"},
     {Name = "Github", URL = "https://github.com/SwampertX"},
-    {Name = "About", URL = "/about"},
-    {Name = "Projects", URL = "/projects"}
+    # {Name = "About", URL = "/about"},
+    # {Name = "Projects", URL = "/projects"}
 ]
 
 [Params]
