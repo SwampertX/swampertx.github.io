@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.89.2" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Linux wired earphones white noise solution &middot; Yee Jian&#39;s Blog</title>
+  <meta name="description" content="" />
+
+  
+  <link type="text/css" rel="stylesheet" href="css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="css/poole.css">
+  <link type="text/css" rel="stylesheet" href="css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class=" ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href=""><h1>Yee Jian&#39;s Blog</h1></a>
+      <p class="lead">
+       Some reflections.
+ 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="">Posts</a> </li>
+        <li><a href="https://yeejian.dev/cv.pdf"> CV (Research) </a></li><li><a href="https://github.com/SwampertX"> Github </a></li><li><a href="https://yeejian.dev/resume.pdf"> Resume </a></li>
+      </ul>
+    </nav>
+
+    <p>&copy; 2021. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>Linux wired earphones white noise solution</h1>
+  
+  <time datetime=2021-08-04T22:48:55&#43;0800 class="post-date">Wed, Aug 4, 2021</time>
+  
+  <h1 id="there-was-white-noise">There was white noise.</h1>
+<p>This is a short write-up on how I solve the issue in the title.</p>
+<h2 id="how-i-solved-it">How I solved it</h2>
+<p>I went to <code>alsamixer</code> and choose the correct sound card (HDA Intel PCH).</p>
+<p>Then press right until you see the <code>Auto-Mute</code> option. <strong>Enable</strong> it.</p>
+<p>That solved the issue for me. Nowadays, I just use the command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">amixer -c0 set <span style="color:#e6db74">&#34;Auto-Mute Mode&#34;</span> Enabled
+</code></pre></div><h2 id="some-descriptions-for-original-problem">Some descriptions for original problem.</h2>
+<p>There was white noise whenever I plugged in my earphones. It didn&rsquo;t exit before this, and does not come out on speaker.</p>
+
+</div>
+
+
+    </main>
+
+    
+      
+    
+  </body>
+</html>
