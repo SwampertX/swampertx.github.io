@@ -30,7 +30,7 @@ also part of the [University Scholars Programme](https://www.usp.nus.edu.sg/).
    and Jingjing Zhao, 2021. [A Stepper for a Functional JavaScript
    Sublanguage](https://dl.acm.org/doi/abs/10.1145/3484272.3484968). Proceedings
    of the 2021 ACM SIGPLAN International Symposium on SPLASH-E, October 2021,
-   pp.71–81.
+   pp. 71–81.
 
 ## Thesis
 [Formalizing Coq Modules in the MetaCoq
