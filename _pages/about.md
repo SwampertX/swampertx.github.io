@@ -40,4 +40,12 @@ Bachelor's Thesis, National University of Singapore, 2022.
 
 
 # CV
+- 2022: B.Comp (Hons) Computer Science, National University of Singapore.
+
+  Focus area: Algorithms and Theory
+
+- 2022: B.Sc (Hons) Mathematics, National University of Singapore.
+
+  Focus areas: Logic, Abstract Algebra
+
 Click [here](files/cv.pdf) for a full CV.
