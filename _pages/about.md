@@ -8,21 +8,27 @@ redirect_from:
   - /about.html
 ---
 
-I am an incoming Master's student at the *École Polytechnique*. I am interested
-in logic, verified proofs, and the Coq proof assistant.
+I am a first-year masters student studying the [Parisian Master of Research in
+Computer Science (MPRI)][mpri] at [*École Polytechnique*][x]. My research
+interests lie in logic, verified proofs, and proof assistants (such as
+[Coq][coq]).
 
-Previously, I did my Bachelor's in Mathematics and Computer Science at the
-[National University of Singapore](https://www.nus.edu.sg/). My
-[thesis](https://github.com/SwampertX/undergraduate-thesis) was on the
-formalization of Coq Modules in the [MetaCoq](https://metacoq.github.io/)
+Previously, I obtained my Bachelor's Degrees in Mathematics and Computer Science
+at the [National University of Singapore][nus]. I wrote my [thesis](#thesis) on
+the formalization of Coq Modules in the [MetaCoq](https://metacoq.github.io/)
 project, co-supervised by Nicolas Tabareau, Martin Henz, and Yue Yang. I was
-also part of the [University Scholars Programme](https://www.usp.nus.edu.sg/).
+also part of the [University Scholars Programme](https://www.usp.nus.edu.sg/),
+the honors college of [NUS][nus].
 
+[coq]: https://coq.inria.fr/
+[x]: https://www.polytechnique.edu/
+[nus]: https://www.nus.edu.sg/
+[mpri]: https://wikimpri.dptinfo.ens-cachan.fr/doku.php
 # News
-- In September 2023, I will start my Masters in the Parisian Master
-  of Research in Computer Science (MPRI), at the *École Polytechnique*.
-- I have graduated from the National University of Singapore (NUS) after a
-  five-year, double-degree Bachelor's program in Mathematics and Computer
+- In September 2023, I will start my [Masters in the Parisian Master of Research
+  in Computer Science (MPRI)][mpri], at the [*École Polytechnique*][x].
+- In May 2023, I have graduated from the National University of Singapore (NUS)!
+  I obtained two Bachelor's degrees: one in Mathematics, and another in Computer
   Science.
 
 # Publications
@@ -32,9 +38,10 @@ also part of the [University Scholars Programme](https://www.usp.nus.edu.sg/).
    of the 2021 ACM SIGPLAN International Symposium on SPLASH-E, October 2021,
    pp. 71–81.
 
-## Thesis
-[Formalizing Coq Modules in the MetaCoq
-Project](https://github.com/SwampertX/undergraduate-thesis/releases/download/v1.0.0/XFC4101.Final.Report.pdf)
+# Thesis
+[Formalizing Coq Modules in the MetaCoq Project (PDF)][thesis-pdf]
+
+[thesis-pdf]: https://github.com/SwampertX/undergraduate-thesis/releases/download/v1.0.0/XFC4101.Final.Report.pdf
 
 Bachelor's Thesis, National University of Singapore, 2022.
 
