@@ -25,7 +25,13 @@ the honors college of [NUS][nus].
 [nus]: https://www.nus.edu.sg/
 [mpri]: https://wikimpri.dptinfo.ens-cachan.fr/doku.php
 # News
-- In September 2023, I will start my [Masters in the Parisian Master of Research
+- 10-14 June 2024: I am attending [TYPES 2024](https://types2024.itu.dk/) in Copenhagen.
+- 3 June 2024: I gave a talk on the guard checker of Coq
+  at the [RECIPROG](https://www.irif.fr/reciprog/workshop-guarded-june24) workshop.
+- 1 May 2024: I started doing an M1 internship with Yannick Forster
+  in the [Cambium](https://cambium.inria.fr/) team, in Inria Paris.
+  We will be working towards a formalisation of the Guard Checker of Coq.
+- In September 2023, I started my [Masters in the Parisian Master of Research
   in Computer Science (MPRI)][mpri], at the [*École Polytechnique*][x].
 - In May 2023, I have graduated from the National University of Singapore (NUS)!
   I obtained two Bachelor's degrees: one in Mathematics, and another in Computer
@@ -37,6 +43,11 @@ the honors college of [NUS][nus].
    Sublanguage](https://dl.acm.org/doi/abs/10.1145/3484272.3484968). Proceedings
    of the 2021 ACM SIGPLAN International Symposium on SPLASH-E, October 2021,
    pp. 71–81.
+
+# Talks
+- [Towards Formalizing the Guard Condition of Coq](files/240603-reciprog-slides.pdf), 3 June 2024\
+  Invited talk at Workshop on the guard condition of Coq, RECIPROG.\
+  Joint work with Yannick Forster.
 
 # Thesis
 [Formalizing Coq Modules in the MetaCoq Project (PDF)][thesis-pdf]
