@@ -4,7 +4,7 @@ _site/
 # Edit at https://www.toptal.com/developers/gitignore?templates=jekyll,visualstudiocode
 
 ### Jekyll ###
-_site/
+# _site/
 .sass-cache/
 .jekyll-cache/
 .jekyll-metadata
