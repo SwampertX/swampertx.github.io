@@ -28,6 +28,6 @@ group :jekyll_plugins do
   gem 'jekyll-gist'
   gem 'jekyll-redirect-from'
   # gem 'hawkins'
-  # gem 'jekyll-sass-converter', "~> 3.0.0"
+  # gem "webrick", "~> 1.8"
 end
 
