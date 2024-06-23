@@ -26,4 +26,4 @@ group :jekyll_plugins do
   gem 'hawkins'
 end
 
-ruby "~> 3.2"
+ruby "~> 3.2.0"
