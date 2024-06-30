@@ -54,15 +54,15 @@ the honors college of [NUS][nus].
 
 [thesis-pdf]: https://github.com/SwampertX/undergraduate-thesis/releases/download/v1.0.0/XFC4101.Final.Report.pdf
 
-Bachelor's Thesis, National University of Singapore, 2022.
+Bachelor's Thesis, National University of Singapore, 2023.
 
 
 # CV
-- 2022: B.Comp (Hons) Computer Science, National University of Singapore.
+- 2023: B.Comp (Hons) Computer Science, National University of Singapore.
 
   Focus area: Algorithms and Theory
 
-- 2022: B.Sc (Hons) Mathematics, National University of Singapore.
+- 2023: B.Sc (Hons) Mathematics, National University of Singapore.
 
   Focus areas: Logic, Abstract Algebra
 
