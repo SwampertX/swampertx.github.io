@@ -8,10 +8,17 @@ redirect_from:
   - /about.html
 ---
 
-I am a first-year masters student studying the [Parisian Master of Research in
+I am a second-year masters student studying the [Parisian Master of Research in
 Computer Science (MPRI)][mpri] at [*École Polytechnique*][x]. My research
 interests lie in logic, verified proofs, and proof assistants (such as
 [Coq][coq]).
+
+In my Masters Year 1 internship, I worked towards formalising the guard checker of Coq with [Yannick Forster](https://yforster.de/)
+in the [Cambium](https://cambium.inria.fr/) research team in Inria Paris.
+In my [report](files/240827-report.pdf),
+I documented the guard checker with examples and explanations.
+The full [implementation](https://github.com/inria-cambium/m1-tan)
+is freely accessible online.
 
 Previously, I obtained my Bachelor's Degrees in Mathematics and Computer Science
 at the [National University of Singapore][nus]. I wrote my [thesis](#thesis) on
@@ -24,18 +31,32 @@ the honors college of [NUS][nus].
 [x]: https://www.polytechnique.edu/
 [nus]: https://www.nus.edu.sg/
 [mpri]: https://wikimpri.dptinfo.ens-cachan.fr/doku.php
+
 # News
-- 10-14 June 2024: I am attending [TYPES 2024](https://types2024.itu.dk/) in Copenhagen.
+- 15-21 September 2024: I going to the
+  [Proof and Computation Autumn School 2024](https://www.mathematik.uni-muenchen.de/~schwicht/pc24.php),
+  at Fischbachau, Germany.
+- 14 September 2024: I will be presenting (remotely) at the [Coq Workshop 2024](https://coq-workshop.gitlab.io/2024/)
+  about my M1 internship project on the Guard Checker of Coq.
+  It is affiliated with [ITP 2024](https://www.viam.science.tsu.ge/itp2024/)
+  at Tbilisi, Georgia.
+- 27 August 2024: I successfully defended my Masters 1 internship,
+  in which I implemented the Guard Checker of Coq in MetaCoq
+  and documented its behaviour!
+  Here are the [code](https://github.com/inria-cambium/m1-tan),
+  [report](files/240827-report.pdf),
+  and [slides](files/240827-slides.pdf).
+- 10-14 June 2024: I am attending [TYPES 2024](https://types2024.itu.dk/) in Copenhagen, Denmark.
 - 3 June 2024: I gave a talk on the guard checker of Coq
-  at the [RECIPROG](https://www.irif.fr/reciprog/workshop-guarded-june24) workshop.
-- 1 May 2024: I started doing an M1 internship with Yannick Forster
+  at the [RECIPROG](https://www.irif.fr/reciprog/workshop-guarded-june24) workshop in Nantes, France.
+<!-- - 1 May 2024: I started doing an M1 internship with Yannick Forster
   in the [Cambium](https://cambium.inria.fr/) team, in Inria Paris.
-  We will be working towards a formalisation of the Guard Checker of Coq.
-- In September 2023, I started my [Masters in the Parisian Master of Research
-  in Computer Science (MPRI)][mpri], at the [*École Polytechnique*][x].
-- In May 2023, I have graduated from the National University of Singapore (NUS)!
+  We will be working towards a formalisation of the Guard Checker of Coq. -->
+<!-- - In September 2023, I started my [Masters in the Parisian Master of Research
+  in Computer Science (MPRI)][mpri], at the [*École Polytechnique*][x]. -->
+<!-- - In May 2023, I have graduated from the National University of Singapore (NUS)!
   I obtained two Bachelor's degrees: one in Mathematics, and another in Computer
-  Science.
+  Science. -->
 
 # Publications
 1. Martin Henz, Thomas Tan, Zachary Chua, Peter Jung, Yee-Jian Tan, Xinyi Zhang,
@@ -50,6 +71,10 @@ the honors college of [NUS][nus].
   Joint work with Yannick Forster.
 
 # Thesis
+[Towards Formalising the Guard Checker of Coq (PDF)](files/240827-report.pdf)
+
+Masters Year 1 Thesis, École Polytechnique, 2024.
+
 [Formalizing Coq Modules in the MetaCoq Project (PDF)][thesis-pdf]
 
 [thesis-pdf]: https://github.com/SwampertX/undergraduate-thesis/releases/download/v1.0.0/XFC4101.Final.Report.pdf
