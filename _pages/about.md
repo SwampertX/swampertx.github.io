@@ -8,12 +8,15 @@ redirect_from:
   - /about.html
 ---
 
-I am a second-year masters student studying the [Parisian Master of Research in
-Computer Science (MPRI)][mpri] at [*École Polytechnique*][x]. My research
-interests lie in logic, verified proofs, and proof assistants (such as
-[Coq][coq]).
+I am a second-year Masters (M2) student
+studying the [Parisian Master of Research in Computer Science (MPRI)][mpri]
+at [*École Polytechnique*][x].
+My research interests lie in logic, verified proofs,
+and proof assistants (such as [Coq][coq]).
 
-In my Masters Year 1 internship, I worked towards formalising the guard checker of Coq with [Yannick Forster](https://yforster.de/)
+In my Masters Year 1 internship,
+I worked towards formalising the guard checker of Coq
+with [Yannick Forster](https://yforster.de/)
 in the [Cambium](https://cambium.inria.fr/) research team in Inria Paris.
 In my [report](files/240827-report.pdf),
 I documented the guard checker with examples and explanations.
@@ -21,10 +24,13 @@ The full [implementation](https://github.com/inria-cambium/m1-tan)
 is freely accessible online.
 
 Previously, I obtained my Bachelor's Degrees in Mathematics and Computer Science
-at the [National University of Singapore][nus]. I wrote my [thesis](#thesis) on
-the formalization of Coq Modules in the [MetaCoq](https://metacoq.github.io/)
-project, co-supervised by Nicolas Tabareau, Martin Henz, and Yue Yang. I was
-also part of the [University Scholars Programme](https://www.usp.nus.edu.sg/),
+at the [National University of Singapore][nus].
+I wrote my [thesis](#theses) on
+the formalization of Coq Modules in the [MetaCoq](https://metacoq.github.io/) project,
+co-supervised by [Nicolas Tabareau](https://tabareau.fr),
+[Martin Henz](https://www.comp.nus.edu.sg/~henz/),
+and [Yue Yang](https://discovery.nus.edu.sg/463-yue-yang).
+I was also part of the [University Scholars Programme](https://www.usp.nus.edu.sg/),
 the honors college of [NUS][nus].
 
 [coq]: https://coq.inria.fr/
@@ -33,7 +39,9 @@ the honors college of [NUS][nus].
 [mpri]: https://wikimpri.dptinfo.ens-cachan.fr/doku.php
 
 # News
-- 15-21 September 2024: I going to the
+- 25 October 2024: My [Masters 1 Project/Thesis](#theses) received an Honourable Mention
+  (_"Mention de Félicitations"_) from École Polytechnique!
+- 15-21 September 2024: I attended the
   [Proof and Computation Autumn School 2024](https://www.mathematik.uni-muenchen.de/~schwicht/pc24.php),
   at Fischbachau, Germany.
 - 14 September 2024: I will be presenting (remotely) at the [Coq Workshop 2024](https://coq-workshop.gitlab.io/2024/)
@@ -46,9 +54,9 @@ the honors college of [NUS][nus].
   Here are the [code](https://github.com/inria-cambium/m1-tan),
   [report](files/240827-report.pdf),
   and [slides](files/240827-slides.pdf).
-- 10-14 June 2024: I am attending [TYPES 2024](https://types2024.itu.dk/) in Copenhagen, Denmark.
-- 3 June 2024: I gave a talk on the guard checker of Coq
-  at the [RECIPROG](https://www.irif.fr/reciprog/workshop-guarded-june24) workshop in Nantes, France.
+<!-- - 10-14 June 2024: I am attending [TYPES 2024](https://types2024.itu.dk/) in Copenhagen, Denmark. -->
+<!-- - 3 June 2024: I gave a talk on the guard checker of Coq
+  at the [RECIPROG](https://www.irif.fr/reciprog/workshop-guarded-june24) workshop in Nantes, France. -->
 <!-- - 1 May 2024: I started doing an M1 internship with Yannick Forster
   in the [Cambium](https://cambium.inria.fr/) team, in Inria Paris.
   We will be working towards a formalisation of the Guard Checker of Coq. -->
@@ -58,37 +66,47 @@ the honors college of [NUS][nus].
   I obtained two Bachelor's degrees: one in Mathematics, and another in Computer
   Science. -->
 
-# Publications
-1. Martin Henz, Thomas Tan, Zachary Chua, Peter Jung, Yee-Jian Tan, Xinyi Zhang,
-   and Jingjing Zhao, 2021. [A Stepper for a Functional JavaScript
-   Sublanguage](https://dl.acm.org/doi/abs/10.1145/3484272.3484968). Proceedings
-   of the 2021 ACM SIGPLAN International Symposium on SPLASH-E, October 2021,
-   pp. 71–81.
-
 # Talks
+- [Towards Formalizing the Guard Condition of Coq](files/240914-coqws-slides.pdf), 24 September 2024\
+  Talk at Coq Workshop 2024.\
+  Joint work with Yannick Forster.
 - [Towards Formalizing the Guard Condition of Coq](files/240603-reciprog-slides.pdf), 3 June 2024\
   Invited talk at Workshop on the guard condition of Coq, RECIPROG.\
   Joint work with Yannick Forster.
 
-# Thesis
-[Towards Formalising the Guard Checker of Coq (PDF)](files/240827-report.pdf)
+# Theses
+- **Towards Formalising the Guard Checker of Coq**\
+  Masters Year 1 Thesis, École Polytechnique, 2024.\
+  Honourable Mention (_"Mention de Félicitations"_) by École Polytechnique on L3/M1 Theses.\
+  [Report](files/240827-report.pdf), [Slides](files/240827-slides.pdf), [Code](https://github.com/inria-cambium/m1-tan).
 
-Masters Year 1 Thesis, École Polytechnique, 2024.
+- **Formalizing Coq Modules in the MetaCoq Project**\
+  Bachelor's Thesis, National University of Singapore, 2023.\
+  [Report](files/XFC4101.Final.Report.pdf),
+  [Slides](files/XFC4101.Final.Presentation.pdf),
+  [Code](https://github.com/SwampertX/metacoq/tree/yeejian-thesis).
 
-[Formalizing Coq Modules in the MetaCoq Project (PDF)][thesis-pdf]
 
-[thesis-pdf]: https://github.com/SwampertX/undergraduate-thesis/releases/download/v1.0.0/XFC4101.Final.Report.pdf
+# Projects and Reports
 
-Bachelor's Thesis, National University of Singapore, 2023.
+- [Formalizing Dependent Types in Agda](files/m1-project-report.pdf) (~equivalent to 1-month internship)\
+  Supervised by [Ambrus Kaposi](https://akaposi.github.io).
+  <!-- [Report](files/m1-project-report.pdf) -->
+
+# Publications
+- [A Stepper for a Functional JavaScript
+   Sublanguage](https://dl.acm.org/doi/abs/10.1145/3484272.3484968).\
+   Joint work with Martin Henz, Thomas Tan, Zachary Chua, Peter Jung, Xinyi Zhang,
+   and Jingjing Zhao, 2021.\
+   Proceedings
+   of the 2021 ACM SIGPLAN International Symposium on SPLASH-E, October 2021, pp. 71–81.
 
 
 # CV
-- 2023: B.Comp (Hons) Computer Science, National University of Singapore.
-
+- 2023: B.Comp (Hons) Computer Science (Distinction), National University of Singapore.\
   Focus area: Algorithms and Theory
 
-- 2023: B.Sc (Hons) Mathematics, National University of Singapore.
-
+- 2023: B.Sc (Hons) Mathematics with (Highest Distinction), National University of Singapore.\
   Focus areas: Logic, Abstract Algebra
 
 Click [here](files/cv.pdf) for a full CV.
