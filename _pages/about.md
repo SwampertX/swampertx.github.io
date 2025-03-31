@@ -12,10 +12,10 @@ I am a second-year Masters (M2) student
 studying the [Parisian Master of Research in Computer Science (MPRI)][mpri]
 at [*École Polytechnique*][x].
 My research interests lie in logic, verified proofs,
-and proof assistants (such as [Coq][coq]).
+and proof assistants (such as [Rocq][rocq]).
 
 In my Masters Year 1 internship,
-I worked towards formalising the guard checker of Coq
+I worked towards formalising the guard checker of Rocq
 with [Yannick Forster](https://yforster.de/)
 in the [Cambium](https://cambium.inria.fr/) research team in Inria Paris.
 In my [report](files/240827-report.pdf),
@@ -26,30 +26,34 @@ is freely accessible online.
 Previously, I obtained my Bachelor's Degrees in Mathematics and Computer Science
 at the [National University of Singapore][nus].
 I wrote my [thesis](#theses) on
-the formalization of Coq Modules in the [MetaCoq](https://metacoq.github.io/) project,
+the formalization of Rocq Modules in the [MetaRocq](https://metarocq.github.io/) project,
 co-supervised by [Nicolas Tabareau](https://tabareau.fr),
 [Martin Henz](https://www.comp.nus.edu.sg/~henz/),
 and [Yue Yang](https://discovery.nus.edu.sg/463-yue-yang).
 I was also part of the [University Scholars Programme](https://www.usp.nus.edu.sg/),
 the honors college of [NUS][nus].
 
-[coq]: https://coq.inria.fr/
+[rocq]: https://rocq-prover.org
 [x]: https://www.polytechnique.edu/
 [nus]: https://www.nus.edu.sg/
 [mpri]: https://wikimpri.dptinfo.ens-cachan.fr/doku.php
 
 # News
+- 1 April 2025: I am starting my Masters Year 2 (M2) internship at KU Leuven with
+  [Andreas Nuyts](https://anuyts.github.io/) and
+  [Dominique Devriese](https://distrinet.cs.kuleuven.be/people/DominiqueDevriese),
+  working on implementing new type theory primitives in the Agda proof assistant.
 - 25 October 2024: My [Masters 1 Project/Thesis](#theses) received an Honourable Mention
   (_"Mention de Félicitations"_) from École Polytechnique!
 - 15-21 September 2024: I attended the
   [Proof and Computation Autumn School 2024](https://www.mathematik.uni-muenchen.de/~schwicht/pc24.php),
   at Fischbachau, Germany.
 - 14 September 2024: I will be presenting (remotely) at the [Coq Workshop 2024](https://coq-workshop.gitlab.io/2024/)
-  about my M1 internship project on the Guard Checker of Coq.
+  about my M1 internship project on the Guard Checker of Rocq.
   It is affiliated with [ITP 2024](https://www.viam.science.tsu.ge/itp2024/)
   at Tbilisi, Georgia.
 - 27 August 2024: I successfully defended my Masters 1 internship,
-  in which I implemented the Guard Checker of Coq in MetaCoq
+  in which I implemented the Guard Checker of Rocq in MetaRocq
   and documented its behaviour!
   Here are the [code](https://github.com/inria-cambium/m1-tan),
   [report](files/240827-report.pdf),
@@ -67,20 +71,20 @@ the honors college of [NUS][nus].
   Science. -->
 
 # Talks
-- [Towards Formalizing the Guard Condition of Coq](files/240914-coqws-slides.pdf), 24 September 2024\
+- [Towards Formalizing the Guard Condition of Rocq](files/240914-coqws-slides.pdf), 24 September 2024\
   Talk at Coq Workshop 2024.\
   Joint work with Yannick Forster.
-- [Towards Formalizing the Guard Condition of Coq](files/240603-reciprog-slides.pdf), 3 June 2024\
+- [Towards Formalizing the Guard Condition of Rocq](files/240603-reciprog-slides.pdf), 3 June 2024\
   Invited talk at Workshop on the guard condition of Coq, RECIPROG.\
   Joint work with Yannick Forster.
 
 # Theses
-- **Towards Formalising the Guard Checker of Coq**\
+- **Towards Formalising the Guard Checker of Rocq**\
   Masters Year 1 Thesis, École Polytechnique, 2024.\
   Honourable Mention (_"Mention de Félicitations"_) by École Polytechnique on L3/M1 Theses.\
   [Report](files/240827-report.pdf), [Slides](files/240827-slides.pdf), [Code](https://github.com/inria-cambium/m1-tan).
 
-- **Formalizing Coq Modules in the MetaCoq Project**\
+- **Formalizing Rocq Modules in the MetaCoq Project**\
   Bachelor's Thesis, National University of Singapore, 2023.\
   [Report](files/XFC4101.Final.Report.pdf),
   [Slides](files/XFC4101.Final.Presentation.pdf),
