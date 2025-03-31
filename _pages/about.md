@@ -12,7 +12,8 @@ I am a second-year Masters (M2) student
 studying the [Parisian Master of Research in Computer Science (MPRI)][mpri]
 at [*École Polytechnique*][x].
 My research interests lie in logic, verified proofs,
-and proof assistants (such as [Rocq][rocq]).
+and proof assistants (such as [Rocq][rocq]
+and [Agda](https://wiki.portal.chalmers.se/agda/pmwiki.php)).
 
 In my Masters Year 1 internship,
 I worked towards formalising the guard checker of Rocq
