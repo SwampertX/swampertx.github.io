@@ -8,9 +8,9 @@
 
 # Basic Site Settings
 locale                   : "en-US"
-title                    : "Yee Jian Tan"
+title                    : "Yee-Jian Tan"
 title_separator          : "-"
-name                     : &name "Yee Jian Tan"
+name                     : &name "Yee-Jian Tan"
 description              : &description "Masters student in theoretical Computer
 Science."
 url                      : https://www.yeejian.dev # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
@@ -85,14 +85,14 @@ analytics:
 
 # Site Author
 author:
-  name             : "Yee Jian Tan"
+  name             : "Yee-Jian Tan"
   avatar           : "profile.png"
-  bio              : "M2 MPRI Masters Student at the École Polytechnique"
+  bio              : "Computer Science PhD Student at KU Leuven."
   location         : "Leuven, Belgium"
   employer         :
   # pubmed           : "https://www.ncbi.nlm.nih.gov/pubmed/?term=john+snow"
-  googlescholar    : "https://scholar.google.com/citations?user=ZbzVnZIAAAAJ"
-  email            : "tanyeejian@gmail.com"
+  # googlescholar    : "https://scholar.google.com/citations?user=ZbzVnZIAAAAJ"
+  email            : "yee-jian.tan@kuleuven.be"
   researchgate     :  # example: "https://www.researchgate.net/profile/yourprofile"
   uri              :
   bitbucket        :
@@ -107,8 +107,8 @@ author:
   instagram        :
   impactstory      : #"https://profiles.impactstory.org/u/xxxx-xxxx-xxxx-xxxx"
   lastfm           :
-  linkedin         :
-  # orcid            : "http://orcid.org/yourorcidurl"
+  linkedin         : "https://linkedin.com/in/yeejian-tan"
+  orcid            : "https://orcid.org/0000-0002-5725-9633"
   pinterest        :
   soundcloud       :
   stackoverflow    : # http://stackoverflow.com/users/123456/username
